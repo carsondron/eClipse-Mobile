@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
     <head>
         <title></title>
@@ -35,12 +35,13 @@
             </div>
         </div>
 
-        <div data-role="view" id="tabstrip-geolocation" data-title="Geolocation">
-            <h1>My Location</h1>
-            <div id="geoLocationContainer">
-                <div id="myLocation">Unable to get location information. Please check your network connection and try again.</div>
-                <a id="refreshMap" data-role="button" data-click="getLocation" data-icon="refresh">Refresh Location</a>
-                <div id="map_canvas"></div>
+        <div data-role="view" id="tabstrip-geolocation" data-title="Jitterz" data-init="announcementListViewTemplatesInit">
+			<div data-role="content">
+                <div id="announcements">
+                    <ul data-role="listview" id="announcements-listview" 
+                        data-style="inset" data-type="group">
+                    </ul>
+                </div>
             </div>
         </div>
 
@@ -62,6 +63,33 @@
 
         <script>
             var app = new kendo.mobile.Application(document.body, { transition: "slide", layout: "mobile-tabstrip" });
+            
+function announcementListViewTemplatesInit() {
+	$("#announcements-listview").kendoMobileListView({
+		dataSource :{ transport: {
+               read: {
+                   url: "http://localhost/BrokerPlus.WebSL4/ClientBin/BrokerPlus-Web-BrokerPlusDomainService.svc/JSON/GetActiveClassOfBusiness?$orderby=it.gencob_name",
+ 
+                   data: {
+                       Accept: "application/json"
+                   }
+               }
+           },
+           schema: {
+        data: "GetActiveClassOfBusinessResult.RootResults"
+               }
+            },
+		template: $("#announcement-listview-template").html()
+	});
+}
+
+            
+        </script>
+        
+        <script type="text/x-kendo-template" id="announcement-listview-template">
+            
+            <h3 class="item-title">${gencob_name}</h3>
+            <p class="item-info">${gencob_updated_who}</p>
         </script>
     </body>
 </html>
