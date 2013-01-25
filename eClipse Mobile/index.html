@@ -14,25 +14,30 @@
     </head>
     <body>
         <div data-role="view" id="tabstrip-home" data-title="Hello World!">
-            <h1>Welcome!</h1>
-            <p>
-                Icenium&trade; enables you to build cross-platform device applications regardless of your 
-                development platform by combining the convenience of a local development toolset with the 
-                power and flexibility of the cloud.
-            </p>
-        </div>
-
-        <div data-role="view" id="tabstrip-uiinteraction" data-title="UI Interaction">
-            <h1>Say Hello!</h1>
+            <h1>eClipse Mobile</h1>
             <div id='helloWorldInput'>
-                <label for="txtName" style="display: inline-block;">Enter your name:</label>
+                <label for="txtName" style="display: inline-block;">Search:</label>
                 <input type="text" id="txtName" value="" />
             </div>
             <div id='helloWorldText' style="display:block;"></div>
             <div class="buttonArea">
                 <a id="resetButton" data-role="button" data-click="sayHelloReset" data-icon="refresh">Reset</a>
-                <a id="submitButton" data-role="button" data-click="sayHello" data-icon="compose">Submit</a>
+                <a id="submitButton" data-role="button" data-click="announcementListViewTemplatesInit" data-icon="compose">Submit</a>
             </div>
+            <div id="announcements">
+                    <ul data-role="listview" id="announcements-listview" style="display: inline-block;"
+                        data-style="inset" data-type="group">
+                    </ul>
+                </div>
+        </div>
+
+        <div data-role="view" id="tabstrip-uiinteraction" data-title="UI Interaction">
+             <h1>Welcome!</h1>
+            <p>
+                Icenium&trade; enables you to build cross-platform device applications regardless of your 
+                development platform by combining the convenience of a local development toolset with the 
+                power and flexibility of the cloud.
+            </p>
         </div>
 
         <div data-role="view" id="tabstrip-geolocation" data-title="Jitterz" data-init="announcementListViewTemplatesInit">
@@ -65,10 +70,12 @@
             var app = new kendo.mobile.Application(document.body, { transition: "slide", layout: "mobile-tabstrip" });
             
 function announcementListViewTemplatesInit() {
+    var inputText = document.getElementById('txtName');
+    
 	$("#announcements-listview").kendoMobileListView({
 		dataSource :{ transport: {
                read: {
-                   url: "http://localhost/BrokerPlus.WebSL4/ClientBin/BrokerPlus-Web-BrokerPlusDomainService.svc/JSON/GetActiveClassOfBusiness?$orderby=it.gencob_name",
+                   url: "http://localhost/BrokerPlus.WebSL4/ClientBin/BrokerPlus-Web-BrokerPlusDomainService.svc/JSON/GetClientsResult?searchFilter=" + inputText.value,
  
                    data: {
                        Accept: "application/json"
@@ -76,20 +83,28 @@ function announcementListViewTemplatesInit() {
                }
            },
            schema: {
-        data: "GetActiveClassOfBusinessResult.RootResults"
+        data: "GetClientsResultResult.RootResults"
                }
             },
 		template: $("#announcement-listview-template").html()
 	});
 }
+function eclipseSearch() {
+    var sayHelloInputElem = document.getElementById('helloWorldInput');
+    var sayHelloTextElem = document.getElementById('helloWorldText');
+    var inputText = document.getElementById('txtName');
 
+    sayHelloTextElem.innerHTML = 'Hello, ' + inputText.value + '!';
+    sayHelloTextElem.style.display = 'block';
+    sayHelloInputElem.style.display = 'none';
+}
             
         </script>
         
         <script type="text/x-kendo-template" id="announcement-listview-template">
             
-            <h3 class="item-title">${gencob_name}</h3>
-            <p class="item-info">${gencob_updated_who}</p>
+            <h3 class="item-title">${ent_name}</h3>
+            <p class="item-info">${ent_updated_who}</p>
         </script>
     </body>
 </html>
