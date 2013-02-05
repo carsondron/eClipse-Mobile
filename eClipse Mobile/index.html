@@ -9,23 +9,91 @@
         <script src="http://maps.google.com/maps/api/js?sensor=true"></script>
         <script src="scripts/hello-world.js"></script>
 
-        <link href="kendo/styles/kendo.mobile.all.min.css" rel="stylesheet" />
-        <link href="styles/main.css" rel="stylesheet" />
+        <link rel="stylesheet" href="kendo/styles/kendo.mobile.all.min.css" />
+        <link rel="stylesheet" href="kendo/styles/kendo.jitterz.mobile.all.css" />
+        
+        <!-- Default Stylesheet -->
+        <link rel="stylesheet" href="styles/main.css" />
+        <!-- Phone 320x480 High DPI (aka Retina) -->
+		<link rel="stylesheet" media="only screen and (min-device-width: 320px) and (max-device-width: 480px) and (-webkit-device-pixel-ratio:2)" href="styles/phone-480.css" type="text/css" />
+        <!-- Phone 480x800 Medium DPI (aka Samsung Galaxy S II Skyrocket) -->
+        <link rel="stylesheet" media="only screen and (min-device-width: 320px) and (max-device-width: 508px) and (-webkit-device-pixel-ratio:1.5)" href="styles/phone-800.css" type="text/css" />
+        <!-- Tablet 768x1024 Low DPI (aka iPad 1 & 2") -->
+        <link rel="stylesheet" media="only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (-webkit-device-pixel-ratio:1)" href="styles/tablet-1024-ldpi.css" type="text/css" />
+        <!-- Tablet 800x1280 Low DPI (aka Samsung Galaxy Tab 8.9" & Lenovo K1) -->
+        <link rel="stylesheet" media="only screen and (min-device-width: 800px) and (max-device-width: 1280px) and (-webkit-device-pixel-ratio:1)" href="styles/tablet-1280.css" type="text/css" />=
+        <!-- Phone 720x1280 High DPI (aka Google Nexus) -->
+        <link rel="stylesheet" media="only screen and (min-device-width: 720px) and (max-device-width: 1280px) and (-webkit-device-pixel-ratio:2)" href="styles/phone-1280.css" type="text/css" />
+		<!-- Tablet 500x1024 Low DPI (aka Kindle Fire) -->
+        <link rel="stylesheet" media="only screen and (min-device-width: 600px) and (max-device-width: 1024px) and (-webkit-device-pixel-ratio:1)" href="styles/tablet-600-1024.css" type="text/css" />
+        <!-- Tablet 768x1024 High DPI (aka iPad3") -->
+        <link rel="stylesheet" media="only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (-webkit-device-pixel-ratio:2)" href="styles/tablet-1024-hdpi.css" type="text/css" />
+        <style type="text/css">
+            
+        </style>
+        
+<style scoped>
+.item-photo {
+    width: 4em;
+    height: 4em;
+    float: left;
+    margin: .5em 0;
+    -webkit-box-shadow: 0 1px 3px #333;
+    box-shadow: 0 1px 3px #333;
+    -webkit-border-radius: 8px;
+    border-radius: 8px;
+}
+
+#announcements-listview .item-title {
+	float: left;
+	font-size: 1em;
+    line-height: 1.4em;
+    margin: .3em 1em 0 .6em;
+    width: 80%;
+}
+#announcements-listview .item-info {
+	float: left;
+	font-size: .7em;
+	line-height: 1em;
+    margin: 0 0 0 .95em;
+    width: 45%;
+}
+
+.details-link {
+    margin-top: -1.2em;
+    position: absolute;
+    right: 0.6em;
+    top: 50%;
+}
+.km-listview .km-list {
+    margin: 0;
+}
+</style>
     </head>
     <body>
         <div data-role="view" id="tabstrip-home" data-title="eClipse Mobile">
+            <header data-role="header">
+                <div data-role="navbar" id="navbar">
+                <p align="center">eClipse Mobile</p>
+                </div>
+                <div >
+                
+                    <input type="text" style="width:100px" placeholder="Search" id="txtName" validationmessage="Please enter {0}" class="k-textbox">
+                        
+                    <select data-role="dropdownlist" id="searchType" class="k-input">
+                        <option value="Client">Client</option>
+                        <option value="Task">Task</option>
+                        <option value="Claim">Claim</option>
+                        </select>
 
-            <div id='helloWorldInput'>
-                <label for="txtName" style="display: inline-block;">Search:</label>
-                <input type="text" id="txtName" value="" />
-            </div>
-            <div id='helloWorldText' style="display:block;"></div>
-            <div class="buttonArea">
-                <a id="resetButton" data-role="button" data-click="sayHelloReset" data-icon="refresh">Reset</a>
-                <a id="submitButton" data-role="button" data-click="eclipseSearch" data-icon="compose">Submit</a>
-            </div>
-            <div id="announcements">
-                    <ul data-role="listview" id="announcements-listview" style="display: inline-block;"
+                    <a id="submitButton" data-role="button" data-click="eclipseSearch" data-icon="search"></a>
+                </div>
+    
+            </header>            
+            
+
+            <div>
+                <ul data-role="listview" id="announcements-listview" style="height: auto; overflow: auto;"
                         data-style="inset" data-type="group">
                     </ul>
                 </div>
@@ -65,35 +133,178 @@
                 </div>
             </div>
         </div>
-
+        
+                        
         <script>
             var app = new kendo.mobile.Application(document.body, { transition: "slide", layout: "mobile-tabstrip" });
-     
+            
 function eclipseSearch() {
     var inputText = document.getElementById('txtName');
     
-	$("#announcements-listview").kendoMobileListView({
-		dataSource :{ transport: {
-               read: {
-                   url: "http://localhost/BrokerPlus.WebSL4/ClientBin/BrokerPlus-Web-BrokerPlusDomainService.svc/JSON/GetClientsResult?searchFilter=" + inputText.value,
- 
-                   data: {
-                       Accept: "application/json"
+    var serverURL = "http://localhost/BrokerPlus.WebSL4/ClientBin/BrokerPlus-Web-BrokerPlusDomainService.svc/JSON/";
+    //var serverURL = "http://203.110.139.199/demo/ClientBin/BrokerPlus-Web-BrokerPlusDomainService.svc/JSON/";
+    var searchType = document.getElementById('searchType').value;
+    
+    switch(searchType)
+    {
+        case "Client":
+        
+        	$("#announcements-listview").kendoMobileListView({
+        		dataSource :{ transport: {
+                       read: {
+                           url: serverURL + "GetClientsResult?searchFilter=" + inputText.value,
+         
+                           data: {
+                               Accept: "application/json"
+                           }
+                       }
+                   },
+                   schema: {
+                data: "GetClientsResultResult.RootResults"
+                       }
+                    },
+        		template: $("#clientSearchResults-listview-template").html()
+        	});
+        break;
+        
+        case "Task":
+        
+        	$("#announcements-listview").kendoMobileListView({
+        		dataSource :
+                { 
+                    transport: 
+                    {
+                       read: 
+                        {
+                           url: serverURL + "GetTasks_view?$where=(it.tas_id%253d%253d" + inputText.value + ")",
+         
+                           data: 
+                            {
+                               Accept: "application/json"
+                            }
+                       }
+                   },
+                   schema: 
+                   {
+                        data: "GetTasks_viewResult.RootResults"
                    }
-               }
-           },
-           schema: {
-        data: "GetClientsResultResult.RootResults"
-               }
-            },
-		template: $("#announcement-listview-template").html()
-	});
+                },
+        		template: $("#taskSearchResults-listview-template").html()
+        	});
+        break;
+        
+        case "Claim":
+                	$("#announcements-listview").kendoMobileListView({
+        		dataSource :{ transport: {
+                       read: {
+                           url: serverURL + "GetSearchClaimsResults?insurerRef=" + inputText.value,
+         
+                           data: {
+                               Accept: "application/json"
+                           }
+                       }
+                   },
+                   schema: {
+                data: "GetSearchClaimsResultsResult.RootResults"
+                       }
+                    },
+        		template: $("#claimSearchResults-listview-template").html()
+        	});
+        
+        
+        break;
+    }
+
+    
 }
             
+             $(document).ready(function(){
+        $("#searchType").kendoDropDownList({
+                // The options are needed only for the desktop demo, remove them for mobile.
+               /* popup: { appendTo: body },
+                animation: { open: { effects: body.hasClass("km-android") ? "fadeIn" : body.hasClass("km-ios") ? "slideIn:up" : "slideIn:down" } }*/
+            });
+                     });
+
         </script>
         
-        <script type="text/x-kendo-template" id="announcement-listview-template">
-            <a>${ent_name}</a>
+        <script type="text/x-kendo-template" id="clientSearchResults-listview-template">
+            <h3 class="item-title">${ent_name}</h3>
+                <div>
+                    <p class="item-info">
+                        #= (ent_address_1 == null) ? '' : ent_address_1 #
+                    </p>
+                    <p class="item-info">
+                        #= (ent_address_2 == null) ? '' : ent_address_2 #
+                        </p>
+                    <p class="item-info">
+                            #= (ent_address_3 == null) ? '' : ent_address_3 #
+                    </p>
+        
+                </div>
+                <div>
+                    <p class="item-info">
+                        #= (ent_telephone == null) ? '' : ent_telephone #
+                    </p>
+                    <p class="item-info">
+                        #= (ent_mobile == null) ? '' : ent_mobile #
+                    </p>
+                    <p class="item-info">
+                        #= (ent_email == null) ? '' : ent_email #
+                    </p>
+                </div>
+            <a data-role="button" class="details-link" data-icon="details"></a>
         </script>
+        
+        <script type="text/x-kendo-template" id="taskSearchResults-listview-template">
+             <h3 class="item-title">${TaskType} Task ${tas_id} - ${TaskTypeName}</h3>
+                <div>
+                    <p class="item-info">
+                        ${ent_name}
+                    </p>
+                    <p class="item-info">
+                         Follow up Action
+                    </p>
+        
+                </div>
+                <div>
+                    <p class="item-info">
+                         ${tas_brief_description}
+                    </p>
+                    <p class="item-info">
+                        ${tas_followup_Action}
+                    </p>
+        
+                </div>
+            <a data-role="button" class="details-link" data-icon="details"></a>
+        </script>
+       
+                        
+        <script type="text/x-kendo-template" id="claimSearchResults-listview-template">
+             <h3 class="item-title">Claim ID ${ClaId} - ${Client_Name}</h3>
+                <div>
+                    <p class="item-info">
+                        ${Insurer}
+                    </p>
+                    <p class="item-info">
+                         Ref: ${cla_insurer_reference}
+                    </p>
+        
+                </div>
+                <div>
+                    <p class="item-info">
+                         ${cla_brief_description}
+                    </p>
+                    <p class="item-info">
+                        Situation/Reg No: ${cla_sit_reg}
+                    </p>
+        
+                </div>
+            <a data-role="button" class="details-link" data-icon="details"></a>
+        </script>
+       
+                   
+
+
     </body>
 </html>
