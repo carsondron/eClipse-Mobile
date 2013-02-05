@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title></title>
+        <title>My App</title>
         <meta charset="utf-8" />
         <script src="cordova.js"></script>
         <script src="kendo/js/jquery.min.js"></script>
         <script src="kendo/js/kendo.mobile.min.js"></script>
         <script src="http://maps.google.com/maps/api/js?sensor=true"></script>
         <script src="scripts/hello-world.js"></script>
+        <script src="scripts/search.js"></script>
 
         <link rel="stylesheet" href="kendo/styles/kendo.mobile.all.min.css" />
         <link rel="stylesheet" href="kendo/styles/kendo.jitterz.mobile.all.css" />
@@ -84,7 +85,7 @@
         <div data-role="view" id="tabstrip-home" data-title="eClipse Mobile">
             <header data-role="header">
                 <div data-role="navbar" id="navbar">
-                <p align="center">eClipse Mobile</p>
+                    <p align="center">eClipse Mobile</p>
                 </div>
                 <div >
                 
@@ -137,86 +138,6 @@
                         
         <script>
             var app = new kendo.mobile.Application(document.body, { transition: "slide", layout: "mobile-tabstrip" });
-            
-function eclipseSearch() {
-    var inputText = document.getElementById('txtName');
-    
-    var serverURL = "http://localhost/BrokerPlus.WebSL4/ClientBin/BrokerPlus-Web-BrokerPlusDomainService.svc/JSON/";
-    //var serverURL = "http://203.110.139.199/demo/ClientBin/BrokerPlus-Web-BrokerPlusDomainService.svc/JSON/";
-    var searchType = document.getElementById('searchType').value;
-    
-    switch(searchType)
-    {
-        case "Client":
-        
-        	$("#searchResults-listview").kendoMobileListView({
-        		dataSource :{ transport: {
-                       read: {
-                           url: serverURL + "GetClientsResult?searchFilter=" + inputText.value,
-         
-                           data: {
-                               Accept: "application/json"
-                           }
-                       }
-                   },
-                   schema: {
-                data: "GetClientsResultResult.RootResults"
-                       }
-                    },
-        		template: $("#clientSearchResults-listview-template").html()
-        	});
-        break;
-        
-        case "Task":
-        
-        	$("#searchResults-listview").kendoMobileListView({
-        		dataSource :
-                { 
-                    transport: 
-                    {
-                       read: 
-                        {
-                           url: serverURL + "GetTasks_view?$where=(it.tas_id%253d%253d" + inputText.value + ")",
-         
-                           data: 
-                            {
-                               Accept: "application/json"
-                            }
-                       }
-                   },
-                   schema: 
-                   {
-                        data: "GetTasks_viewResult.RootResults"
-                   }
-                },
-        		template: $("#taskSearchResults-listview-template").html()
-        	});
-        break;
-        
-        case "Claim":
-                	$("#searchResults-listview").kendoMobileListView({
-        		dataSource :{ transport: {
-                       read: {
-                           url: serverURL + "GetSearchClaimsResults?insurerRef=" + inputText.value,
-         
-                           data: {
-                               Accept: "application/json"
-                           }
-                       }
-                   },
-                   schema: {
-                data: "GetSearchClaimsResultsResult.RootResults"
-                       }
-                    },
-        		template: $("#claimSearchResults-listview-template").html()
-        	});
-        
-        
-        break;
-    }
-
-    
-}
             
              $(document).ready(function(){
         $("#searchType").kendoDropDownList({

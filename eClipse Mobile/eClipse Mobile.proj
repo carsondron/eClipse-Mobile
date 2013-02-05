@@ -40,7 +40,7 @@
     <Resource Include="App_Resources\iOS\Icon-Small-50@2x.png" />
     <Resource Include="App_Resources\iOS\Default.png" />
     <Resource Include="App_Resources\iOS\Default@2x.png" />
-  <Resource Include="App_Resources\iOS\Default-568h@2x.png" />
+    <Resource Include="App_Resources\iOS\Default-568h@2x.png" />
     <Resource Include="App_Resources\iOS\Default-Portrait.png" />
     <Resource Include="App_Resources\iOS\Default-Landscape.png" />
     <Resource Include="App_Resources\iOS\Default-Portrait@2x.png" />
@@ -60,6 +60,7 @@
     <Content Include="kendo\styles\images\KendoUI.woff" />
     <Content Include="kendo\styles\kendo.mobile.all.min.css" />
     <Content Include="scripts\hello-world.js" />
+    <Content Include="scripts\search.js" />
     <Content Include="styles\main.css" />
     <Content Include="cordova.ios.js">
       <Platform>iOS</Platform>
