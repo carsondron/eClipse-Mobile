@@ -138,13 +138,15 @@
                         
         <script>
             var app = new kendo.mobile.Application(document.body, { transition: "slide", layout: "mobile-tabstrip" });
+            var serverURL = "http://localhost/BrokerPlus.WebSL4/ClientBin/BrokerPlus-Web-BrokerPlusDomainService.svc/JSON/";
+            //var serverURL = "http://203.110.139.199/demo/ClientBin/BrokerPlus-Web-BrokerPlusDomainService.svc/JSON/";
             
              $(document).ready(function(){
-        $("#searchType").kendoDropDownList({
+       /* $("#searchType").kendoDropDownList({
                 // The options are needed only for the desktop demo, remove them for mobile.
                /* popup: { appendTo: body },
-                animation: { open: { effects: body.hasClass("km-android") ? "fadeIn" : body.hasClass("km-ios") ? "slideIn:up" : "slideIn:down" } }*/
-            });
+                animation: { open: { effects: body.hasClass("km-android") ? "fadeIn" : body.hasClass("km-ios") ? "slideIn:up" : "slideIn:down" } }
+            });*/
                      });
 
         </script>
