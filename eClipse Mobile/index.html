@@ -9,6 +9,7 @@
         <script src="http://maps.google.com/maps/api/js?sensor=true"></script>
         <script src="scripts/hello-world.js"></script>
         <script src="scripts/search.js"></script>
+        <script src="scripts/utils.js"></script>
 
         <link rel="stylesheet" href="kendo/styles/kendo.mobile.all.min.css" />
         <link rel="stylesheet" href="kendo/styles/kendo.jitterz.mobile.all.css" />
@@ -60,6 +61,22 @@
     width: 45%;
 }
 
+#clientSummaryView .item-title {
+	float: left;
+    color: Blue;
+	font-size: 1em;
+	line-height: 1.2em;
+    margin: 0 0 0 .95em;
+    width: 30%;
+}
+#clientSummaryView .item-info {
+	float: right;
+	font-size: 1em;
+	line-height: 1.2em;
+    margin: 0 0 0 .95em;
+    width: 60%;
+}
+    
 .details-link {
     margin-top: -1.2em;
     position: absolute;
@@ -68,6 +85,16 @@
 }
 .km-listview .km-list {
     margin: 0;
+    
+}
+
+.km-android .km-navbar .km-view-title /* After Q2 2012 SP1 */
+{
+    visibility: visible;
+}
+    
+    .km-android div.km-view {
+    -webkit-box-direction: normal;
 }
 </style>
     </head>
@@ -140,14 +167,38 @@
             <header data-role="header">
                 <div data-role="navbar">
                     <a data-role="backbutton" data-align="left">Back</a>
-                    <span data-role="view-title">Client Summary</span>
+                    <div data-role="view-title">Client Summary</div>
                 </div>
             </header>
-    
             <div data-role="content">
             </div>
         </div>
          
+        <script id="detailTemplate" type="text/x-kendo-template">
+            
+            <ul data-role="listview" data-style="inset" data-type="group">
+            <li>#= ent_name + ((ent_suburb == null || ent_suburb == '') ? '' : ', ' + ent_suburb) #
+                <ul>
+                     <li>Contact<span class="item-info">#= (ent_contact == null) ? '' : ent_contact #</span>
+                     <li>Address
+                        <span class="item-info">
+                        #= skipIfEmpty(ent_address_1, true) #
+                        #= skipIfEmpty(ent_address_2, true) #
+                        #= skipIfEmpty(ent_address_3, true) #
+                        #= skipIfEmpty(ent_suburb, true) #
+                        #= skipIfEmpty(ent_postcode, true) #        
+                        </span>
+                     <li>Contact<span class="item-info">#= skipIfEmpty(ent_contact) #</span>
+                     <li>Job Title<span class="item-info">#= skipIfEmpty(ent_job_title) #</span>
+                     <li>Salutation<span class="item-info">#= skipIfEmpty(ent_salutation) #</span>
+                     <li>Web<span class="item-info">#= skipIfEmpty(ent_web_site) #</span>
+                     <li>Email<span class="item-info">#= skipIfEmpty(ent_email) #</span>
+                     
+                </ul>
+                    </li>
+            </ul>
+        </script>
+                                                
         <script>
             var app = new kendo.mobile.Application(document.body, { transition: "slide", layout: "mobile-tabstrip" });
             var serverURL = "http://localhost/BrokerPlus.WebSL4/ClientBin/BrokerPlus-Web-BrokerPlusDomainService.svc/JSON/";
@@ -168,22 +219,22 @@
             <h3 class="item-title">${ent_name}</h3>
                 <div>
                     <p class="item-info">
-                        #= (ent_address_1 == null) ? '' : ent_address_1 + '<br />' #
-                        #= (ent_address_2 == null) ? '' : ent_address_2 + '<br />' #
-                        #= (ent_address_3 == null) ? '' : ent_address_3 + '<br />' #
-                        #= (ent_suburb == null) ? '' : ent_suburb + '<br />' #
-                        #= (ent_postcode == null) ? '' : ent_postcode #
+                        #= skipIfEmpty(ent_address_1, true) #
+                        #= skipIfEmpty(ent_address_2, true) #
+                        #= skipIfEmpty(ent_address_3, true) #
+                        #= skipIfEmpty(ent_suburb, true) #
+                        #= skipIfEmpty(ent_postcode, true) #
                     </p>
                 </div>
                 <div>
                     <p class="item-info">
-                        #= (ent_telephone == null) ? '' : ent_telephone #
+                        #= skipIfEmpty(ent_telephone) #
                     </p>
                     <p class="item-info">
-                        #= (ent_mobile == null) ? '' : ent_mobile #
+                        #= skipIfEmpty(ent_mobile) #
                     </p>
                     <p class="item-info">
-                        #= (ent_email == null) ? '' : ent_email #
+                        #= skipIfEmpty(ent_email) #
                     </p>
                 </div>
             </a>

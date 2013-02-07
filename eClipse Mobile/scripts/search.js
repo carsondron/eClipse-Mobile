@@ -1,10 +1,11 @@
 
 var searched = false;
 
-function retrieveClient()
+function retrieveClient(e)
 {
-    /*var view = e.view;
-
+    var view = e.view;
+    var itemDetailsTemplate = kendo.template($("#detailTemplate").text());
+    
     var ds = new kendo.data.DataSource(
     {
          transport:
@@ -23,11 +24,13 @@ function retrieveClient()
             data: "GetEntityResult.RootResults"
        }
     });
+    //var template = kendo.template($("#headerTemplate").html());
     ds.fetch(function() {
-                item = ds.get(view.params.id);
+                item = ds.get();
                 view.scrollerContent.html(itemDetailsTemplate(item));
                 kendo.mobile.init(view.content);
-        });*/
+                //$("#clientSummaryHeader").html(template(item));
+        });
 }
 
 function eclipseSearch() {
