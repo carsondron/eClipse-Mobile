@@ -135,35 +135,45 @@
             </div>
         </div>
         
-                        
+        <!-- Client Summary Page -->
+        <div data-role="view" id="clientSummaryView" data-transition="slide" data-layout="default" data-show="retrieveClient">
+            <header data-role="header">
+                <div data-role="navbar">
+                    <a data-role="backbutton" data-align="left">Back</a>
+                    <span data-role="view-title">Client Summary</span>
+                </div>
+            </header>
+    
+            <div data-role="content">
+            </div>
+        </div>
+         
         <script>
             var app = new kendo.mobile.Application(document.body, { transition: "slide", layout: "mobile-tabstrip" });
             var serverURL = "http://localhost/BrokerPlus.WebSL4/ClientBin/BrokerPlus-Web-BrokerPlusDomainService.svc/JSON/";
             //var serverURL = "http://203.110.139.199/demo/ClientBin/BrokerPlus-Web-BrokerPlusDomainService.svc/JSON/";
             
              $(document).ready(function(){
-       /* $("#searchType").kendoDropDownList({
-                // The options are needed only for the desktop demo, remove them for mobile.
-               /* popup: { appendTo: body },
-                animation: { open: { effects: body.hasClass("km-android") ? "fadeIn" : body.hasClass("km-ios") ? "slideIn:up" : "slideIn:down" } }
-            });*/
+
                      });
 
         </script>
         
         <script type="text/x-kendo-template" id="clientSearchResults-listview-template">
+            <a
+            class="details-link"
+            data-role="listview-link"
+            href="\#clientSummaryView?id=#:ent_id#">
+            
             <h3 class="item-title">${ent_name}</h3>
                 <div>
                     <p class="item-info">
-                        #= (ent_address_1 == null) ? '' : ent_address_1 #
+                        #= (ent_address_1 == null) ? '' : ent_address_1 + '<br />' #
+                        #= (ent_address_2 == null) ? '' : ent_address_2 + '<br />' #
+                        #= (ent_address_3 == null) ? '' : ent_address_3 + '<br />' #
+                        #= (ent_suburb == null) ? '' : ent_suburb + '<br />' #
+                        #= (ent_postcode == null) ? '' : ent_postcode #
                     </p>
-                    <p class="item-info">
-                        #= (ent_address_2 == null) ? '' : ent_address_2 #
-                        </p>
-                    <p class="item-info">
-                            #= (ent_address_3 == null) ? '' : ent_address_3 #
-                    </p>
-        
                 </div>
                 <div>
                     <p class="item-info">
@@ -176,7 +186,7 @@
                         #= (ent_email == null) ? '' : ent_email #
                     </p>
                 </div>
-            <a data-role="button" class="details-link" data-icon="details"></a>
+            </a>
         </script>
         
         <script type="text/x-kendo-template" id="taskSearchResults-listview-template">

@@ -1,11 +1,37 @@
 
 var searched = false;
-var dsSearch;
+
+function retrieveClient()
+{
+    /*var view = e.view;
+
+    var ds = new kendo.data.DataSource(
+    {
+         transport:
+         {
+             read:
+             {
+               url: serverURL + "GetEntity?entId=" + view.params.id,
+               data: 
+               {
+                   Accept: "application/json"
+               }
+            }
+       },
+       schema: 
+       {
+            data: "GetEntityResult.RootResults"
+       }
+    });
+    ds.fetch(function() {
+                item = ds.get(view.params.id);
+                view.scrollerContent.html(itemDetailsTemplate(item));
+                kendo.mobile.init(view.content);
+        });*/
+}
 
 function eclipseSearch() {
     var inputText = document.getElementById('txtName');
-    
-    
     var searchType = document.getElementById('searchType').value;
     
     if (searched) {
@@ -15,26 +41,32 @@ function eclipseSearch() {
         var lvSearch = $("#searchResults-listview").data("kendoMobileListView");
         lvSearch.dataSource.transport.options.read.url = serverURL + "GetClientsResult?searchFilter=" + inputText.value;
         lvSearch.dataSource.page(1);
+        lvSearch.dataSource.read();
         lvSearch.refresh();
-        //lvSearch.dataSource.read();
+        app.scroller().reset();
         return;
     }
-    //searched = true;
-    dsSearch = new kendo.data.DataSource({
-         transport: {
-                       read: {
-                           url: serverURL + "GetClientsResult?searchFilter=" + inputText.value,
-         
-                           data: {
-                               Accept: "application/json"
-                           }
-                       }
-                   },
-                   schema: {
-                data: "GetClientsResultResult.RootResults"
-                       }
+    
+    searched = true;
+    var dsSearch = new kendo.data.DataSource(
+    {
+         transport:
+         {
+             read:
+             {
+               url: serverURL + "GetClientsResult?searchFilter=" + inputText.value,
+               data: 
+               {
+                   Accept: "application/json"
+               }
+            }
+       },
+       schema: 
+       {
+            data: "GetClientsResultResult.RootResults"
+       }
     });
-         
+ 
     switch(searchType)
     {
         case "Client":
