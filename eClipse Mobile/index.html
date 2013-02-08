@@ -63,18 +63,13 @@
 
 #clientSummaryView .item-title {
 	float: left;
-    color: Blue;
-	font-size: 1em;
-	line-height: 1.2em;
-    margin: 0 0 0 .95em;
-    width: 30%;
+    width: 33%;
 }
 #clientSummaryView .item-info {
 	float: right;
-	font-size: 1em;
-	line-height: 1.2em;
-    margin: 0 0 0 .95em;
-    width: 60%;
+    width: 65%;
+    color: #aaa;
+    vertical-align : center;
 }
     
 .details-link {
@@ -170,35 +165,70 @@
                     <div data-role="view-title">Client Summary</div>
                 </div>
             </header>
+            <div align="center">
+                <a data-role="button" href="#debtsView">Debts</a>
+                <a data-role="button">Tasks</a>
+                <a data-role="button">Claims</a>
+                <a data-role="button">Notes</a>
+            </div>
             <div data-role="content">
             </div>
         </div>
-         
+                     
         <script id="detailTemplate" type="text/x-kendo-template">
             
             <ul data-role="listview" data-style="inset" data-type="group">
-            <li>#= ent_name + ((ent_suburb == null || ent_suburb == '') ? '' : ', ' + ent_suburb) #
-                <ul>
-                     <li>Contact<span class="item-info">#= (ent_contact == null) ? '' : ent_contact #</span>
-                     <li>Address
-                        <span class="item-info">
-                        #= skipIfEmpty(ent_address_1, true) #
-                        #= skipIfEmpty(ent_address_2, true) #
-                        #= skipIfEmpty(ent_address_3, true) #
-                        #= skipIfEmpty(ent_suburb, true) #
-                        #= skipIfEmpty(ent_postcode, true) #        
-                        </span>
-                     <li>Contact<span class="item-info">#= skipIfEmpty(ent_contact) #</span>
-                     <li>Job Title<span class="item-info">#= skipIfEmpty(ent_job_title) #</span>
-                     <li>Salutation<span class="item-info">#= skipIfEmpty(ent_salutation) #</span>
-                     <li>Web<span class="item-info">#= skipIfEmpty(ent_web_site) #</span>
-                     <li>Email<span class="item-info">#= skipIfEmpty(ent_email) #</span>
-                     
-                </ul>
-                    </li>
+                <li>#= ent_name + ((ent_suburb == null || ent_suburb == '') ? '' : ', ' + ent_suburb) #
+                    <ul>
+                         <li>
+                            #= ((ent_trading_as == null || ent_trading_as == '') ? '' : 't/as ' + ent_trading_as + '<br />') #
+                            #= skipIfEmpty(ent_addressee, true) #
+                            #= skipIfEmpty(ent_address_1, true) #
+                            #= skipIfEmpty(ent_address_2, true) #
+                            #= skipIfEmpty(ent_address_3, true) #
+                            #= skipIfEmpty(ent_suburb, true) #
+                            #= skipIfEmpty(ent_postcode, true) #        
+                        </li>
+                    </ul>
+                </li>
+                <li>Details
+                    <ul>
+                         <li><span class="item-title">Contact</span><span class="item-info">#= skipIfEmpty(ent_contact) #</span></li>
+                         <li><span class="item-title">Job Title</span><span class="item-info">#= skipIfEmpty(ent_job_title) #</span></li>
+                         <li><span class="item-title">Salutation</span><span class="item-info">#= skipIfEmpty(ent_salutation) #</span></li>
+                         <li><span class="item-title">Web</span><span class="item-info">#= skipIfEmpty(ent_web_site) #</span></li>
+                         <li><span class="item-title">Email</span><span class="item-info">#= skipIfEmpty(ent_email) #</span></li>
+                         <li><span class="item-title">Classification</span><span class="item-info">#= skipIfEmpty(ent_abn) #</span></li>
+                         <li><span class="item-title">ABN</span><span class="item-info">#= skipIfEmpty(ent_abn) #</span></li>
+                    </ul>
+                </li>
+                <li>Phone
+                    <ul>
+                         <li><span class="item-title">Main Phone</span><span class="item-info">#= skipIfEmpty(ent_telephone) #</span></li>
+                         <li><span class="item-title">Other Phone</span><span class="item-info">#= skipIfEmpty(ent_telephone_2) #</span></li>
+                         <li><span class="item-title">Mobile</span><span class="item-info">#= skipIfEmpty(ent_mobile) #</span></li>
+                         <li><span class="item-title">Fax</span><span class="item-info">#= skipIfEmpty(ent_facsimile) #</span></li>
+                    </ul>
+                </li>
             </ul>
         </script>
-                                                
+                     
+        <!-- Debts Page -->
+        <div data-role="view" id="debtsView" data-transition="slide" data-layout="default" data-show="retrieveDebts">
+            <header data-role="header">
+                <div data-role="navbar">
+                    <a data-role="backbutton" data-align="left">Back</a>
+                    <div data-role="view-title">Debts</div>
+                </div>
+            </header>
+            <div>
+                <ul data-role="listview" id="debts-listview" style="height: auto;"
+                        data-style="inset" data-type="group">
+                </ul>
+            </div>
+        </div>
+         
+                        
         <script>
             var app = new kendo.mobile.Application(document.body, { transition: "slide", layout: "mobile-tabstrip" });
             var serverURL = "http://localhost/BrokerPlus.WebSL4/ClientBin/BrokerPlus-Web-BrokerPlusDomainService.svc/JSON/";
@@ -208,6 +238,23 @@
 
                      });
 
+        </script>
+                                
+        <script type="text/x-kendo-template" id="debts-listview-template">
+            <a
+            class="details-link"
+            data-role="listview-link"
+            >
+            
+            <h3 class="item-title">${ClientBalance}</h3>
+                <div>
+                    <p class="item-info">
+                        #= skipIfEmpty(DebtorName, true) #
+                        #= skipIfEmpty(gencob_name, true) #
+                        #= skipIfEmpty(genins_policy_number, true) #
+                    </p>
+                </div>
+            </a>
         </script>
         
         <script type="text/x-kendo-template" id="clientSearchResults-listview-template">

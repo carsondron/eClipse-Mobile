@@ -1,5 +1,6 @@
 
 var searched = false;
+var currentClient = -1;
 
 function retrieveClient(e)
 {
@@ -24,14 +25,51 @@ function retrieveClient(e)
             data: "GetEntityResult.RootResults"
        }
     });
-    //var template = kendo.template($("#headerTemplate").html());
+    currentClient = view.params.id;
+    //var template = kendo.template($("#clientButtonsTemplate").html());
     ds.fetch(function() {
                 item = ds.get();
                 view.scrollerContent.html(itemDetailsTemplate(item));
                 kendo.mobile.init(view.content);
-                //$("#clientSummaryHeader").html(template(item));
+                //$("#clientHeaderTemplate").html(template(item));
         });
 }
+
+function retrieveDebts(e)
+{
+    var dsSearch = new kendo.data.DataSource(
+    {
+         transport:
+         {
+             read:
+             {
+               url: serverURL + "GetAllDebts?ent_id=" + currentClient + "&BRClient=0&$orderby=it.pol_date_effective%252c%2bit.pol_tran_id",
+               data: 
+               {
+                   Accept: "application/json"
+               }
+            }
+       },
+       schema: 
+       {
+            data: "GetAllDebtsResult.RootResults"
+       }
+    });
+    
+    $("#debts-listview").kendoMobileListView({
+        		dataSource :dsSearch,
+        		template: $("#debts-listview-template").html(),
+                 //loadMore: true,
+        click: function (e) {
+            //showActivity(e.dataItem.EventID);
+        },
+        dataBound: function () {
+            
+            
+            }
+        	});
+}
+
 
 function eclipseSearch() {
     var inputText = document.getElementById('txtName');
