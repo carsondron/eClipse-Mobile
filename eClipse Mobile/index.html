@@ -10,6 +10,7 @@
         <script src="scripts/hello-world.js"></script>
         <script src="scripts/search.js"></script>
         <script src="scripts/utils.js"></script>
+        <script src="scripts/OutstandingTasks.js"></script>
 
         <link rel="stylesheet" href="kendo/styles/kendo.mobile.all.min.css" />
         <link rel="stylesheet" href="kendo/styles/kendo.jitterz.mobile.all.css" />
@@ -60,7 +61,22 @@
     margin: 0 0 0 .95em;
     width: 45%;
 }
-
+    
+#outstandingTasksResults-listview .item-title {
+	float: left;
+	font-size: 1em;
+    line-height: 1.4em;
+    margin: .3em 1em 0 .6em;
+    width: 80%;
+}
+#outstandingTasksResults-listview .item-info {
+	float: left;
+	font-size: .7em;
+	line-height: 1em;
+    margin: 0 0 0 .95em;
+    width: 45%;
+}  
+    
 #clientSummaryView .item-title {
 	float: left;
     width: 33%;
@@ -71,6 +87,20 @@
     color: #aaa;
     vertical-align : center;
 }
+
+
+#outstandingTasksDetailView .item-title {
+	float: left;
+    width: 33%;
+}
+    
+#outstandingTasksDetailView .item-info {
+	float: right;
+    width: 65%;
+    color: #aaa;
+    vertical-align : center;
+}
+
     
 .details-link {
     margin-top: -1.2em;
@@ -88,21 +118,75 @@
     visibility: visible;
 }
     
-    .km-android div.km-view {
+.km-android div.km-view {
     -webkit-box-direction: normal;
 }
 </style>
     </head>
     <body>
-
-        <div data-role="view" id="tabstrip-uiinteraction" data-title="eClipse Mobile">
-             <h1>Welcome!</h1>
-            <p>
-                Icenium&trade; enables you to build cross-platform device applications regardless of your 
-                development platform by combining the convenience of a local development toolset with the 
-                power and flexibility of the cloud..
-            </p>
+         <!-- Home Page -->
+        <div data-role="view" id="tabstrip-uiinteraction" data-title="eClipse Mobile" data-init="GetAllOutstandingTasks">
+            <header data-role="header">
+                <div data-role="navbar" id="navbar">
+                    <p align="center">eClipse Mobile</p>
+                </div>                   
+               <div align="center">
+                   <h2 align="center" id="selectedTaskText"></h2>                                            
+                   <ul id="buttongroup" data-role="buttongroup" data-index="0" data-select="selectedTask">
+                        <li>All</li>
+                        <li>Client</li>
+                        <li>Claim</li>
+                        <li>Policy</li>
+                    </ul>
+               </div>
+            </header>                                     
+            <div>                                                        
+            <ul data-role="listview" id="outstandingTasksResults-listview" style="height: auto;"
+                data-style="inset" data-type="group">                
+            </ul>
+            </div>               
         </div>
+        
+        <!-- Outstanding Tasks Details Page -->
+        <div data-role="view" id="outstandingTasksDetailView" data-transition="slide" data-layout="default" data-show="retrieveOutstandingTasks">
+            <header data-role="header">
+                <div data-role="navbar">
+                    <a data-role="backbutton" data-align="left">Back</a>
+                    <div data-role="view-title">Task Summary</div>
+                </div>
+            </header>                                       
+            <div data-role="content">
+            </div>          
+        </div>
+        
+        <script id="outstandingTaskDetailTemplate" type="text/x-kendo-template">
+            
+            <!-- For Testing  -->  
+            <ul data-role="listview" data-style="inset" data-type="group">
+                <li> #= ent_name#
+                    <ul>
+                        <li>
+                            #= tas_brief_description#                        
+                        </li> 
+                    </ul>
+                </li>
+                <li>Details
+                    <ul>
+                        <li><span class="item-title">Date</span><span class="item-info">#= kendo.toString(tas_followup_date, "dd/MM/yyyy") #</span></li>
+                        <li><span class="item-title">Ref</span><span class="item-info">#= getTaskCode(TaskType) #:#= tas_id #</span></li>                        
+                        <li><span class="item-title">Priority</span><span class="item-info">#= skipIfEmpty(pri_name, true) #</span></li>                                                   
+                        <li><span class="item-title">Description</span><span class="item-info">#= skipIfEmpty(tas_brief_description, true) #</span></li>                                              
+                        <li><span class="item-title">Action</span><span class="item-info">#= skipIfEmpty(tas_followup_Action, true) #</span></li> 
+                        <li><span class="item-title">Type</span><span class="item-info">#= TaskType#:#= TaskTypeName#</span></li> 
+                        <li><span class="item-title">Description</span><span class="item-info">#= skipIfEmpty(tasstaty_name, true) #</span></li>
+                        <li><span class="item-title">Contact</span><span class="item-info">#= skipIfEmpty(tas_contact_person, true) #</span></li>                           
+                        <li><span class="item-title">Notes</span><span class="item-info">#= skipIfEmpty(tas_notes, true) #</span></li>
+                        <li><span class="item-title">Doc</span><span class="item-info">#= skipIfEmpty(tas_contact_person, true) #</span></li>
+                        <li><span class="item-title">Queue</span><span class="item-info">#= skipIfEmpty(tas_queue, true) #</span></li>
+                    </ul>
+                </li>
+            </ul>                                
+        </script>        
         
         <div data-role="view" id="tabstrip-home" data-title="eClipse Mobile">
             <header data-role="header">
@@ -117,7 +201,7 @@
                         <option value="Client">Client</option>
                         <option value="Task">Task</option>
                         <option value="Claim">Claim</option>
-                        </select>
+                    </select>
 
                     <a id="submitButton" data-role="button" data-click="eclipseSearch" data-icon="search"></a>
                 </div>
@@ -147,14 +231,14 @@
                     <span data-role="view-title"></span>
                 </div>
             </header>
-
+               
             <div data-role="footer">
                 <div data-role="tabstrip">
                     <a href="#tabstrip-uiinteraction" data-icon="home">Home</a>
                     <a href="#tabstrip-home" data-icon="search">Search</a>
                     <a href="#tabstrip-geolocation" data-icon="globe">Geolocation</a>
                 </div>
-            </div>
+            </div>            
         </div>
         
         <!-- Client Summary Page -->
@@ -166,7 +250,7 @@
                 </div>
             </header>
             <div align="center">
-                <a data-role="button" id="debtsButton" href="#debtsView">Debts</a>
+                <a data-role="button" href="#debtsView">Debts</a>
                 <a data-role="button">Tasks</a>
                 <a data-role="button">Claims</a>
                 <a data-role="button">Notes</a>
@@ -176,7 +260,7 @@
         </div>
                      
         <script id="detailTemplate" type="text/x-kendo-template">
-            
+                     
             <ul data-role="listview" data-style="inset" data-type="group">
                 <li>#= ent_name + ((ent_suburb == null || ent_suburb == '') ? '' : ', ' + ent_suburb) #
                     <ul>
@@ -211,6 +295,7 @@
                     </ul>
                 </li>
             </ul>
+                
         </script>
                      
         <!-- Debts Page -->
@@ -231,7 +316,7 @@
                         
         <script>
             var app = new kendo.mobile.Application(document.body, { transition: "slide", layout: "mobile-tabstrip" });
-            var serverURL = "http://localhost/BrokerPlus.WebSL4/ClientBin/BrokerPlus-Web-BrokerPlusDomainService.svc/JSON/";
+            //var serverURL = "http://localhost/BrokerPlus.Web/ClientBin/BrokerPlus-Web-BrokerPlusDomainService.svc/JSON/";
             //var serverURL = "http://203.110.139.199/demo/ClientBin/BrokerPlus-Web-BrokerPlusDomainService.svc/JSON/";
             
              $(document).ready(function(){
@@ -333,9 +418,30 @@
                 </div>
             <a data-role="button" class="details-link" data-icon="details"></a>
         </script>
-       
-                   
-
-
+               
+         <script type="text/x-kendo-template" id="outstandingTasksResults-listview-template">          
+             <a
+              class="details-link"
+              data-role="listview-link"
+              href="\#outstandingTasksDetailView?tas_id=#:tas_id#">               
+             
+                  <h3 class="item-title">${tas_brief_description}</h3>  
+                  <div>
+                            <p class="item-info">
+                               <span> ${ent_name} </span>
+                            </p>
+                            <p class="item-info">
+                                Date: #= kendo.toString(tas_followup_date, "dd/MM/yyyy") #                                       
+                            </p>
+                            <p class="item-info"> 
+                                 Priority: ${pri_name}
+                            </p>    
+                           <p class="item-info">&nbsp;</p>
+                            #= getTaskType(TaskType) #  
+                           
+                            
+                   </div>    
+             </a>
+        </script>                                                                                  
     </body>
 </html>
