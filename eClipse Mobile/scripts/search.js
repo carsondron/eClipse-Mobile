@@ -26,12 +26,10 @@ function retrieveClient(e)
        }
     });
     currentClient = view.params.id;
-    //var template = kendo.template($("#clientButtonsTemplate").html());
     ds.fetch(function() {
                 item = ds.get();
                 view.scrollerContent.html(itemDetailsTemplate(item));
                 kendo.mobile.init(view.content);
-                //$("#clientHeaderTemplate").html(template(item));
         });
 }
 
