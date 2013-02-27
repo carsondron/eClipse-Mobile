@@ -6,7 +6,7 @@ var isClientTask = true;
 var isClaimTask = true;
 var isPolicyTask = true;
 var selectedTaskType = "Client";
-var serverURL = "http://localhost/BrokerPlus.Web/ClientBin/BrokerPlus-Web-BrokerPlusDomainService.svc/JSON/";       
+    
 
 function GetAllOutstandingTasks(){           
   isClientTask = true  
@@ -81,7 +81,7 @@ function GetOutstandingTasks() {
                 endlessScroll: true,
                 scrollTreshold: 30, //treshold in pixels
                 columns: [
-                        { field:"tas_followup_date", title: "ent_name" }]
+                        { field:"tas_followup_date" }]
    });         
     
 }
@@ -90,7 +90,7 @@ function UpdatedSelectedTask(type) {
     
    
     var selectedTaskTextElem = document.getElementById('selectedTaskText');           
-    selectedTaskTextElem.innerHTML = 'Outstanding Tasks (' + type + ')';    
+    selectedTaskTextElem.innerHTML = 'Outstanding Tasks';    
     selectedTaskTextElem.style.display = 'block';    
 }
 

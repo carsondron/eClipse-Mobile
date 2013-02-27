@@ -53,7 +53,12 @@
     <Resource Include="App_Resources\Android\drawable-ldpi\icon.png" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="images\calendar_redtotal.png" />
+    <Content Include="images\flag_green.png" />
+    <Content Include="images\flag_red.png" />
     <Content Include="images\money_dollar.png" />
+    <Content Include="images\NaqNLogo.png" />
+    <Content Include="images\Prem_Fund_Submitted.png" />
     <Content Include="index.html" />
     <Content Include="kendo\js\jquery.min.js" />
     <Content Include="kendo\js\kendo.mobile.min.js" />

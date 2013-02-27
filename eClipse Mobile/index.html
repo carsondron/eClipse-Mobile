@@ -88,6 +88,20 @@
     vertical-align : center;
 }
 
+#debts-listview .item-title {
+	float: left;
+	font-size: .7em;
+	line-height: 1.3em;
+    color: #369;
+    width: 20%;
+}
+#debts-listview .item-info {
+	float: right;
+	font-size: .7em;
+	line-height: 1.3em;
+    width: 75%;
+}
+
 
 #outstandingTasksDetailView .item-title {
 	float: left;
@@ -215,7 +229,7 @@
             </div>
         </div>
                         
-        <div data-role="view" id="tabstrip-geolocation" data-title="Jitterz" data-init="announcementListViewTemplatesInit">
+        <div data-role="view" id="tabstrip-geolocation" data-title="" data-init="announcementListViewTemplatesInit">
 			<div data-role="content">
                 <div id="searchResults">
                     <ul data-role="listview" id="searchResults-listview" 
@@ -316,8 +330,7 @@
                         
         <script>
             var app = new kendo.mobile.Application(document.body, { transition: "slide", layout: "mobile-tabstrip" });
-            //var serverURL = "http://localhost/BrokerPlus.Web/ClientBin/BrokerPlus-Web-BrokerPlusDomainService.svc/JSON/";
-            //var serverURL = "http://203.110.139.199/demo/ClientBin/BrokerPlus-Web-BrokerPlusDomainService.svc/JSON/";
+            
             
              $(document).ready(function(){
 
@@ -326,20 +339,29 @@
         </script>
                                 
         <script type="text/x-kendo-template" id="debts-listview-template">
+           
             <a
-            class="details-link"
-            data-role="listview-link"
-            >
-            
-            <h3 class="item-title">${ClientBalance}</h3>
-                <div>
-                    <p class="item-info">
-                        #= skipIfEmpty(DebtorName, true) #
-                        #= skipIfEmpty(gencob_name, true) #
-                        #= skipIfEmpty(genins_policy_number, true) #
-                    </p>
-                </div>
-            </a>
+              class="details-link"
+              data-role="listview-link"
+              href="">               
+                  <h4>${gencob_name} - ${gentrans_name}</h4>
+                      #= HasTask == 1 ? '<img src="images/calendar_redtotal.png" />' : '' #
+                      #= ClaimStatus == 1 ? '<img src="images/flag_red.png" />' : '' #
+                      #= ClaimStatus == 0 ? '<img src="images/flag_green.png" />' : '' #
+                      #= status_desc == 'Submitted' ? '<img src="images/Prem_Fund_Submitted.png" />' : '' #
+                  <p>
+                      <span class="item-title">Date</span><span class="item-info">#= kendo.toString(pol_date_effective, "dd/MM/yyyy") #</span>
+                            <span class="item-title">Details</span><span class="item-info">#= skipIfEmpty(genins_name) + ' ' #
+                        #= skipIfEmpty(Insurer) + ': Policy no. ' #
+                        #= skipIfEmpty(genins_policy_number, true, 'TBC') #</span>
+                         <span class="item-title">Inv No</span><span class="item-info">#= pol_tran_id #</span>
+                         <span class="item-title">Invoiced</span><span class="item-info">#= formatNum(pol_total_gross_premium, true) #</span>
+                         <span class="item-title">Paid</span><span class="item-info">#= formatNum(Paid, true) #</span>
+                         <span class="item-title">Balance</span><span class="item-info">#= formatNum(bal_amount, true) #</span>                      
+                            
+                   </p>    
+             </a>
+                 
         </script>
         
         <script type="text/x-kendo-template" id="clientSearchResults-listview-template">
@@ -392,7 +414,7 @@
                     </p>
         
                 </div>
-            <a data-role="button" class="details-link" data-icon="details"></a>
+           
         </script>
        
                         
@@ -416,7 +438,7 @@
                     </p>
         
                 </div>
-            <a data-role="button" class="details-link" data-icon="details"></a>
+            
         </script>
                
          <script type="text/x-kendo-template" id="outstandingTasksResults-listview-template">          

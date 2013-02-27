@@ -46,17 +46,26 @@ function retrieveDebts(e)
                {
                    Accept: "application/json"
                }
+                 
+  
             }
        },
        schema: 
        {
-            data: "GetAllDebtsResult.RootResults"
+            data: "GetAllDebtsResult.RootResults",
+           model: {
+                fields: {
+                    pol_date_effective: { type: "date"}
+                }
+               }
        }
     });
     
     $("#debts-listview").kendoMobileListView({
         		dataSource :dsSearch,
         		template: $("#debts-listview-template").html(),
+                columns: [
+                        { field:"pol_date_effective"}],
                  //loadMore: true,
         click: function (e) {
             //showActivity(e.dataItem.EventID);
@@ -68,6 +77,10 @@ function retrieveDebts(e)
         	});
 }
 
+function GetTaskImage(hasTask)
+{
+    return hasTask == 1 ? '<img src="../images/calendar_redtotal.png" />' : '';
+}
 
 function eclipseSearch() {
     var inputText = document.getElementById('txtName');
@@ -86,7 +99,7 @@ function eclipseSearch() {
         return;
     }
     
-    searched = true;
+    //searched = true;
     var dsSearch = new kendo.data.DataSource(
     {
          transport:
