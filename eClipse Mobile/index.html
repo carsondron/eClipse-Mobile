@@ -36,25 +36,15 @@
         </style>
         
 <style scoped>
-.item-photo {
-    width: 4em;
-    height: 4em;
-    float: left;
-    margin: .5em 0;
-    -webkit-box-shadow: 0 1px 3px #333;
-    box-shadow: 0 1px 3px #333;
-    -webkit-border-radius: 8px;
-    border-radius: 8px;
-}
 
-#searchResults-listview .item-title {
+.searchResults-listview .item-title {
 	float: left;
 	font-size: 1em;
     line-height: 1.4em;
     margin: .3em 1em 0 .6em;
     width: 80%;
 }
-#searchResults-listview .item-info {
+.searchResults-listview .item-info {
 	float: left;
 	font-size: .7em;
 	line-height: 1em;
@@ -127,6 +117,10 @@
     
 }
 
+
+    .km-ios .debtsHeader { color: black; }
+    .km-android .debtsHeader { color: white; }
+        
 .km-android .km-navbar .km-view-title /* After Q2 2012 SP1 */
 {
     visibility: visible;
@@ -222,8 +216,14 @@
     
             </header>            
 
-            <div>
-                <ul data-role="listview" id="searchResults-listview" style="height: auto;"
+            <div class='searchResults-listview'>
+                <ul data-role="listview" id="clientResults-listview" style="height: auto;"
+                        data-style="inset" data-type="group">
+                </ul>
+                <ul data-role="listview" id="taskResults-listview" style="height: auto;"
+                        data-style="inset" data-type="group">
+                </ul>
+                <ul data-role="listview" id="claimResults-listview" style="height: auto;"
                         data-style="inset" data-type="group">
                 </ul>
             </div>
@@ -319,8 +319,12 @@
                     <a data-role="backbutton" data-align="left">Back</a>
                     <div data-role="view-title">Debts</div>
                 </div>
+                <div>
+                        <h2 align='center' id="Debtor" class="debtsHeader"></h2>
+                        <h4 align='center' id="DebtsBalance" class="debtsHeader"></h4>
+                </div>
             </header>
-            <div>
+            <div data-role="content">
                 <ul data-role="listview" id="debts-listview" style="height: auto;"
                         data-style="inset" data-type="group">
                 </ul>
@@ -340,27 +344,24 @@
                                 
         <script type="text/x-kendo-template" id="debts-listview-template">
            
-            <a
-              class="details-link"
-              data-role="listview-link"
-              href="">               
-                  <h4>${gencob_name} - ${gentrans_name}</h4>
+            <ul data-role="listview" data-style="inset" data-type="group">
+                  <li>${gencob_name} - ${gentrans_name}
                       #= HasTask == 1 ? '<img src="images/calendar_redtotal.png" />' : '' #
                       #= ClaimStatus == 1 ? '<img src="images/flag_red.png" />' : '' #
                       #= ClaimStatus == 0 ? '<img src="images/flag_green.png" />' : '' #
                       #= status_desc == 'Submitted' ? '<img src="images/Prem_Fund_Submitted.png" />' : '' #
-                  <p>
-                      <span class="item-title">Date</span><span class="item-info">#= kendo.toString(pol_date_effective, "dd/MM/yyyy") #</span>
-                            <span class="item-title">Details</span><span class="item-info">#= skipIfEmpty(genins_name) + ' ' #
+                  <ul>
+                      <li><span class="item-title">Date</span><span class="item-info">#= kendo.toString(pol_date_effective, "dd/MM/yyyy") #</span></li>
+                            <li><span class="item-title">Details</span><span class="item-info">#= skipIfEmpty(genins_name) + ' ' #
                         #= skipIfEmpty(Insurer) + ': Policy no. ' #
-                        #= skipIfEmpty(genins_policy_number, true, 'TBC') #</span>
-                         <span class="item-title">Inv No</span><span class="item-info">#= pol_tran_id #</span>
-                         <span class="item-title">Invoiced</span><span class="item-info">#= formatNum(pol_total_gross_premium, true) #</span>
-                         <span class="item-title">Paid</span><span class="item-info">#= formatNum(Paid, true) #</span>
-                         <span class="item-title">Balance</span><span class="item-info">#= formatNum(bal_amount, true) #</span>                      
+                        #= skipIfEmpty(genins_policy_number, true, 'TBC') #</span></li>
+                         <li><span class="item-title">Inv No</span><span class="item-info">#= pol_tran_id #</span></li>
+                         <li><span class="item-title">Invoiced</span><span class="item-info">#= formatNum(pol_total_gross_premium, true) #</span></li>
+                         <li><span class="item-title">Paid</span><span class="item-info">#= formatNum(Paid, true) #</span></li>
+                         <li><span class="item-title">Balance</span><span class="item-info">#= formatNum(bal_amount, true) #</span>     </li>                 
                             
-                   </p>    
-             </a>
+                   </ul>    
+             </ul>               
                  
         </script>
         

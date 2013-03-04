@@ -1,6 +1,10 @@
 
-var searched = false;
+var clientSearched = false;
+var taskSearched = false;
+var claimSearched = false;
+var debtsSearched = false;
 var currentClient = -1;
+var currentClientName = '';
 
 function retrieveClient(e)
 {
@@ -28,6 +32,7 @@ function retrieveClient(e)
     currentClient = view.params.id;
     ds.fetch(function() {
                 item = ds.get();
+                $("#Debtor").text(item.ent_name);
                 view.scrollerContent.html(itemDetailsTemplate(item));
                 kendo.mobile.init(view.content);
         });
@@ -35,13 +40,25 @@ function retrieveClient(e)
 
 function retrieveDebts(e)
 {
+    if (debtsSearched)
+    {
+        var lvSearch = $("#debts-listview").data("kendoMobileListView");
+        lvSearch.dataSource.transport.options.read.url = serverURL + "GetOutstandingDebts?ent_id=" + currentClient + "&BRClient=0&$orderby=it.pol_date_effective%252c%2bit.pol_tran_id";
+        lvSearch.dataSource.page(1);
+        lvSearch.dataSource.read();
+        lvSearch.refresh();
+        app.scroller().reset();
+        return;
+    }
+    debtsSearched = true;
+    
     var dsSearch = new kendo.data.DataSource(
     {
          transport:
          {
              read:
              {
-               url: serverURL + "GetAllDebts?ent_id=" + currentClient + "&BRClient=0&$orderby=it.pol_date_effective%252c%2bit.pol_tran_id",
+               url: serverURL + "GetOutstandingDebts?ent_id=" + currentClient + "&BRClient=0&$orderby=it.pol_date_effective%252c%2bit.pol_tran_id",
                data: 
                {
                    Accept: "application/json"
@@ -52,7 +69,7 @@ function retrieveDebts(e)
        },
        schema: 
        {
-            data: "GetAllDebtsResult.RootResults",
+            data: "GetOutstandingDebtsResult.RootResults",
            model: {
                 fields: {
                     pol_date_effective: { type: "date"}
@@ -60,7 +77,7 @@ function retrieveDebts(e)
                }
        }
     });
-    
+
     $("#debts-listview").kendoMobileListView({
         		dataSource :dsSearch,
         		template: $("#debts-listview-template").html(),
@@ -69,62 +86,78 @@ function retrieveDebts(e)
                  //loadMore: true,
         click: function (e) {
             //showActivity(e.dataItem.EventID);
-        },
-        dataBound: function () {
-            
-            
-            }
+        }
         	});
-}
-
-function GetTaskImage(hasTask)
-{
-    return hasTask == 1 ? '<img src="../images/calendar_redtotal.png" />' : '';
-}
-
-function eclipseSearch() {
-    var inputText = document.getElementById('txtName');
-    var searchType = document.getElementById('searchType').value;
-    
-    if (searched) {
-        /*dsSearch.options.transport.read.url = serverURL + "GetClientsResult?searchFilter=" + inputText.value;
-        dsSearch.page(1);*/
-        
-        var lvSearch = $("#searchResults-listview").data("kendoMobileListView");
-        lvSearch.dataSource.transport.options.read.url = serverURL + "GetClientsResult?searchFilter=" + inputText.value;
-        lvSearch.dataSource.page(1);
-        lvSearch.dataSource.read();
-        lvSearch.refresh();
-        app.scroller().reset();
-        return;
-    }
-    
-    //searched = true;
-    var dsSearch = new kendo.data.DataSource(
-    {
-         transport:
-         {
-             read:
-             {
-               url: serverURL + "GetClientsResult?searchFilter=" + inputText.value,
-               data: 
-               {
-                   Accept: "application/json"
-               }
+    var lvSearch2 = $("#debts-listview").data("kendoMobileListView");
+        lvSearch2.bind("dataBound", function(e) {
+            if(this.dataSource.data().length == 0)
+            {
+                $("#DebtsBalance").text("Balance: $0.00");
             }
-       },
-       schema: 
-       {
-            data: "GetClientsResultResult.RootResults"
-       }
-    });
- 
+            else
+            {
+                 $("#DebtsBalance").text("Balance: " + formatNum(this.dataSource.data()[0].ClientBalance));
+                }
+             });
+}
+
+function eclipseSearch() 
+{
+    var searchType = document.getElementById('searchType').value;
+    var inputText = document.getElementById('txtName').value;
+    $("#clientResults-listview").hide();
+    $("#taskResults-listview").hide();
+    $("#claimResults-listview").hide();    
+    app.scroller().reset();
+    
     switch(searchType)
     {
         case "Client":
-        
-        	$("#searchResults-listview").kendoMobileListView({
-        		dataSource :dsSearch,
+            clientSearch(inputText);
+        break;
+        case "Task":
+            taskSearch(inputText);
+        break;
+        case "Claim":
+            claimSearch(inputText);
+        break;    
+    }        
+   
+}
+
+function clientSearch(inputText)
+{
+    $("#clientResults-listview").show();
+    
+    if (clientSearched) {
+        var lvSearch = $("#clientResults-listview").data("kendoMobileListView");
+        lvSearch.dataSource.transport.options.read.url = serverURL + "GetClientsResult?searchFilter=" + inputText;
+        lvSearch.dataSource.page(1);
+        lvSearch.dataSource.read();
+        lvSearch.refresh();
+        return;
+    }
+    
+    clientSearched = true;
+    
+       $("#clientResults-listview").kendoMobileListView({
+       dataSource :
+           {
+           transport:
+             {
+                 read:
+                 {
+                   url: serverURL + "GetClientsResult?searchFilter=" + inputText,
+                   data: 
+                   {
+                       Accept: "application/json"
+                   }
+                }
+           },
+           schema: 
+           {
+                data: "GetClientsResultResult.RootResults"
+           }},
         		template: $("#clientSearchResults-listview-template").html(),
                  //loadMore: true,
         click: function (e) {
@@ -132,22 +165,34 @@ function eclipseSearch() {
         },
         dataBound: function () {
             if (this.dataSource.total() == 0) {
-                $("#searchResults-listview").html("No Results Found");
+                $("#clientResults-listview").html("No Results Found");
             }
             }
         	});
-        break;
-        
-        case "Task":
-        
-        	$("#searchResults-listview").kendoMobileListView({
+}
+
+function taskSearch(inputText)
+{
+    $("#taskResults-listview").show();
+    
+    if (taskSearched) {
+        var lvSearch = $("#taskResults-listview").data("kendoMobileListView");
+        lvSearch.dataSource.transport.options.read.url = serverURL + "GetTasks_view?$where=(it.tas_id%253d%253d" + inputText + ")";
+        lvSearch.dataSource.page(1);
+        lvSearch.dataSource.read();
+        lvSearch.refresh();
+        return;
+    }
+    
+    taskSearched = true;
+    $("#taskResults-listview").kendoMobileListView({
         		dataSource :
                 { 
                     transport: 
                     {
                        read: 
                         {
-                           url: serverURL + "GetTasks_view?$where=(it.tas_id%253d%253d" + inputText.value + ")",
+                           url: serverURL + "GetTasks_view?$where=(it.tas_id%253d%253d" + inputText + ")",
          
                            data: 
                             {
@@ -162,13 +207,27 @@ function eclipseSearch() {
                 },
         		template: $("#taskSearchResults-listview-template").html()
         	});
-        break;
-        
-        case "Claim":
-                	$("#searchResults-listview").kendoMobileListView({
+}
+
+function claimSearch(inputText)
+{
+    $("#claimResults-listview").show();
+    
+    if (claimSearched) {
+        var lvSearch = $("#claimResults-listview").data("kendoMobileListView");
+        lvSearch.dataSource.transport.options.read.url = serverURL + "GetSearchClaimsResults?insurerRef=" + inputText;
+        lvSearch.dataSource.page(1);
+        lvSearch.dataSource.read();
+        lvSearch.refresh();
+        return;
+    }
+    
+    claimSearched = true;
+    
+    $("#claimResults-listview").kendoMobileListView({
         		dataSource :{ transport: {
                        read: {
-                           url: serverURL + "GetSearchClaimsResults?insurerRef=" + inputText.value,
+                           url: serverURL + "GetSearchClaimsResults?insurerRef=" + inputText,
          
                            data: {
                                Accept: "application/json"
@@ -181,10 +240,4 @@ function eclipseSearch() {
                     },
         		template: $("#claimSearchResults-listview-template").html()
         	});
-        
-        
-        break;
-    }
-
-    
 }
