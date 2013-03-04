@@ -5,6 +5,16 @@
 var serverURL = "http://192.168.140.23/EclipseMobile/ClientBin/BrokerPlus-Web-BrokerPlusDomainService.svc/JSON/";
 //var serverURL = "http://203.110.139.199/demo/ClientBin/BrokerPlus-Web-BrokerPlusDomainService.svc/JSON/";
 
+function login()
+{
+    $("#modalview-login").data("kendoMobileModalView").open();    
+}
+
+function closeModalViewLogin() {
+    $("#modalview-login").kendoMobileModalView("close");
+        GetAllOutstandingTasks();
+    }
+
 function skipIfEmpty(strValue, addBreak, defaultString)
 {
     addBreak = (typeof addBreak === "undefined") ? false : addBreak;

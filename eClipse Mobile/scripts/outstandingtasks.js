@@ -8,7 +8,7 @@ var isPolicyTask = true;
 var selectedTaskType = "Client";
     
 
-function GetAllOutstandingTasks(){           
+function GetAllOutstandingTasks(){   
   isClientTask = true  
   isClaimTask = true; 
   GetOutstandingTasks();  
