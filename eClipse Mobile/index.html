@@ -6,12 +6,11 @@
         <script src="cordova.js"></script>
         <script src="kendo/js/jquery.min.js"></script>
         <script src="kendo/js/kendo.mobile.min.js"></script>
-        <script src="http://maps.google.com/maps/api/js?sensor=true"></script>
-        <script src="scripts/hello-world.js"></script>
         <script src="scripts/search.js"></script>
         <script src="scripts/utils.js"></script>
         <script src="scripts/outstandingtasks.js"></script>
         <script src="scripts/entitytasks.js"></script>
+        <script type="text/javascript" charset="utf-8" src="Plugins/Child Browser/childbrowser.js"></script>
         
         <link rel="stylesheet" href="kendo/styles/kendo.mobile.all.min.css" />
         <link rel="stylesheet" href="kendo/styles/kendo.jitterz.mobile.all.css" />
@@ -96,6 +95,43 @@
 	line-height: 1.3em;
     width: 65%;
 }
+    
+#policies-listview .item-heading {
+	font-size: .8em;
+	line-height: 1.3em;
+}
+#policies-listview .item-title {
+	float: left;
+	font-size: .7em;
+	line-height: 1.3em;
+    color: #369;
+    width: 30%;
+}
+#policies-listview .item-info {
+	float: right;
+	font-size: .7em;
+	line-height: 1.3em;
+    width: 65%;
+}
+ 
+#docs-listview .item-heading {
+	font-size: .8em;
+	line-height: 1.3em;
+}        
+#docs-listview .item-title {
+	float: left;
+	font-size: .7em;
+	line-height: 1.3em;
+    color: #369;
+    width: 30%;
+}
+#docs-listview .item-info {
+	float: right;
+	font-size: .7em;
+	line-height: 1.3em;
+    width: 65%;
+}
+    
 #outstandingTasksDetailView .item-title {
 	float: left;
     width: 33%;
@@ -149,6 +185,7 @@
     -webkit-box-direction: normal;
 }
 </style>
+                        
     </head>
     <body>
         
@@ -247,7 +284,6 @@
                         <option value="Task">Task</option>
                         <option value="Claim">Claim</option>
                     </select>
-
                     <a id="submitButton" data-role="button" data-click="eclipseSearch" data-icon="search"></a>
                 </div>
     
@@ -301,9 +337,10 @@
                 </div>
             </header>
             <div align="center">
+                <a data-role="button" href="#policiesView">Policies</a>
                 <a data-role="button" href="#debtsView">Debts</a>
                 <a data-role="button" href="#tasksView">Tasks</a>
-                <a data-role="button">Claims</a>
+                <a data-role="button" data-click="showPDF">Claims</a>
                 <a data-role="button">Notes</a>
             </div>
             <div data-role="content">
@@ -348,7 +385,37 @@
             </ul>
                 
         </script>
-                     
+                  
+        <!-- Policies Page -->
+        <div data-role="view" id="policiesView" data-transition="slide" data-layout="default" data-show="retrievePolicies">
+            <header data-role="header">
+                <div data-role="navbar">
+                    <a data-role="backbutton" data-align="left">Back</a>
+                    <div data-role="view-title">Policies</div>
+                </div>
+            </header>
+            <div data-role="content">
+                <ul data-role="listview" id="policies-listview" style="height: auto;"
+                        data-style="inset" data-type="group">
+                </ul>
+            </div>
+        </div>
+                  
+        <!-- Policy Documents Page -->
+        <div data-role="view" id="policyDocView" data-transition="slide" data-layout="default" data-show="retrieveDocuments">
+            <header data-role="header">
+                <div data-role="navbar">
+                    <a data-role="backbutton" data-align="left">Back</a>
+                    <div data-role="view-title">Documents</div>
+                </div>
+            </header>
+            <div data-role="content">
+                <ul data-role="listview" id="docs-listview" style="height: auto;"
+                        data-style="inset" data-type="group">
+                </ul>
+            </div>
+        </div>
+                                   
         <!-- Debts Page -->
         <div data-role="view" id="debtsView" data-transition="slide" data-layout="default" data-show="retrieveDebts">
             <header data-role="header">
@@ -390,14 +457,47 @@
         </div>
                         
         <script>
-            var app = new kendo.mobile.Application(document.body, { transition: "slide", layout: "mobile-tabstrip" });
             
-             $(document).ready(function(){
-
-                     });
+            var app = new kendo.mobile.Application(document.body, { transition: "slide", layout: "mobile-tabstrip" });
 
         </script>
-                                
+                                                 
+        <script type="text/x-kendo-template" id="docs-listview-template">
+
+            <ul data-role="listview" data-style="inset" data-type="group">
+            
+                <li><span class="item-heading">${jou_brief_description}</span>
+                    <ul>
+                      <li><span class="item-title">Date</span><span class="item-info">#= kendo.toString(jou_created_when, "dd/MM/yyyy") #</span> </li>   
+                      <li><span class="item-title">Name</span><span class="item-info">#= genins_name #</span></li>
+                   </ul>
+                </li>
+            </ul>
+        </script>
+                                                   
+        <script type="text/x-kendo-template" id="policies-listview-template">
+           
+            <ul data-role="listview" data-style="inset" data-type="group">
+                  <li><span class="item-heading">${genins_name}</span>
+                      #= HasTask != 0 ? '<img src="images/calendar_redtotal.png" />' : '' #
+                      #= balance > 0 ? '<img src="images/money_dollar_red.png" />' : '' #
+                      #= prem_genins_id != 0 ? '<img src="images/Prem_Fund.png" />' : '' #
+                      #= close_status > 0 ? '<img src="images/flag_red.png" />' : '' #
+                      #= close_status == 0 ? '<img src="images/flag_green.png" />' : '' #
+                      <ul>
+                          <li><a href="\#policyDocView?id=#:genins_id#"><img src="images/document.png" /></a></li>
+                          <li><span class="item-title">Period</span><span class="item-info">#= kendo.toString(genins_dtFrom, "dd/MM/yyyy") + ' - ' + 
+                              kendo.toString(genins_dtTo, "dd/MM/yyyy") #</span></li>
+                             <li><span class="item-title">Class of Business</span><span class="item-info">#= gencob_name #</span></li>
+                             <li><span class="item-title">Insurer</span><span class="item-info">#= insurer #</span></li>
+                             <li><span class="item-title">Policy No.</span><span class="item-info">#= genins_policy_number #</span></li>
+                             <li><span class="item-title">Amount Owing</span><span class="item-info">#= formatNum(balance, true) #</span>     </li>                 
+                       </ul>    
+                  </li>
+            </ul>               
+                 
+        </script>
+                        
         <script type="text/x-kendo-template" id="debts-listview-template">
            
             <ul data-role="listview" data-style="inset" data-type="group">
@@ -405,7 +505,7 @@
                       #= HasTask == 1 ? '<img src="images/calendar_redtotal.png" />' : '' #
                       #= ClaimStatus == 1 ? '<img src="images/flag_red.png" />' : '' #
                       #= ClaimStatus == 0 ? '<img src="images/flag_green.png" />' : '' #
-                      #= status_desc == 'Submitted' ? '<img src="images/Prem_Fund_Submitted.png" />' : '' #
+                      #= status_desc == 'Submitted' ? '<img src="images/Prem_Fund_Submitted.png" />' : '' #</li>
                   <ul>
                       <li><span class="item-title">Date</span><span class="item-info">#= kendo.toString(pol_date_effective, "dd/MM/yyyy") #</span></li>
                             <li><span class="item-title">Details</span><span class="item-info">#= skipIfEmpty(genins_name) + ' ' #
@@ -424,7 +524,7 @@
          <script type="text/x-kendo-template" id="entityTasks-listview-template">
                
               <ul data-role="listview" data-style="inset" data-type="group"> 
-                <li><span class="item-heading">${tas_brief_description}</span>
+                <li><span class="item-heading">${tas_brief_description}</span></li>
             
                  <ul>
                       <li><span class="item-title">Date</span><span class="item-info">#= kendo.toString(tas_followup_date, "dd/MM/yyyy") #</span> </li>   

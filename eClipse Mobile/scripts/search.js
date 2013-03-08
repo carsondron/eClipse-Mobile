@@ -3,8 +3,77 @@ var clientSearched = false;
 var taskSearched = false;
 var claimSearched = false;
 var debtsSearched = false;
+var policiesSearched = false;
+var docsSearched = false;
 var currentClient = -1;
 var currentClientName = '';
+
+function ShowPolicyDoc(docId, docType)
+{
+    $.ajax( 
+    { 
+        type: "POST",
+               url: serverURL + "GetDocumentByIdAndWriteToTempFile",
+               contentType: "application/json",
+               data: '{ "id": "' + docId.toString() + '", "type": "' + docType.toString() + '", "Accept": "application/json"}',
+               dataType: "json", 
+        success: function (item) { 
+            ShowDocument(item.GetDocumentByIdAndWriteToTempFileResult); 
+        }
+        });
+}
+
+function retrieveDocuments(e)
+{
+    var view = e.view;
+    
+    if (docsSearched)
+    {
+        var lvSearch = $("#docs-listview").data("kendoMobileListView");
+        lvSearch.dataSource.transport.options.read.url = serverURL + "GetPolicyDocumentsWebForIR?geninsID=" + view.params.id  + "&$orderby=it.jou_created_when%2bdesc";
+        lvSearch.dataSource.page(1);
+        lvSearch.dataSource.read();
+        lvSearch.refresh();
+        app.scroller().reset();
+        return;
+    }
+    docsSearched = true;
+    
+    var dsSearch = new kendo.data.DataSource(
+    {
+         transport:
+         {
+             read:
+             {
+               url: serverURL + "GetPolicyDocumentsWebForIR?geninsID=" + view.params.id  + "&$orderby=it.jou_created_when%2bdesc",
+               data: 
+               {
+                   Accept: "application/json"
+               }
+            }
+       },
+       schema: 
+       {
+            data: "GetPolicyDocumentsWebForIRResult.RootResults",
+           model: {
+                fields: {
+                    jou_created_when: { type: "date"}
+                }
+               }
+       }
+    });
+
+    $("#docs-listview").kendoMobileListView({
+        		dataSource :dsSearch,
+        		template: $("#docs-listview-template").html(),
+                columns: [
+                        { field:"jou_created_when"}],
+                 //loadMore: true,
+        click: function (e) {
+            ShowPolicyDoc(e.dataItem.Id, e.dataItem.Type);
+        }
+        	});
+}
 
 function retrieveClient(e)
 {
@@ -99,6 +168,60 @@ function retrieveDebts(e)
                  $("#DebtsBalance").text("Balance: " + formatNum(this.dataSource.data()[0].ClientBalance));
                 }
              });
+}
+
+function retrievePolicies(e)
+{
+    if (policiesSearched)
+    {
+        var lvSearch = $("#policies-listview").data("kendoMobileListView");
+        lvSearch.dataSource.transport.options.read.url = serverURL + "GetInterestsAndRisks?entId=" + currentClient + "&showAll=true";
+        lvSearch.dataSource.page(1);
+        lvSearch.dataSource.read();
+        lvSearch.refresh();
+        app.scroller().reset();
+        return;
+    }
+    policiesSearched = true;
+    
+    var dsSearch = new kendo.data.DataSource(
+    {
+         transport:
+         {
+             read:
+             {
+               url: serverURL + "GetInterestsAndRisks?entId=" + currentClient + "&showAll=true",
+               data: 
+               {
+                   Accept: "application/json"
+               }
+                 
+  
+            }
+       },
+       schema: 
+       {
+            data: "GetInterestsAndRisksResult.RootResults",
+           model: {
+                fields: {
+                    genins_dtFrom: { type: "date"},
+                    genins_dtTo: { type: "date"}
+                }
+               }
+       }
+    });
+
+    $("#policies-listview").kendoMobileListView({
+        		dataSource :dsSearch,
+        		template: $("#policies-listview-template").html(),
+                columns: [
+                        { field:"genins_dtFrom"},
+                        { field:"genins_dtTo"}],
+                 //loadMore: true,
+        click: function (e) {
+            //showActivity(e.dataItem.EventID);
+        }
+        	});
 }
 
 function eclipseSearch() 

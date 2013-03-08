@@ -1,9 +1,25 @@
 
 
-//var serverURL = "http://localhost/BrokerPlus.Web/ClientBin/BrokerPlus-Web-BrokerPlusDomainService.svc/JSON/";   
-//var serverURL = "http://localhost/BrokerPlus.WebSL4/ClientBin/BrokerPlus-Web-BrokerPlusDomainService.svc/JSON/";
-var serverURL = "http://192.168.140.23/EclipseMobile/ClientBin/BrokerPlus-Web-BrokerPlusDomainService.svc/JSON/";
-//var serverURL = "http://203.110.139.199/demo/ClientBin/BrokerPlus-Web-BrokerPlusDomainService.svc/JSON/";
+//var baseURL = "http://localhost/BrokerPlus.Web";   
+//var baseURL = "http://localhost/BrokerPlus.WebSL4";
+var baseURL = "http://192.168.140.23/EclipseMobile";
+//var baseURL = "http://203.110.139.199/demo";
+var serverURL = baseURL + "/ClientBin/BrokerPlus-Web-BrokerPlusDomainService.svc/JSON/";
+
+function ShowDocument(url)
+{
+    var docUrl = baseURL + "/TempReports/" + url;
+
+    if (device.platform === 'Android')
+    {
+        window.plugins.childBrowser.openExternal(docUrl);
+       
+    }
+    else
+    {
+        window.plugins.childBrowser.showWebPage(docUrl); 
+    }
+}
 
 function login()
 {
@@ -25,12 +41,8 @@ function skipIfEmpty(strValue, addBreak, defaultString)
     {
         resultString = defaultString;
     }
-    else
-    {
-        resultString = strValue.replace(' ', '');
-    }
     
-    if(resultString == '')
+    if(resultString.replace(' ', '') == '')
     {
         resultString = defaultString;
     }
