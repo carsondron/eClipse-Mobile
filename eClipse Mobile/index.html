@@ -242,8 +242,7 @@
         </div>
         
         <script id="outstandingTaskDetailTemplate" type="text/x-kendo-template">
-            
-            <!-- For Testing  -->  
+                      
             <ul data-role="listview" data-style="inset" data-type="group">
                 <li> #= ent_name#
                     <ul>
@@ -442,14 +441,14 @@
                     <a data-role="backbutton" data-align="left">Back</a>
                     <div data-role="view-title">Tasks</div>
                 </div>
-            </header>
-            <div>
-                <ul id="buttongroup" data-role="buttongroup" data-index="0" data-select="selectedEntityTask">
+                 <ul id="buttongroup" data-role="buttongroup" data-index="0" data-select="selectedEntityTask">
                         <li>All</li>
                         <li>Client</li>
                         <li>Claim</li>
                         <li>Policy</li>
                     </ul>
+            </header>
+            <div>               
                 <ul data-role="listview" id="entityTasks-listview" style="height: auto;"
                         data-style="inset" data-type="group">
                 </ul>

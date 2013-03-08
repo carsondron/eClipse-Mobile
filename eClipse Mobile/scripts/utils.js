@@ -17,6 +17,7 @@ function ShowDocument(url)
     }
     else
     {
+        alert(docUrl);
         window.plugins.childBrowser.showWebPage(docUrl); 
     }
 }
@@ -112,4 +113,20 @@ function hasNotes(strValue)
     }
     
     return 'Yes';        
+}
+
+function ScrollToTop(e) {
+   
+     setTimeout(function() {                                               
+        
+        var scroller = app.scroller();
+        var touches = scroller.userEvents.touches;
+        var dummyEvent = { event: { preventDefault: $.noop } };
+
+        for (i = 0; i < touches.length; i ++) {
+            touches[i].end(dummyEvent);
+        }
+
+        scroller.reset();                   
+    }, 500);        
 }
