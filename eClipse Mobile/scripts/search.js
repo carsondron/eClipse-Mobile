@@ -157,6 +157,7 @@ function retrieveDebts(e)
 
     $("#debts-listview").kendoMobileListView({
         		dataSource :dsSearch,
+                endlessScroll: true,
         		template: $("#debts-listview-template").html(),
                 columns: [
                         { field:"pol_date_effective"}],
