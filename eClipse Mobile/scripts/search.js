@@ -105,6 +105,8 @@ function retrieveClient(e)
                 view.scrollerContent.html(itemDetailsTemplate(item));
                 kendo.mobile.init(view.content);
         });
+      
+    UpdateClientBalance();
 }
 
 function retrieveDebts(e)
@@ -117,8 +119,7 @@ function retrieveDebts(e)
         lvSearch.dataSource.read();
         lvSearch.refresh();
         //app.scroller().reset();
-        
-        UpdateClientBalance();
+               
         ScrollToTop(); 
         return;
     }
@@ -165,29 +166,37 @@ function retrieveDebts(e)
         click: function (e) {
             //showActivity(e.dataItem.EventID);
         }
-        	});   
-       UpdateClientBalance();
+        	});                               
 }
 
 function UpdateClientBalance()
-{
-    var lvSearch2 = $("#debts-listview").data("kendoMobileListView");
-    lvSearch2.bind("dataBound", function(e) {                                                                                  
-        
-        if(this.dataSource.data().length == 0 )
-        {                
-            $("#DebtsBalance").text("Balance: $0.00");
-        }
-        else
-        {                                         
-           $("#DebtsBalance").text("Balance: " + formatNum(this.dataSource.data()[0].ClientBalance));                   
-           
-        }      
-        
-        lvSearch2.unbind("dataBound");
-        
-        });
-    
+{               
+    var dataSource = new kendo.data.DataSource(
+    {
+         transport:
+         {
+             read:
+             {
+               url: serverURL + "GetClientBalanceMobile?ent_id=" + currentClient + "&BRClient=0",
+               data: 
+               {
+                   Accept: "application/json"
+               }                   
+            }
+       },
+        schema: 
+           {
+                data: "GetClientBalanceMobileResult.RootResults"          
+           }  
+    });  
+  
+    dataSource.fetch(function() {
+                item = dataSource.get();             
+                               
+                var balance = typeof(item) === "undefined" ? "$0.00" : item.ClientBalance;
+                $("#DebtsBalanceOnSummary").text(formatNum(balance));   
+                $("#DebtsBalance").text(formatNum(balance));
+        });            
 }
 
 function retrievePolicies(e)
@@ -214,9 +223,7 @@ function retrievePolicies(e)
                data: 
                {
                    Accept: "application/json"
-               }
-                 
-  
+               }                   
             }
        },
        schema: 

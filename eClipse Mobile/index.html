@@ -37,6 +37,17 @@
         
 <style scoped>
 
+ #eclipseLogo {                            
+    top: 20%;     
+    margin: 1px; 
+    background-position: center center;
+    -webkit-box-shadow: 0 1px 3px #333;
+    box-shadow: 0 1px 3px #333;
+    -webkit-border-radius: 8px;
+    border-radius: 8px;
+    background: url('images/Naq50.png') transparent no-repeat 0 0;
+}    
+    
 .searchResults-listview .item-title {
 	float: left;
 	font-size: 1em;
@@ -191,9 +202,11 @@
         
          <!-- Home Page -->
         <div data-role="view" id="tabstrip-uiinteraction" data-title="eClipse Mobile" data-init="login">
-            <header data-role="header">
+            <header  data-role="header">
                 <div data-role="navbar" id="navbar">
-                    <p align="center">eClipse Mobile</p>
+                    <div id="eclipseLogo">
+                        <p align="center">eClipse Mobile</p>
+                    </div>
                 </div>
 
                <div align="center">
@@ -211,7 +224,7 @@
                 data-style="inset" data-type="group">                
             </ul>
             </div>
-                            <div data-role="modalview" id="modalview-login" style="width: 300px; height: 230px;">
+                    <div data-role="modalview" id="modalview-login" style="width: 300px; height: 230px;">
                     <div data-role="header">
                         <div data-role="navbar">
                             <span>Login</span>
@@ -232,9 +245,9 @@
         <!-- Outstanding Tasks Details Page -->
         <div data-role="view" id="outstandingTasksDetailView" data-transition="slide" data-layout="default" data-show="retrieveOutstandingTasks">
             <header data-role="header">
-                <div data-role="navbar">
-                    <a data-role="backbutton" data-align="left">Back</a>
-                    <div data-role="view-title">Task Summary</div>
+                <div data-role="navbar">                     
+                        <a data-role="backbutton" data-align="left">Back</a>
+                        <div data-role="view-title">Task Summary</div>                      
                 </div>
             </header>                                       
             <div data-role="content">
@@ -272,7 +285,9 @@
         <div data-role="view" id="tabstrip-home" data-title="eClipse Mobile">
             <header data-role="header">
                 <div data-role="navbar" id="navbar">
-                    <p align="center">eClipse Mobile</p>
+                     <div id="eclipseLogo">
+                        <p align="center">eClipse Mobile</p>
+                     </div>
                 </div>
                 <div >
                 
@@ -303,10 +318,8 @@
                         
         <div data-role="view" id="tabstrip-geolocation" data-title="" data-init="announcementListViewTemplatesInit">
 			<div data-role="content">
-                <div id="searchResults">
-                    <ul data-role="listview" id="searchResults-listview" 
-                        data-style="inset" data-type="group">
-                    </ul>
+                <div id="searchResults">                  
+                    <ul data-role="listview" id="searchResults-listview" data-style="inset" data-type="group"></ul>                          
                 </div>
             </div>
         </div>
@@ -342,10 +355,13 @@
                 <a data-role="button" data-click="showPDF">Claims</a>
                 <a data-role="button">Notes</a>
             </div>
+             <div align='center'>                                                 
+                  <h4 align='center' id="DebtsBalanceOnSummary" class="debtsHeader"></h4>                
+             </div>             
             <div data-role="content">
             </div>
-        </div>
-                     
+        </div>                                         
+                        
         <script id="detailTemplate" type="text/x-kendo-template">
                      
             <ul data-role="listview" data-style="inset" data-type="group">
@@ -424,7 +440,7 @@
                 </div>
                 <div>
                         <h2 align='center' id="Debtor" class="debtsHeader"></h2>
-                        <h4 align='center' id="DebtsBalance" class="debtsHeader"></h4>
+                        <h4 align='center' id="DebtsBalance" class="debtsHeader"></h4>                       
                 </div>
             </header>
             <div data-role="content">
@@ -446,7 +462,7 @@
                         <li>Client</li>
                         <li>Claim</li>
                         <li>Policy</li>
-                    </ul>
+                 </ul>
             </header>
             <div>               
                 <ul data-role="listview" id="entityTasks-listview" style="height: auto;"
