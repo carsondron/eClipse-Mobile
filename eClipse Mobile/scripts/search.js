@@ -4,6 +4,7 @@ var taskSearched = false;
 var claimSearched = false;
 var debtsSearched = false;
 var policiesSearched = false;
+var notesSearched = false;
 var docsSearched = false;
 var currentClient = -1;
 var currentClientName = '';
@@ -217,6 +218,94 @@ function retrievePolicies(e)
                 columns: [
                         { field:"genins_dtFrom"},
                         { field:"genins_dtTo"}],
+                 //loadMore: true,
+        click: function (e) {
+            //showActivity(e.dataItem.EventID);
+        }
+        	});
+}
+
+function saveNote(e)
+{
+    var subject = document.getElementById("noteSubject").value;
+    var email = document.getElementById("noteEmail").value;
+    var noteText = document.getElementById("noteNote").value;
+    var priority = document.getElementById('notPriority').value;
+    
+    $.ajax( 
+    { 
+        type: "POST",
+               url: serverURL + "AddNote",
+               contentType: "application/json",
+               data: '{ "ent_id": "' + currentClient.toString() + '", "subject": "' + subject.toString()
+                     + '", "note": "' + noteText.toString() + '", "email": "' + email.toString()
+                     + '", "priority": "' + priority.toString() + '", "Accept": "application/json"}',
+               dataType: "json", 
+        success: function (item) { 
+            app.navigate("#:back");
+        }
+        });
+}
+
+function cancelNoteAdd(e)
+{
+    app.navigate("#:back");
+}
+
+function resetNote(e)
+{
+    document.getElementById("noteSubject").value = "";
+    email = document.getElementById("noteEmail").value = "";
+    noteText = document.getElementById("noteNote").value = "";
+    priority = document.getElementById('notPriority').value = 2;
+}
+
+function retrieveNotes(e)
+{
+    if (notesSearched)
+    {
+        var lvSearch = $("#notes-listview").data("kendoMobileListView");
+        lvSearch.dataSource.transport.options.read.url = serverURL + "GetNotesViews?$where=(it.not_parent_id%253d%253d" + currentClient + ")&$orderby=it.not_created_when%2bdesc";
+        
+        lvSearch.dataSource.page(1);
+        lvSearch.dataSource.read();
+        lvSearch.refresh();
+        app.scroller().reset();
+        return;
+    }
+    notesSearched = true;
+    
+    var dsSearch = new kendo.data.DataSource(
+    {
+         transport:
+         {
+             read:
+             {
+               url: serverURL +"GetNotesViews?$where=(it.not_parent_id%253d%253d" + currentClient + ")&$orderby=it.not_created_when%2bdesc",
+               data: 
+               {
+                   Accept: "application/json"
+               }
+                 
+  
+            }
+       },
+       schema: 
+       {
+            data: "GetNotesViewsResult.RootResults",
+           model: {
+                fields: {
+                    not_created_when: { type: "date"}
+                }
+               }
+       }
+    });
+
+    $("#notes-listview").kendoMobileListView({
+        		dataSource :dsSearch,
+        		template: $("#notes-listview-template").html(),
+                columns: [
+                        { field:"not_created_when"}],
                  //loadMore: true,
         click: function (e) {
             //showActivity(e.dataItem.EventID);

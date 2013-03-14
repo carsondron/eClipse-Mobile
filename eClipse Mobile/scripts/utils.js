@@ -6,6 +6,8 @@ var baseURL = "http://192.168.140.23/EclipseMobile";
 //var baseURL = "http://203.110.139.199/demo";
 var serverURL = baseURL + "/ClientBin/BrokerPlus-Web-BrokerPlusDomainService.svc/JSON/";
 
+var loggedIn = false;
+
 function ShowDocument(url)
 {
     var docUrl = baseURL + "/TempReports/" + url;
@@ -23,13 +25,48 @@ function ShowDocument(url)
 
 function login()
 {
+    var svrURL = localStorage.getItem("ServerURL");
+    if(svrURL == null || svrURL == "")
+    {
+        $("#modalview-settings").data("kendoMobileModalView").open();
+        return;
+    }
+    baseURL = svrURL;
+    serverURL = baseURL + "/ClientBin/BrokerPlus-Web-BrokerPlusDomainService.svc/JSON/";
     $("#modalview-login").data("kendoMobileModalView").open();    
 }
 
-function closeModalViewLogin() {
-    $("#modalview-login").kendoMobileModalView("close");
-        GetAllOutstandingTasks();
+function showSettings()
+{
+    var svrURL = document.getElementById("serverUrl");
+    svrURL.value = localStorage.getItem("ServerURL");
+    $("#modalview-settings").data("kendoMobileModalView").open();
+}
+
+function saveSettings()
+{
+    var svrURL = document.getElementById("serverUrl");
+    localStorage.setItem("ServerURL", svrURL.value);
+    $("#modalview-settings").kendoMobileModalView("close");
+    baseURL = svrURL;
+    serverURL = baseURL + "/ClientBin/BrokerPlus-Web-BrokerPlusDomainService.svc/JSON/";
+    if(!loggedIn)
+    {
+        login();
     }
+}
+
+function closeModalViewSettings()
+{
+    $("#modalview-settings").kendoMobileModalView("close");
+}
+
+function closeModalViewLogin()
+{
+    $("#modalview-login").kendoMobileModalView("close");
+    loggedIn = true;
+    GetAllOutstandingTasks();
+}
 
 function skipIfEmpty(strValue, addBreak, defaultString)
 {

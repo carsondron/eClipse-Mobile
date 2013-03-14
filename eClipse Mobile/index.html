@@ -114,6 +114,31 @@
     width: 65%;
 }
  
+#notes-listview .item-heading {
+	font-size: .8em;
+	line-height: 1.3em;
+}
+#notes-listview .item-title {
+	float: left;
+	font-size: .7em;
+	line-height: 1.3em;
+    color: #369;
+    width: 30%;
+}
+#notes-listview .item-info {
+	float: right;
+	font-size: .7em;
+	line-height: 1.3em;
+    width: 65%;
+}
+ 
+#notes-listview .item-note {
+	float: left;
+	font-size: .7em;
+	line-height: 1.3em;
+    width: 90%;
+}
+ 
 #docs-listview .item-heading {
 	font-size: .8em;
 	line-height: 1.3em;
@@ -172,9 +197,20 @@
     
 }
 
+.settingsDetail{
+    float:left;
+    height: 30px;
+}
 
-    .km-ios .debtsHeader { color: black; }
-    .km-android .debtsHeader { color: white; }
+.notesEntryClass{
+    height: 150px;
+    margin: .95em 0 0 .95em;
+    width: 90%;
+}
+    
+.km-ios .debtsHeader { color: black; }
+.km-android .debtsHeader { color: white; }
+    
         
 .km-android .km-navbar .km-view-title /* After Q2 2012 SP1 */
 {
@@ -211,7 +247,7 @@
                 data-style="inset" data-type="group">                
             </ul>
             </div>
-                            <div data-role="modalview" id="modalview-login" style="width: 300px; height: 230px;">
+            <div data-role="modalview" id="modalview-login" style="width: 300px; height: 230px;">
                     <div data-role="header">
                         <div data-role="navbar">
                             <span>Login</span>
@@ -221,12 +257,37 @@
                         <li><label for="username">Username:</label> <input type="text" id="username" value='NAQTest' /></li>
                         <li><label for="password">Password:</label> <input type="password" id="password" value='1234' /></li>
                     </ul>
-                <div align='center'>
-                    <input id="rememberMe" type='checkbox' checked='True' /><label for="remember">Remember me</label> <br /><br />
-                    <a data-click="closeModalViewLogin" id="modalview-login-button" type="button" data-role="button">Login</a>
-                    <a data-click="closeModalViewLogin" id="modalview-reg-button" type="button" data-role="button">Cancel</a>
+                    <div align='center'>
+                        <input id="rememberMe" type='checkbox' checked='True' /><label for="remember">Remember me</label> <br /><br />
+                        <a data-click="closeModalViewLogin" id="modalview-login-button" type="button" data-role="button">Login</a>
+                        <a data-click="closeModalViewLogin" id="modalview-reg-button" type="button" data-role="button">Cancel</a>
                     </div>
                 </div>
+            
+            <div data-role="modalview" id="modalview-settings" style="width: 300px; height: 230px;" data-init="settingsInit">
+                <div data-role="header">
+                        <div data-role="navbar">
+                            <span>Settings</span>
+                        </div>
+                    </div>
+
+                     <ul data-role="listview" data-style="inset" data-type="group">
+                         <li>Server URL
+                             <ul>
+                                 <li>
+                                     <div class="settingsDetail">
+                                         <input align="left" id="serverUrl" value="http://203.110.139.199/demo" />
+                                     </div>
+                                 </li>
+                             </ul>
+                         </li>
+                    </ul>
+                    <div align='center'>
+                        <a data-click="saveSettings" id="saveSettingsButton" type="button" data-role="button">Save</a>
+                        <a data-click="closeModalViewSettings" id="settingsCanelButton" type="button" data-role="button">Cancel</a>
+                    </div>
+            </div>
+            
         </div>
         
         <!-- Outstanding Tasks Details Page -->
@@ -301,17 +362,15 @@
                 </ul>
             </div>
         </div>
-                        
-        <div data-role="view" id="tabstrip-geolocation" data-title="" data-init="announcementListViewTemplatesInit">
-			<div data-role="content">
-                <div id="searchResults">
-                    <ul data-role="listview" id="searchResults-listview" 
-                        data-style="inset" data-type="group">
-                    </ul>
+                                            
+        <div data-role="view" id="tabstrip-settings" data-title="Options">
+			<div>
+                <div>
+                    <a id="showSettingsButton" data-role="button" data-click="showSettings">Settings</a>
                 </div>
             </div>
         </div>
-
+  
         <div data-role="layout" data-id="mobile-tabstrip">
             <header data-role="header">
                 <div data-role="navbar">
@@ -323,7 +382,7 @@
                 <div data-role="tabstrip">
                     <a href="#tabstrip-uiinteraction" data-icon="home">Home</a>
                     <a href="#tabstrip-home" data-icon="search">Search</a>
-                    <a href="#tabstrip-geolocation" data-icon="globe">Geolocation</a>
+                    <a href="#tabstrip-settings" data-icon="settings">Settings</a>
                 </div>
             </div>            
         </div>
@@ -340,8 +399,8 @@
                 <a data-role="button" href="#policiesView">Policies</a>
                 <a data-role="button" href="#debtsView">Debts</a>
                 <a data-role="button" href="#tasksView">Tasks</a>
-                <a data-role="button" data-click="showPDF">Claims</a>
-                <a data-role="button">Notes</a>
+                <a data-role="button">Claims</a>
+                <a data-role="button" href="#notesView">Notes</a>
             </div>
             <div data-role="content">
             </div>
@@ -385,6 +444,69 @@
             </ul>
                 
         </script>
+                
+                        
+        <!-- Notes Page -->
+        <div data-role="view" id="notesView" data-transition="slide" data-layout="default" data-show="retrieveNotes">
+            <header data-role="header">
+                <div data-role="navbar">
+                    <a data-role="backbutton" data-align="left">Back</a>
+                    <div data-role="view-title">Notes</div>
+                    <a data-icon="add" data-align="right" data-role="button" href="#addNoteView"></a>
+                </div>
+            </header>
+            <div data-role="content">
+                <ul data-role="listview" id="notes-listview" style="height: auto;"
+                        data-style="inset" data-type="group">
+                </ul>
+            </div>
+        </div>
+                          
+        <!-- Add Note Page -->
+        <div data-role="view" id="addNoteView" data-transition="slide" data-layout="default" data-show="resetNote">
+            <header data-role="header">
+                <div data-role="navbar">
+                    <div data-role="view-title" >New Note</div>
+                </div>
+            </header>
+            <div data-role="content">
+                <div align="center" >
+                    <a data-role="button" data-align="right" data-click="saveNote">Save</a>
+                    <a data-role="button" data-align="right" data-click="cancelNoteAdd">Cancel</a>
+                </div>
+                <h3>Details</h3>
+                <ul data-role="listview" data-style="inset">
+                    
+                    <li>
+                        <label>
+                        Subject
+                            <input type="text" placeholder="Subject"  id="noteSubject" />
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                        Priority
+                        <select id="notPriority" >
+                            <option value="1">Low</option>
+                            <option value="2" selected="selected">Normal</option>
+                            <option value="3">High</option>
+                        </select>
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                        Email
+                        <input type="text" placeholder="Email" id="noteEmail" />
+                        </label>
+                    </li>
+                    
+                </ul>
+                <h3>Note</h3>
+                         
+                <textarea class="notesEntryClass" placeholder="Notes" id="noteNote"></textarea>
+
+            </div>
+        </div>
                   
         <!-- Policies Page -->
         <div data-role="view" id="policiesView" data-transition="slide" data-layout="default" data-show="retrievePolicies">
@@ -474,7 +596,26 @@
                 </li>
             </ul>
         </script>
-                                                   
+                                             
+        <script type="text/x-kendo-template" id="notes-listview-template">
+           
+            <ul data-role="listview" data-style="inset" data-type="group">
+                  <li><span class="item-heading">${not_Subject}</span>
+                      <ul>
+                          <li><span class="item-title">User</span><span class="item-info">#= not_created_who #</span></li>
+                             <li><span class="item-title">Date</span><span class="item-info">#= kendo.toString(not_created_when, "dd/MM/yyyy") #</span></li>
+                             <li><span class="item-title">Contact</span><span class="item-info">#= skipIfEmpty(not_Contact) #</span></li>
+                             <li><span class="item-title">Priority</span><span class="item-info">#= skipIfEmpty(pri_name) #</span></li>
+                             <li><span class="item-title">Phone</span><span class="item-info">#= skipIfEmpty(not_phone) #</span></li>
+                             <li><span class="item-title">Mobile</span><span class="item-info">#= skipIfEmpty(not_mobile) #</span></li>
+                             <li><span class="item-title">Email</span><span class="item-info">#= skipIfEmpty(not_email) #</span></li>
+                             <li><span class="item-note">#= not_note #     </span></li>                 
+                       </ul>    
+                  </li>
+            </ul>               
+                 
+        </script>
+                                                               
         <script type="text/x-kendo-template" id="policies-listview-template">
            
             <ul data-role="listview" data-style="inset" data-type="group">
