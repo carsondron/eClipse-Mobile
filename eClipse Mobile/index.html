@@ -445,17 +445,17 @@
                          <li><span class="item-title">Contact</span><span class="item-info">#= skipIfEmpty(ent_contact) #</span></li>
                          <li><span class="item-title">Job Title</span><span class="item-info">#= skipIfEmpty(ent_job_title) #</span></li>
                          <li><span class="item-title">Salutation</span><span class="item-info">#= skipIfEmpty(ent_salutation) #</span></li>
-                         <li><span class="item-title">Web</span><span class="item-info">#= skipIfEmpty(ent_web_site) #</span></li>
-                         <li><span class="item-title">Email</span><span class="item-info">#= skipIfEmpty(ent_email) #</span></li>
+                         <li><span class="item-title">Web</span><span class="item-info"><a href="#= skipIfEmpty(ent_web_site) #" data-rel="external">#= skipIfEmpty(ent_web_site) #</a></span></li>
+                         <li><span class="item-title">Email</span><span class="item-info"><a href="mailto:#= skipIfEmpty(ent_email) #"  data-rel="external">#= skipIfEmpty(ent_email) #</a></span></li>
                          <li><span class="item-title">Classification</span><span class="item-info">#= skipIfEmpty(ent_abn) #</span></li>
                          <li><span class="item-title">ABN</span><span class="item-info">#= skipIfEmpty(ent_abn) #</span></li>
                     </ul>
                 </li>
                 <li>Phone
                     <ul>
-                         <li><span class="item-title">Main Phone</span><span class="item-info">#= skipIfEmpty(ent_telephone) #</span></li>
-                         <li><span class="item-title">Other Phone</span><span class="item-info">#= skipIfEmpty(ent_telephone_2) #</span></li>
-                         <li><span class="item-title">Mobile</span><span class="item-info">#= skipIfEmpty(ent_mobile) #</span></li>
+                         <li><span class="item-title">Main Phone</span><span class="item-info"><a href="tel:#= skipIfEmpty(ent_telephone) #" data-role="listview-link" data-rel="external">#= skipIfEmpty(ent_telephone) #</a></span></li>
+                         <li><span class="item-title">Other Phone</span><span class="item-info"><a href="tel:#= skipIfEmpty(ent_telephone_2) #"  data-rel="external">#= skipIfEmpty(ent_telephone_2) #</a></span></li>
+                         <li><span class="item-title">Mobile</span><span class="item-info"><a href="tel:#= skipIfEmpty(ent_mobile) #"  data-rel="external">#= skipIfEmpty(ent_mobile) #</a></span></li>
                          <li><span class="item-title">Fax</span><span class="item-info">#= skipIfEmpty(ent_facsimile) #</span></li>
                     </ul>
                 </li>
