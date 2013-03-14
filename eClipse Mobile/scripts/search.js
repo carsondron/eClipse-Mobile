@@ -106,6 +106,8 @@ function retrieveClient(e)
                 view.scrollerContent.html(itemDetailsTemplate(item));
                 kendo.mobile.init(view.content);
         });
+      
+    UpdateClientBalance();
 }
 
 function retrieveDebts(e)
@@ -113,43 +115,51 @@ function retrieveDebts(e)
     if (debtsSearched)
     {
         var lvSearch = $("#debts-listview").data("kendoMobileListView");
-        lvSearch.dataSource.transport.options.read.url = serverURL + "GetOutstandingDebts?ent_id=" + currentClient + "&BRClient=0&$orderby=it.pol_date_effective%252c%2bit.pol_tran_id";
+        lvSearch.dataSource.transport.options.read.url = serverURL + "GetOutstandingDebtsMobile?ent_id=" + currentClient + "&BRClient=0&$orderby=it.pol_date_effective%252c%2bit.pol_tran_id";
         lvSearch.dataSource.page(1);
         lvSearch.dataSource.read();
         lvSearch.refresh();
-        app.scroller().reset();
+        //app.scroller().reset();
+               
+        ScrollToTop(); 
         return;
     }
     debtsSearched = true;
     
     var dsSearch = new kendo.data.DataSource(
     {
+         pageSize: 20,
          transport:
          {
              read:
              {
-               url: serverURL + "GetOutstandingDebts?ent_id=" + currentClient + "&BRClient=0&$orderby=it.pol_date_effective%252c%2bit.pol_tran_id",
+               url: serverURL + "GetOutstandingDebtsMobile?ent_id=" + currentClient + "&BRClient=0&$orderby=it.pol_date_effective%252c%2bit.pol_tran_id",
                data: 
                {
                    Accept: "application/json"
-               }
-                 
-  
-            }
+               }                 
+            },
+            parameterMap: function(options) {var parameters = {take: options.pageSize,page: options.page};return parameters; }
        },
+       serverPaging: true,   
        schema: 
        {
-            data: "GetOutstandingDebtsResult.RootResults",
+            data: "GetOutstandingDebtsMobileResult.RootResults",
            model: {
                 fields: {
                     pol_date_effective: { type: "date"}
                 }
                }
-       }
+       },
+       pageable: true,
+       requestEnd: function (e) {
+                               
+            } 
     });
 
     $("#debts-listview").kendoMobileListView({
         		dataSource :dsSearch,
+                endlessScroll: true,
         		template: $("#debts-listview-template").html(),
                 columns: [
                         { field:"pol_date_effective"}],
@@ -157,18 +167,37 @@ function retrieveDebts(e)
         click: function (e) {
             //showActivity(e.dataItem.EventID);
         }
-        	});
-    var lvSearch2 = $("#debts-listview").data("kendoMobileListView");
-        lvSearch2.bind("dataBound", function(e) {
-            if(this.dataSource.data().length == 0)
-            {
-                $("#DebtsBalance").text("Balance: $0.00");
+        	});                               
+}
+
+function UpdateClientBalance()
+{               
+    var dataSource = new kendo.data.DataSource(
+    {
+         transport:
+         {
+             read:
+             {
+               url: serverURL + "GetClientBalanceMobile?ent_id=" + currentClient + "&BRClient=0",
+               data: 
+               {
+                   Accept: "application/json"
+               }                   
             }
-            else
-            {
-                 $("#DebtsBalance").text("Balance: " + formatNum(this.dataSource.data()[0].ClientBalance));
-                }
-             });
+       },
+        schema: 
+           {
+                data: "GetClientBalanceMobileResult.RootResults"          
+           }  
+    });  
+  
+    dataSource.fetch(function() {
+                item = dataSource.get();             
+                               
+                var balance = typeof(item) === "undefined" ? "$0.00" : item.ClientBalance;
+                $("#DebtsBalanceOnSummary").text(formatNum(balance));   
+                $("#DebtsBalance").text(formatNum(balance));
+        });            
 }
 
 function retrievePolicies(e)
@@ -195,9 +224,7 @@ function retrievePolicies(e)
                data: 
                {
                    Accept: "application/json"
-               }
-                 
-  
+               }                   
             }
        },
        schema: 

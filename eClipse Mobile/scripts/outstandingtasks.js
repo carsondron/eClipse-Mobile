@@ -24,26 +24,7 @@ curr_date = ('0' +taskDate.getDate()).slice(-2); // Add leading zeroes to date a
 curr_month = ('0' + (taskDate.getMonth() + 1)).slice(-2); //Months are zero based
 curr_year = taskDate.getFullYear(); 
 
-   
-
-function GetOutstandingTasks() {                       
-    
-      if (loaded) { 
-        
-      var lvTasks = $("#outstandingTasksResults-listview").data("kendoMobileListView");
-      lvTasks.dataSource.transport.options.read.url = serverURL + "GetTasksForUserMobile?user=%25&date=" + curr_year + "-" + curr_month + "-" + curr_date  + "&IsClientTask=" + isClientTask+ "&IsClaimTask=" + isClaimTask + "&IsPolicyTask=" + isPolicyTask;
-      lvTasks.dataSource.page(1);
-      lvTasks.dataSource.read();
-      lvTasks.dataSource.endlessScroll = true;          
-      lvTasks.refresh();
-      app.scroller().reset();
-      return;
-    }
-          
-   loaded = true;     
-   
-    
-    var dataSource = new kendo.data.DataSource({
+var dataSource = new kendo.data.DataSource({
   pageSize: 10, 
   transport: {
     read: {
@@ -76,7 +57,26 @@ function GetOutstandingTasks() {
       
   }
 });
+   
+
+function GetOutstandingTasks() {                       
     
+      if (loaded) { 
+        
+      var lvTasks = $("#outstandingTasksResults-listview").data("kendoMobileListView");
+      lvTasks.dataSource.transport.options.read.url = serverURL + "GetTasksForUserMobile?user=%25&date=" + curr_year + "-" + curr_month + "-" + curr_date  + "&IsClientTask=" + isClientTask+ "&IsClaimTask=" + isClaimTask + "&IsPolicyTask=" + isPolicyTask;
+      lvTasks.dataSource.page(1);
+      lvTasks.dataSource.read();
+      lvTasks.dataSource.endlessScroll = true;          
+      lvTasks.refresh();
+      //app.scroller().reset();
+          
+      ScrollToTop();
+      return;
+    }
+          
+   loaded = true;     
+   
   $("#outstandingTasksResults-listview").kendoMobileListView({
         		dataSource :dataSource,               
         		template: $("#outstandingTasksResults-listview-template").html(),

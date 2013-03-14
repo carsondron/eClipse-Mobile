@@ -89,7 +89,9 @@ function GetEntityTasks() {
       lvTasks.dataSource.read();
       lvTasks.dataSource.endlessScroll = true;          
       lvTasks.refresh();
-      app.scroller().reset();
+      //app.scroller().reset();
+      
+      ScrollToTop();
       return;
     }
          

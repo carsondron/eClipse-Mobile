@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>eClipse Mobile</title>
+        <title>My App</title>
         <meta charset="utf-8" />
         <script src="cordova.js"></script>
         <script src="kendo/js/jquery.min.js"></script>
@@ -37,6 +37,17 @@
         
 <style scoped>
 
+ #eclipseLogo {                            
+    top: 20%;     
+    margin: 1px; 
+    background-position: center center;
+    -webkit-box-shadow: 0 1px 3px #333;
+    box-shadow: 0 1px 3px #333;
+    -webkit-border-radius: 8px;
+    border-radius: 8px;
+    background: url('images/Naq50.png') transparent no-repeat 0 0;
+}    
+    
 .searchResults-listview .item-title {
 	float: left;
 	font-size: 1em;
@@ -197,6 +208,7 @@
     
 }
 
+
 .settingsDetail{
     float:left;
     height: 30px;
@@ -227,9 +239,11 @@
         
          <!-- Home Page -->
         <div data-role="view" id="tabstrip-uiinteraction" data-title="eClipse Mobile" data-init="login">
-            <header data-role="header">
+            <header  data-role="header">
                 <div data-role="navbar" id="navbar">
-                    <p align="center">eClipse Mobile</p>
+                    <div id="eclipseLogo">
+                        <p align="center">eClipse Mobile</p>
+                    </div>
                 </div>
 
                <div align="center">
@@ -247,7 +261,7 @@
                 data-style="inset" data-type="group">                
             </ul>
             </div>
-            <div data-role="modalview" id="modalview-login" style="width: 300px; height: 230px;">
+                    <div data-role="modalview" id="modalview-login" style="width: 300px; height: 230px;">
                     <div data-role="header">
                         <div data-role="navbar">
                             <span>Login</span>
@@ -257,13 +271,13 @@
                         <li><label for="username">Username:</label> <input type="text" id="username" value='NAQTest' /></li>
                         <li><label for="password">Password:</label> <input type="password" id="password" value='1234' /></li>
                     </ul>
-                    <div align='center'>
-                        <input id="rememberMe" type='checkbox' checked='True' /><label for="remember">Remember me</label> <br /><br />
-                        <a data-click="closeModalViewLogin" id="modalview-login-button" type="button" data-role="button">Login</a>
-                        <a data-click="closeModalViewLogin" id="modalview-reg-button" type="button" data-role="button">Cancel</a>
+                <div align='center'>
+                    <input id="rememberMe" type='checkbox' checked='True' /><label for="remember">Remember me</label> <br /><br />
+                    <a data-click="closeModalViewLogin" id="modalview-login-button" type="button" data-role="button">Login</a>
+                    <a data-click="closeModalViewLogin" id="modalview-reg-button" type="button" data-role="button">Cancel</a>
                     </div>
                 </div>
-            
+                        
             <div data-role="modalview" id="modalview-settings" style="width: 300px; height: 230px;" data-init="settingsInit">
                 <div data-role="header">
                         <div data-role="navbar">
@@ -293,9 +307,9 @@
         <!-- Outstanding Tasks Details Page -->
         <div data-role="view" id="outstandingTasksDetailView" data-transition="slide" data-layout="default" data-show="retrieveOutstandingTasks">
             <header data-role="header">
-                <div data-role="navbar">
-                    <a data-role="backbutton" data-align="left">Back</a>
-                    <div data-role="view-title">Task Summary</div>
+                <div data-role="navbar">                     
+                        <a data-role="backbutton" data-align="left">Back</a>
+                        <div data-role="view-title">Task Summary</div>                      
                 </div>
             </header>                                       
             <div data-role="content">
@@ -303,8 +317,7 @@
         </div>
         
         <script id="outstandingTaskDetailTemplate" type="text/x-kendo-template">
-            
-            <!-- For Testing  -->  
+                      
             <ul data-role="listview" data-style="inset" data-type="group">
                 <li> #= ent_name#
                     <ul>
@@ -334,7 +347,9 @@
         <div data-role="view" id="tabstrip-home" data-title="eClipse Mobile">
             <header data-role="header">
                 <div data-role="navbar" id="navbar">
-                    <p align="center">eClipse Mobile</p>
+                     <div id="eclipseLogo">
+                        <p align="center">eClipse Mobile</p>
+                     </div>
                 </div>
                 <div >
                 
@@ -362,15 +377,15 @@
                 </ul>
             </div>
         </div>
-                                            
+                                                           
         <div data-role="view" id="tabstrip-settings" data-title="Options">
 			<div>
                 <div>
-                    <a id="showSettingsButton" data-role="button" data-click="showSettings">Settings</a>
+                    <a id="showSettingsButton" data-role="button" data-click="showSettings">Settings</a>          
                 </div>
             </div>
         </div>
-  
+
         <div data-role="layout" data-id="mobile-tabstrip">
             <header data-role="header">
                 <div data-role="navbar">
@@ -402,10 +417,13 @@
                 <a data-role="button">Claims</a>
                 <a data-role="button" href="#notesView">Notes</a>
             </div>
+             <div align='center'>                                                 
+                  <h4 align='center' id="DebtsBalanceOnSummary" class="debtsHeader"></h4>                
+             </div>             
             <div data-role="content">
             </div>
-        </div>
-                     
+        </div>                                         
+                        
         <script id="detailTemplate" type="text/x-kendo-template">
                      
             <ul data-role="listview" data-style="inset" data-type="group">
@@ -444,7 +462,7 @@
             </ul>
                 
         </script>
-                
+                                 
                         
         <!-- Notes Page -->
         <div data-role="view" id="notesView" data-transition="slide" data-layout="default" data-show="retrieveNotes">
@@ -507,7 +525,7 @@
 
             </div>
         </div>
-                  
+                        
         <!-- Policies Page -->
         <div data-role="view" id="policiesView" data-transition="slide" data-layout="default" data-show="retrievePolicies">
             <header data-role="header">
@@ -547,7 +565,7 @@
                 </div>
                 <div>
                         <h2 align='center' id="Debtor" class="debtsHeader"></h2>
-                        <h4 align='center' id="DebtsBalance" class="debtsHeader"></h4>
+                        <h4 align='center' id="DebtsBalance" class="debtsHeader"></h4>                       
                 </div>
             </header>
             <div data-role="content">
@@ -564,14 +582,14 @@
                     <a data-role="backbutton" data-align="left">Back</a>
                     <div data-role="view-title">Tasks</div>
                 </div>
-            </header>
-            <div>
-                <ul id="buttongroup" data-role="buttongroup" data-index="0" data-select="selectedEntityTask">
+                 <ul id="buttongroup" data-role="buttongroup" data-index="0" data-select="selectedEntityTask">
                         <li>All</li>
                         <li>Client</li>
                         <li>Claim</li>
                         <li>Policy</li>
-                    </ul>
+                 </ul>
+            </header>
+            <div>               
                 <ul data-role="listview" id="entityTasks-listview" style="height: auto;"
                         data-style="inset" data-type="group">
                 </ul>
@@ -596,7 +614,7 @@
                 </li>
             </ul>
         </script>
-                                             
+                                                       
         <script type="text/x-kendo-template" id="notes-listview-template">
            
             <ul data-role="listview" data-style="inset" data-type="group">
@@ -615,7 +633,7 @@
             </ul>               
                  
         </script>
-                                                               
+                                                                           
         <script type="text/x-kendo-template" id="policies-listview-template">
            
             <ul data-role="listview" data-style="inset" data-type="group">
