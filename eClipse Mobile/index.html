@@ -39,12 +39,12 @@
 
  #eclipseLogo {                            
     top: 20%;     
-    margin: 1px; 
+    margin: 0px; 
     background-position: center center;
     -webkit-box-shadow: 0 1px 3px #333;
     box-shadow: 0 1px 3px #333;
-    -webkit-border-radius: 8px;
-    border-radius: 8px;
+    -webkit-border-radius: 0px;
+    border-radius: 0px;
     background: url('images/Naq50.png') transparent no-repeat 0 0;
 }    
     
@@ -210,8 +210,9 @@
 
 
 .settingsDetail{
-    float:left;
+
     height: 30px;
+width: 100%;
 }
 
 .notesEntryClass{
@@ -223,7 +224,6 @@
 .km-ios .debtsHeader { color: black; }
 .km-android .debtsHeader { color: white; }
     
-        
 .km-android .km-navbar .km-view-title /* After Q2 2012 SP1 */
 {
     visibility: visible;
@@ -284,18 +284,12 @@
                             <span>Settings</span>
                         </div>
                     </div>
-
-                     <ul data-role="listview" data-style="inset" data-type="group">
-                         <li>Server URL
-                             <ul>
-                                 <li>
-                                     <div class="settingsDetail">
-                                         <input align="left" id="serverUrl" value="http://203.110.139.199/demo" />
-                                     </div>
-                                 </li>
-                             </ul>
-                         </li>
-                    </ul>
+                    <div data-role="content">
+                         <h3>Server URL</h3>
+                        <div class="settingsDetail">
+                         <input style="width:100%;-moz-box-sizing:border-box;-webkit-box-sizing:border-box;box-sizing: border-box;" type="text" width="300px" align="center" id="serverUrl" value="http://203.110.139.199/demo" />
+                            </div>
+                    </div>
                     <div align='center'>
                         <a data-click="saveSettings" id="saveSettingsButton" type="button" data-role="button">Save</a>
                         <a data-click="closeModalViewSettings" id="settingsCanelButton" type="button" data-role="button">Cancel</a>
@@ -411,11 +405,11 @@
                 </div>
             </header>
             <div align="center">
-                <a data-role="button" href="#policiesView">Policies</a>
-                <a data-role="button" href="#debtsView">Debts</a>
-                <a data-role="button" href="#tasksView">Tasks</a>
-                <a data-role="button">Claims</a>
-                <a data-role="button" href="#notesView">Notes</a>
+                <a data-role="button" style="margin-left: 0; margin-right: 0;" href="#policiesView">Policies</a>
+                <a data-role="button" style="margin-left: 0; margin-right: 0;" href="#debtsView">Debts</a>
+                <a data-role="button" style="margin-left: 0; margin-right: 0;" href="#tasksView">Tasks</a>
+                <a data-role="button" style="margin-left: 0; margin-right: 0;" >Claims</a>
+                <a data-role="button" style="margin-left: 0; margin-right: 0;" href="#notesView">Notes</a>
             </div>
              <div align='center'>                                                 
                   <h4 align='center' id="DebtsBalanceOnSummary" class="debtsHeader"></h4>                
@@ -600,6 +594,7 @@
             
             var app = new kendo.mobile.Application(document.body, { transition: "slide", layout: "mobile-tabstrip" });
 
+
         </script>
                                                  
         <script type="text/x-kendo-template" id="docs-listview-template">
@@ -644,7 +639,7 @@
                       #= close_status > 0 ? '<img src="images/flag_red.png" />' : '' #
                       #= close_status == 0 ? '<img src="images/flag_green.png" />' : '' #
                       <ul>
-                          <li><a href="\#policyDocView?id=#:genins_id#"><img src="images/document.png" /></a></li>
+                          <li><a href="\#policyDocView?id=#:genins_id#"><img src="images/document.png" /><span style="font-size: .7em;  color: \#369;">&nbsp;<u>View Documents</u></span></a></li>
                           <li><span class="item-title">Period</span><span class="item-info">#= kendo.toString(genins_dtFrom, "dd/MM/yyyy") + ' - ' + 
                               kendo.toString(genins_dtTo, "dd/MM/yyyy") #</span></li>
                              <li><span class="item-title">Class of Business</span><span class="item-info">#= gencob_name #</span></li>
