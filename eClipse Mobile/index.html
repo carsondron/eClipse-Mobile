@@ -10,6 +10,7 @@
         <script src="scripts/utils.js"></script>
         <script src="scripts/outstandingtasks.js"></script>
         <script src="scripts/entitytasks.js"></script>
+        <script src="scripts/entityclaims.js"></script>
         <script type="text/javascript" charset="utf-8" src="Plugins/Child Browser/childbrowser.js"></script>
         
         <link rel="stylesheet" href="kendo/styles/kendo.mobile.all.min.css" />
@@ -239,21 +240,18 @@ width: 100%;
          <!-- Home Page -->
         <div data-role="view" id="tabstrip-uiinteraction" data-title="eClipse Mobile" data-init="login">
             <header  data-role="header">
-                <div data-role="navbar" id="navbar">
+               <div data-role="navbar" id="navbar">
                     <div id="eclipseLogo">
                         <p align="center">eClipse Mobile</p>
                     </div>
-                </div>
-
-               <div align="center">
-                   <h2 align="center" id="selectedTaskText"></h2>                                            
-                   <ul id="buttongroup" data-role="buttongroup" data-index="0" data-select="selectedTask">
-                        <li>All</li>
-                        <li>Client</li>
-                        <li>Claim</li>
-                        <li>Policy</li>
-                    </ul>
-               </div>
+               </div>              
+               <h2 align="center" id="selectedTaskText"></h2>                                            
+               <ul id="buttongroup" data-role="buttongroup" data-index="0" data-select="selectedTask">
+                    <li>All</li>
+                    <li>Client</li>
+                    <li>Claim</li>
+                    <li>Policy</li>
+                </ul>              
             </header>                                     
             <div>                                                        
             <ul data-role="listview" id="outstandingTasksResults-listview" style="height: auto;"
@@ -407,7 +405,7 @@ width: 100%;
                 <a data-role="button" style="margin-left: 0; margin-right: 0;" href="#policiesView">Policies</a>
                 <a data-role="button" style="margin-left: 0; margin-right: 0;" href="#debtsView">Debts</a>
                 <a data-role="button" style="margin-left: 0; margin-right: 0;" href="#tasksView">Tasks</a>
-                <a data-role="button" style="margin-left: 0; margin-right: 0;" >Claims</a>
+                <a data-role="button" style="margin-left: 0; margin-right: 0;" href="#claimsView">Claims</a>
                 <a data-role="button" style="margin-left: 0; margin-right: 0;" href="#notesView">Notes</a>
             </div>
              <div align='center'>                                                 
@@ -589,6 +587,20 @@ width: 100%;
             </div>
         </div>
                         
+          <!-- Claims Page -->
+        <div data-role="view" id="claimsView" data-transition="slide" data-layout="default" data-show="retrieveEntityClaims">
+            <header data-role="header">
+                <div data-role="navbar">
+                    <a data-role="backbutton" data-align="left">Back</a>
+                    <div data-role="view-title">Claims</div>
+                </div>                
+            </header>
+            <div>               
+                <ul data-role="listview" id="entityClaims-listview" style="height: auto;" data-style="inset" data-type="group">
+                </ul>
+            </div>
+        </div>                        
+                        
         <script>
             
             var app = new kendo.mobile.Application(document.body, { transition: "slide", layout: "mobile-tabstrip" });
@@ -700,6 +712,23 @@ width: 100%;
                                 
         </script>        
        
+        <script type="text/x-kendo-template" id="entityClaims-listview-template">
+               
+              <ul data-role="listview" data-style="inset" data-type="group"> 
+                <li><span class="item-heading">${cla_brief_description}</span></li>
+            
+                 <ul>
+                      <li><span class="item-title">Date</span><span class="item-info">#= kendo.toString(cla_date_of_loss, "dd/MM/yyyy") #</span></li>                            
+                      <li><span class="item-title">Ref</span><span class="item-info">#= cla_id #</span></li>
+                      <li><span class="item-title">Claim Details</span><span class="item-info">#= skipIfEmpty(cla_brief_description, true) #</span></li>  
+                      <li><span class="item-title">Situation/Reg No</span><span class="item-info">#= skipIfEmpty(cla_sit_reg, true) #</span></li>                                                             
+                      <li><span class="item-title">Policy/Policy No</span><span class="item-info">#= skipIfEmpty(genins_name, true) #</span></li> 
+                      <li><span class="item-title">Insurer</span><span class="item-info">#= skipIfEmpty(Insurer, true) #</span></li> 
+                      <li><span class="item-title">Status</span><span class="item-info">#= clastaty_name#</span></li>                                                                                                                               
+                   </ul>
+              </ul>                                        
+                                
+        </script>   
         
         <script type="text/x-kendo-template" id="clientSearchResults-listview-template">
             <a

@@ -77,6 +77,7 @@
     <Content Include="kendo\styles\images\KendoUI.ttf" />
     <Content Include="kendo\styles\images\KendoUI.woff" />
     <Content Include="kendo\styles\kendo.mobile.all.min.css" />
+    <Content Include="scripts\entityclaims.js" />
     <Content Include="scripts\entitytasks.js" />
     <Content Include="scripts\outstandingtasks.js" />
     <Content Include="scripts\search.js" />

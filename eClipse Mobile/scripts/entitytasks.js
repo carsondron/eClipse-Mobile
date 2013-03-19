@@ -5,7 +5,7 @@ var isLoadedEntityTask = false;
 function retrieveEntityTasks(e)
 {                      
     var dsEntityTasks = new kendo.data.DataSource({
-      pageSize: 30, 
+      pageSize: 5, 
       transport: {
         read: {
                 url: serverURL + "GetTasks_ViewMobile?ent_id=" + currentClient + "&taskType=" + selectedTaskType,  //url specifies whether the paging should be handled by the service                           

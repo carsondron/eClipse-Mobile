@@ -128,7 +128,7 @@ function retrieveDebts(e)
     
     var dsSearch = new kendo.data.DataSource(
     {
-         pageSize: 20,
+         pageSize: 10,
          transport:
          {
              read:
@@ -195,8 +195,8 @@ function UpdateClientBalance()
                 item = dataSource.get();             
                                
                 var balance = typeof(item) === "undefined" ? "$0.00" : item.ClientBalance;
-                $("#DebtsBalanceOnSummary").text(formatNum(balance));   
-                $("#DebtsBalance").text(formatNum(balance));
+                $("#DebtsBalanceOnSummary").text("Balance: " + formatNum(balance));   
+                $("#DebtsBalance").text("Balance: " +formatNum(balance));
         });            
 }
 
