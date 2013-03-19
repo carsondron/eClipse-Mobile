@@ -63,16 +63,11 @@
     <Content Include="images\flag_red.png" />
     <Content Include="images\money_dollar.png" />
     <Content Include="images\money_dollar_red.png" />
-    <Content Include="images\Naq100x100.png" />
     <Content Include="images\Naq114x114.png" />
     <Content Include="images\Naq144x144.png" />
-    <Content Include="images\Naq29x29.png" />
     <Content Include="images\Naq50.png" />
-    <Content Include="images\Naq50x50.png" />
     <Content Include="images\Naq57x57.png" />
-    <Content Include="images\Naq58x58.png" />
     <Content Include="images\Naq72x72.png" />
-    <Content Include="images\NaqNLogo.png" />
     <Content Include="images\Prem_Fund.png" />
     <Content Include="images\Prem_Fund_Submitted.png" />
     <Content Include="index.html" />
