@@ -208,7 +208,6 @@
     
 }
 
-
 .settingsDetail{
 
     height: 30px;
@@ -659,7 +658,7 @@ width: 100%;
                       #= HasTask == 1 ? '<img src="images/calendar_redtotal.png" />' : '' #
                       #= ClaimStatus == 1 ? '<img src="images/flag_red.png" />' : '' #
                       #= ClaimStatus == 0 ? '<img src="images/flag_green.png" />' : '' #
-                      #= status_desc == 'Submitted' ? '<img src="images/Prem_Fund_Submitted.png" />' : '' #</li>
+                      #= status_desc == 'Submitted' ? '<img src="images/Prem_Fund_Submitted.png" />' : '' #
                   <ul>
                       <li><span class="item-title">Date</span><span class="item-info">#= kendo.toString(pol_date_effective, "dd/MM/yyyy") #</span></li>
                             <li><span class="item-title">Details</span><span class="item-info">#= skipIfEmpty(genins_name) + ' ' #
@@ -671,6 +670,7 @@ width: 100%;
                          <li><span class="item-title">Balance</span><span class="item-info">#= formatNum(bal_amount, true) #</span>     </li>                 
                             
                    </ul>    
+                       </li>
              </ul>               
                  
         </script>
@@ -678,7 +678,7 @@ width: 100%;
          <script type="text/x-kendo-template" id="entityTasks-listview-template">
                
               <ul data-role="listview" data-style="inset" data-type="group"> 
-                <li><span class="item-heading">${tas_brief_description}</span></li>
+                <li><span class="item-heading">${tas_brief_description}</span>
             
                  <ul>
                       <li><span class="item-title">Date</span><span class="item-info">#= kendo.toString(tas_followup_date, "dd/MM/yyyy") #</span> </li>   
@@ -695,6 +695,7 @@ width: 100%;
                       <li><span class="item-title">Queue</span><span class="item-info">#= tas_queue#</span> </li>                                                         
                       <li><span class="item-title">Doc</span><span class="item-info"></span></li>                    
                    </ul>
+                       </li>
               </ul>                                        
                                 
         </script>        
