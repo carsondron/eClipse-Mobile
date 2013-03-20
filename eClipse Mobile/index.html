@@ -813,14 +813,14 @@ width: 100%;
               data-role="listview-link"
               href="\#outstandingTasksDetailView?tas_id=#:tas_id#">               
              
-                  <h3 class="item-title">${tas_brief_description}</h3>  
+                  <h3 class="item-title">${ent_name}</h3>  
                   <div>
-                            <p class="item-info">
-                               <span> ${ent_name} </span>
-                            </p>
                             <p class="item-info">
                                 Date: #= kendo.toString(tas_followup_date, "dd/MM/yyyy") #                                       
                             </p>
+                            <p class="item-info">
+                               <span> ${tas_brief_description} </span>
+                            </p>                           
                             <p class="item-info"> 
                                  Priority: ${pri_name}
                             </p>    
