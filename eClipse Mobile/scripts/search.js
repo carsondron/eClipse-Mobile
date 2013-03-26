@@ -8,6 +8,7 @@ var notesSearched = false;
 var docsSearched = false;
 var currentClient = -1;
 var currentClientName = '';
+var currentClientSuburb = '';
 
 function ShowPolicyDoc(docId, docType)
 {
@@ -26,7 +27,7 @@ function ShowPolicyDoc(docId, docType)
 
 function retrieveDocuments(e)
 {
-    var view = e.view;
+    var view = e.view;      
     
     if (docsSearched)
     {
@@ -77,9 +78,10 @@ function retrieveDocuments(e)
 }
 
 function retrieveClient(e)
-{
+{   
     var view = e.view;
-    var itemDetailsTemplate = kendo.template($("#detailTemplate").text());
+    var itemDetailsTemplate = kendo.template($("#detailTemplate").text());            
+    var clientId = typeof(view.params.id) === "undefined"? currentClient: view.params.id;           
     
     var ds = new kendo.data.DataSource(
     {
@@ -87,7 +89,7 @@ function retrieveClient(e)
          {
              read:
              {
-               url: serverURL + "GetEntity?entId=" + view.params.id,
+               url: serverURL + "GetEntity?entId=" + clientId,
                data: 
                {
                    Accept: "application/json"
@@ -99,10 +101,16 @@ function retrieveClient(e)
             data: "GetEntityResult.RootResults"
        }
     });
-    currentClient = view.params.id;
+   
+    if(typeof(view.params.id)!="undefined")
+        currentClient = view.params.id;
+    
     ds.fetch(function() {
                 item = ds.get();
-                $("#Debtor").text(item.ent_name);
+                
+                currentClientName = item.ent_name;
+                currentClientSuburb = item.ent_suburb;
+                $("#Debtor").text(item.ent_name + ", " + item.ent_suburb);
                 view.scrollerContent.html(itemDetailsTemplate(item));
                 kendo.mobile.init(view.content);
         });
@@ -111,7 +119,9 @@ function retrieveClient(e)
 }
 
 function retrieveDebts(e)
-{
+{    
+     $("#ClientNameSuburbDebts").text(currentClientName + ", " + currentClientSuburb);
+    
     if (debtsSearched)
     {
         var lvSearch = $("#debts-listview").data("kendoMobileListView");
@@ -201,35 +211,51 @@ function UpdateClientBalance()
 }
 
 function retrievePolicies(e)
-{
+{        
+    $("#ClientNameSuburb").text(currentClientName + ", " + currentClientSuburb);    
+    
     if (policiesSearched)
     {
         var lvSearch = $("#policies-listview").data("kendoMobileListView");
-        lvSearch.dataSource.transport.options.read.url = serverURL + "GetInterestsAndRisks?entId=" + currentClient + "&showAll=true";
+        lvSearch.dataSource.transport.options.read.url = serverURL + "GetInterestsAndRisksMobile?entId=" + currentClient + "&showAll=true";
         lvSearch.dataSource.page(1);
         lvSearch.dataSource.read();
         lvSearch.refresh();
-        app.scroller().reset();
+        
+        ScrollToTop(); 
         return;
+        
     }
-    policiesSearched = true;
+    policiesSearched = true;       
     
-    var dsSearch = new kendo.data.DataSource(
+   
+    var policiesDS = new kendo.data.DataSource(
     {
+         pageSize: 10, 
          transport:
          {
              read:
              {
-               url: serverURL + "GetInterestsAndRisks?entId=" + currentClient + "&showAll=true",
+               url: serverURL + "GetInterestsAndRisksMobile?entId=" + currentClient + "&showAll=true",
                data: 
                {
                    Accept: "application/json"
                }                   
+            },
+            parameterMap: function(options) {
+              var parameters = {        
+                take: options.pageSize,   //additional parameters sent to the remote service
+                page: options.page        //next page
+              };
+                  
+              return parameters;
             }
-       },
+       },  
+       serverPaging: true,
+       pageable: true, 
        schema: 
        {
-            data: "GetInterestsAndRisksResult.RootResults",
+           data: "GetInterestsAndRisksMobileResult.RootResults",
            model: {
                 fields: {
                     genins_dtFrom: { type: "date"},
@@ -238,9 +264,13 @@ function retrievePolicies(e)
                }
        }
     });
-
+      
+    
     $("#policies-listview").kendoMobileListView({
-        		dataSource :dsSearch,
+        		dataSource :policiesDS,
+                endlessScroll: true,
+                pullToRefresh: true,
+                scrollTreshold: 30,
         		template: $("#policies-listview-template").html(),
                 columns: [
                         { field:"genins_dtFrom"},
@@ -249,7 +279,10 @@ function retrievePolicies(e)
         click: function (e) {
             //showActivity(e.dataItem.EventID);
         }
-        	});
+    });     
+   
+   
+    
 }
 
 function saveNote(e)
@@ -289,37 +322,50 @@ function resetNote(e)
 
 function retrieveNotes(e)
 {
+    $("#ClientNameSuburbNotes").text(currentClientName + ", " + currentClientSuburb);
+    
     if (notesSearched)
     {
         var lvSearch = $("#notes-listview").data("kendoMobileListView");
-        lvSearch.dataSource.transport.options.read.url = serverURL + "GetNotesViews?$where=(it.not_parent_id%253d%253d" + currentClient + ")&$orderby=it.not_created_when%2bdesc";
+        //lvSearch.dataSource.transport.options.read.url = serverURL + "GetNotesViewsMobile?$where=(it.not_parent_id%253d%253d" + currentClient + ")";
+        lvSearch.dataSource.transport.options.read.url = serverURL +"GetNotesViewsMobile?parentid=" + currentClient,
         
         lvSearch.dataSource.page(1);
         lvSearch.dataSource.read();
         lvSearch.refresh();
-        app.scroller().reset();
+        ScrollToTop(); 
         return;
     }
     notesSearched = true;
     
     var dsSearch = new kendo.data.DataSource(
     {
+         pageSize: 5, 
          transport:
          {
              read:
              {
-               url: serverURL +"GetNotesViews?$where=(it.not_parent_id%253d%253d" + currentClient + ")&$orderby=it.not_created_when%2bdesc",
+               //url: serverURL +"GetNotesViewsMobile?$where=(it.not_parent_id%253d%253d" + currentClient + ")",
+               url: serverURL +"GetNotesViewsMobile?parentid=" + currentClient,
                data: 
                {
                    Accept: "application/json"
-               }
-                 
-  
+               }                 
+            },
+            parameterMap: function(options) {
+              var parameters = {        
+                take: options.pageSize,   //additional parameters sent to the remote service
+                page: options.page        //next page
+              };
+                  
+              return parameters;
             }
        },
+       serverPaging: true,
+       pageable: true, 
        schema: 
        {
-            data: "GetNotesViewsResult.RootResults",
+            data: "GetNotesViewsMobileResult.RootResults",
            model: {
                 fields: {
                     not_created_when: { type: "date"}
@@ -330,6 +376,7 @@ function retrieveNotes(e)
 
     $("#notes-listview").kendoMobileListView({
         		dataSource :dsSearch,
+                endlessScroll: true,
         		template: $("#notes-listview-template").html(),
                 columns: [
                         { field:"not_created_when"}],
@@ -341,7 +388,7 @@ function retrieveNotes(e)
 }
 
 function eclipseSearch() 
-{
+{      
     var searchType = document.getElementById('searchType').value;
     var inputText = document.getElementById('txtName').value;
     $("#clientResults-listview").hide();
@@ -411,7 +458,7 @@ function clientSearch(inputText)
 }
 
 function taskSearch(inputText)
-{
+{   
     $("#taskResults-listview").show();
     
     if (taskSearched) {

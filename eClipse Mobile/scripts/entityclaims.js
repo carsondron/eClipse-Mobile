@@ -3,6 +3,8 @@ var isLoadedEntityClaim = false;
 
 function retrieveEntityClaims(e)
 {                      
+    $("#ClientNameSuburbClaims").text(currentClientName + ", " + currentClientSuburb);
+    
     var dsEntityClaims = new kendo.data.DataSource({
       pageSize: 10, 
       transport: {

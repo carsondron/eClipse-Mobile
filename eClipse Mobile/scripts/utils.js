@@ -25,7 +25,7 @@ function ShowDocument(url)
 
 function login()
 {
-    var svrURL = localStorage.getItem("ServerURL");
+    var svrURL = localStorage.getItem("lsServerURL");
     if(svrURL == null || svrURL == "")
     {
         $("#modalview-settings").data("kendoMobileModalView").open();
@@ -39,17 +39,18 @@ function login()
 function showSettings()
 {
     var svrURL = document.getElementById("serverUrl");
-    svrURL.value = localStorage.getItem("ServerURL");
+    svrURL.value = localStorage.getItem("lsServerURL");
     $("#modalview-settings").data("kendoMobileModalView").open();
 }
 
 function saveSettings()
 {
     var svrURL = document.getElementById("serverUrl");
-    localStorage.setItem("ServerURL", svrURL.value);
+    localStorage.setItem("lsServerURL", svrURL.value);
     $("#modalview-settings").kendoMobileModalView("close");
-    baseURL = svrURL;
-    serverURL = baseURL + "/ClientBin/BrokerPlus-Web-BrokerPlusDomainService.svc/JSON/";
+    baseURL = svrURL;   
+    
+    serverURL = baseURL.value + "/ClientBin/BrokerPlus-Web-BrokerPlusDomainService.svc/JSON/";
     if(!loggedIn)
     {
         login();
@@ -65,7 +66,7 @@ function closeModalViewLogin()
 {
     $("#modalview-login").kendoMobileModalView("close");
     loggedIn = true;
-    GetAllOutstandingTasks();
+    //GetAllOutstandingTasks();
 }
 
 function skipIfEmpty(strValue, addBreak, defaultString)
@@ -166,3 +167,5 @@ function ScrollToTop(e) {
         scroller.reset();                   
     }, 500);        
 }
+
+

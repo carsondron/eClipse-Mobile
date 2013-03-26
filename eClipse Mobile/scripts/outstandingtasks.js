@@ -6,7 +6,7 @@ var isClientTask = true;
 var isClaimTask = true;
 var isPolicyTask = true;
 var selectedTaskType = "Client";
-    
+var currentTaskType = "";    
 
 function GetAllOutstandingTasks(){   
   isClientTask = true  
@@ -51,7 +51,8 @@ var dataSource = new kendo.data.DataSource({
      model: {
             fields: {
                 tas_followup_date: { type: "date"},
-                tas_id: { type: "number" }
+                tas_id: { type: "number" },
+                ent_id: { type: "number" }
             }
         }           
       
@@ -139,9 +140,7 @@ function customParse(data) {
 function retrieveOutstandingTasks(e)
 {           
     var view = e.view;               
-    var itemDetailsTemplate = kendo.template($("#outstandingTaskDetailTemplate").text());    
-    
-    
+    var itemDetailsTemplate = kendo.template($("#outstandingTaskDetailTemplate").text());            
         
     var ds = new kendo.data.DataSource(
     {
@@ -163,28 +162,45 @@ function retrieveOutstandingTasks(e)
              total: "GetTasksForUserByTaskIdResult.TotalCount",
                 model: {
                 fields: {
-                    tas_followup_date: { type: "date"}
+                    tas_followup_date: { type: "date"},
+                    tas_id: { type: "number" },
+                    ent_id: { type: "number" }
                 }
             }  
        },
        filterable: true,
        pageable: true
     });  
-   
-    
-   // alert(view.params.tas_id);
-    
-    //dataSource.filter([{"filters":[{field: "tas_id", operator : "eq", value : view.params.tas_id}]}]);        
-    
+       
+    //alert(view.params.tas_id + " " + view.params.tas_brief_description + " " +  view.ent_id + " " + currentClient);    
+    //dataSource.filter([{"filters":[{field: "tas_id", operator : "eq", value : view.params.tas_id}]}]);            
     
     ds.fetch(function() 
                 {
-                    item = ds.get();
+                    item = ds.get();                    
+                    currentClient = item.ent_id;   
+                    currentTaskType = item.TaskType;
                     view.scrollerContent.html(itemDetailsTemplate(item));
                     kendo.mobile.init(view.content);                
                 });            
 }
 
+function GoToClientSummary()
+{        
+    switch(currentTaskType)
+    {
+        case "Client":
+            app.navigate("#clientSummaryView"); 
+            break;
+        case "Policy":
+            app.navigate("#policiesView"); 
+            break;
+        case "Claim":
+            app.navigate("#claimsView"); 
+            break;                
+    }
+}
+    
 
 
 

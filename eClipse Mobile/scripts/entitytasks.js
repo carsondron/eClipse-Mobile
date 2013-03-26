@@ -3,7 +3,9 @@ var isLoadedEntityTask = false;
 
 
 function retrieveEntityTasks(e)
-{                      
+{              
+    $("#ClientNameSuburbTasks").text(currentClientName + ", " + currentClientSuburb);
+    
     var dsEntityTasks = new kendo.data.DataSource({
       pageSize: 5, 
       transport: {
@@ -78,9 +80,8 @@ function selectedEntityTask() {
       }    
 }
 
-function GetEntityTasks() {                       
-   
-  
+function GetEntityTasks() {                                  
+    
       if (isLoadedEntityTask) { 
         
       var lvTasks = $("#entityTasks-listview").data("kendoMobileListView");

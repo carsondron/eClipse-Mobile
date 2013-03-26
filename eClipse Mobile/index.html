@@ -81,13 +81,17 @@
     
 #clientSummaryView .item-title {
 	float: left;
-    width: 33%;
+    width: 37%;
+    color: #369;
+    font-size: .8em;
+	line-height: 1.3em;
 }
 #clientSummaryView .item-info {
 	float: right;
-    width: 65%;
-    color: #aaa;
+    width: 61%;    
     vertical-align : center;
+    font-size: .8em;
+	line-height: 1.3em;
 }
 
 #debts-listview .item-heading {
@@ -171,14 +175,16 @@
     
 #outstandingTasksDetailView .item-title {
 	float: left;
+    font-size: .8em;
+	line-height: 1.3em;
     width: 33%;
-}
-    
+    color: #369;
+}    
 #outstandingTasksDetailView .item-info {
 	float: right;
-    width: 65%;
-    color: #aaa;
-    vertical-align : center;
+    width: 65%;        
+    font-size: .8em;
+	line-height: 1.3em;
 }
 #entityTasks-listview .item-heading {
 	font-size: .8em;
@@ -197,6 +203,23 @@
 	line-height: 1.3em;
     width: 65%;
 }    
+#entityClaims-listview .item-heading {
+	font-size: .8em;
+	line-height: 1.3em;
+}
+#entityClaims-listview .item-title {
+	float: left;
+	font-size: .7em;
+	line-height: 1.3em;
+    color: #369;
+    width: 40%;
+}
+#entityClaims-listview .item-info {
+	float: right;
+	font-size: .7em;
+	line-height: 1.3em;
+    width: 58%;
+}            
     
 .details-link {
     margin-top: -1.2em;
@@ -204,15 +227,23 @@
     right: 0.6em;
     top: 50%;
 }
+     
+.km-ios #tabstrip-home .km-content{
+    background: url('../images/Naq114x114.png') no-repeat center center;
+    background-color: white; 
+}   
 .km-listview .km-list {
-    margin: 0;
-    
+    margin: 0;    
 }
-
+  
+#buttongroup {
+    margin: 1em auto .4em auto;
+    font-size: 0.8em;
+} 
+    
 .settingsDetail{
-
     height: 30px;
-width: 100%;
+    width: 100%;
 }
 
 .notesEntryClass{
@@ -220,45 +251,49 @@ width: 100%;
     margin: .95em 0 0 .95em;
     width: 90%;
 }
-    
+  
 .km-ios .debtsHeader { color: black; }
-.km-android .debtsHeader { color: white; }
-    
+.km-android .debtsHeader { color: white; }    
 .km-android .km-navbar .km-view-title /* After Q2 2012 SP1 */
 {
     visibility: visible;
-}
-    
+}    
 .km-android div.km-view {
     -webkit-box-direction: normal;
 }
+    
 </style>
                         
     </head>
     <body>
         
-         <!-- Home Page -->
-        <div data-role="view" id="tabstrip-uiinteraction" data-title="eClipse Mobile" data-init="login">
-            <header  data-role="header">
-               <div data-role="navbar" id="navbar">
-                    <div id="eclipseLogo">
+        <div data-role="view" id="tabstrip-home" data-title="eClipse Mobile" data-init="login" >
+            <header data-role="header">
+                <div data-role="navbar" id="navbar">
+                     <div id="eclipseLogo">
                         <p align="center">eClipse Mobile</p>
-                    </div>
-               </div>              
-               <h2 align="center" id="selectedTaskText"></h2>                                            
-               <ul id="buttongroup" data-role="buttongroup" data-index="0" data-select="selectedTask">
-                    <li>All</li>
-                    <li>Client</li>
-                    <li>Claim</li>
-                    <li>Policy</li>
-                </ul>              
-            </header>                                     
-            <div>                                                        
-            <ul data-role="listview" id="outstandingTasksResults-listview" style="height: auto;"
-                data-style="inset" data-type="group">                
-            </ul>
+                     </div>
+                </div>
+                <div align="center">
+                
+                    <input type="text" style="width:100px" placeholder="Search" id="txtName" validationmessage="Please enter {0}" class="k-textbox">
+                        
+                    <select data-role="dropdownlist" id="searchType" class="k-input">
+                        <option value="Client">Client</option>
+                        <option value="Task">Task</option>
+                        <option value="Claim">Claim</option>
+                    </select>
+                    <a id="submitButton" data-role="button" data-click="eclipseSearch" data-icon="search"></a>
+                </div>
+    
+            </header>                                                             
+            <div class='searchResults-listview'>                
+                <ul data-role="listview" id="clientResults-listview" style="height: auto;" data-style="inset" data-type="group" />
+                <ul data-role="listview" id="taskResults-listview" style="height: auto;" data-style="inset" data-type="group" /> 
+                <ul data-role="listview" id="claimResults-listview" style="height: auto;" data-style="inset" data-type="group" />
             </div>
-                    <div data-role="modalview" id="modalview-login" style="width: 300px; height: 230px;">
+                        
+             <div data-role="modalview" id="modalview-login" style="width: 300px; height: 230px;">
                     <div data-role="header">
                         <div data-role="navbar">
                             <span>Login</span>
@@ -272,10 +307,36 @@ width: 100%;
                     <input id="rememberMe" type='checkbox' checked='True' /><label for="remember">Remember me</label> <br /><br />
                     <a data-click="closeModalViewLogin" id="modalview-login-button" type="button" data-role="button">Login</a>
                     <a data-click="closeModalViewLogin" id="modalview-reg-button" type="button" data-role="button">Cancel</a>
-                    </div>
-                </div>
+                </div>            
+            </div>
+        </div>
                         
-            <div data-role="modalview" id="modalview-settings" style="width: 300px; height: 230px;" data-init="settingsInit">
+         <!-- Tasks Page -->
+        <div data-role="view" id="tabstrip-uiinteraction" data-title="eClipse Mobile" data-init="GetAllOutstandingTasks" >
+            <header  data-role="header">
+               <div data-role="navbar" id="navbar">
+                    <div id="eclipseLogo">
+                        <p align="center">eClipse Mobile</p>
+                    </div>
+               </div>              
+               <h2 align="center" id="selectedTaskText"></h2>                                            
+               <ul id="buttongroup" data-role="buttongroup" data-index="0" data-select="selectedTask">
+                    <li style>All</li>
+                    <li>Client</li>
+                    <li>Claim</li>
+                    <li>Policy</li>
+                </ul>              
+            </header>                                     
+            <div>                                                        
+                <ul data-role="listview" id="outstandingTasksResults-listview" style="height: auto;"
+                    data-style="inset" data-type="group">                
+                </ul>
+            </div>
+                   
+         </div>
+         
+         <!-- Settings Page -->
+         <div data-role="modalview" id="modalview-settings" style="width: 300px; height: 230px;" data-init="settingsInit">
                 <div data-role="header">
                         <div data-role="navbar">
                             <span>Settings</span>
@@ -284,16 +345,16 @@ width: 100%;
                     <div data-role="content">
                          <h3>Server URL</h3>
                         <div class="settingsDetail">
-                         <input style="width:100%;-moz-box-sizing:border-box;-webkit-box-sizing:border-box;box-sizing: border-box;" type="text" width="300px" align="center" id="serverUrl" value="http://203.110.139.199/demo" />
+                         <input style="width:100%;-moz-box-sizing:border-box;-webkit-box-sizing:border-box;box-sizing: border-box;" type="text" width="300px" align="center" id="serverUrl" value="http://192.168.140.23/EclipseMobile" />
                             </div>
                     </div>
                     <div align='center'>
                         <a data-click="saveSettings" id="saveSettingsButton" type="button" data-role="button">Save</a>
                         <a data-click="closeModalViewSettings" id="settingsCanelButton" type="button" data-role="button">Cancel</a>
                     </div>
-            </div>
+         </div>
             
-        </div>
+        
         
         <!-- Outstanding Tasks Details Page -->
         <div data-role="view" id="outstandingTasksDetailView" data-transition="slide" data-layout="default" data-show="retrieveOutstandingTasks">
@@ -308,12 +369,12 @@ width: 100%;
         </div>
         
         <script id="outstandingTaskDetailTemplate" type="text/x-kendo-template">
-                      
+           
             <ul data-role="listview" data-style="inset" data-type="group">
-                <li> #= ent_name#
+                <li>   <a href="javascript:GoToClientSummary();"> #= ent_name# </a>
                     <ul>
                         <li>
-                            #= tas_brief_description#                        
+                            #= tas_brief_description#                
                         </li> 
                     </ul>
                 </li>
@@ -331,43 +392,9 @@ width: 100%;
                         <li><span class="item-title">Doc</span><span class="item-info">#= skipIfEmpty(tas_contact_person, true) #</span></li>
                         <li><span class="item-title">Queue</span><span class="item-info">#= skipIfEmpty(tas_queue, true) #</span></li>
                     </ul>
-                </li>
-            </ul>                                
-        </script>        
-        
-        <div data-role="view" id="tabstrip-home" data-title="eClipse Mobile">
-            <header data-role="header">
-                <div data-role="navbar" id="navbar">
-                     <div id="eclipseLogo">
-                        <p align="center">eClipse Mobile</p>
-                     </div>
-                </div>
-                <div >
-                
-                    <input type="text" style="width:100px" placeholder="Search" id="txtName" validationmessage="Please enter {0}" class="k-textbox">
-                        
-                    <select data-role="dropdownlist" id="searchType" class="k-input">
-                        <option value="Client">Client</option>
-                        <option value="Task">Task</option>
-                        <option value="Claim">Claim</option>
-                    </select>
-                    <a id="submitButton" data-role="button" data-click="eclipseSearch" data-icon="search"></a>
-                </div>
-    
-            </header>            
-
-            <div class='searchResults-listview'>
-                <ul data-role="listview" id="clientResults-listview" style="height: auto;"
-                        data-style="inset" data-type="group">
-                </ul>
-                <ul data-role="listview" id="taskResults-listview" style="height: auto;"
-                        data-style="inset" data-type="group">
-                </ul>
-                <ul data-role="listview" id="claimResults-listview" style="height: auto;"
-                        data-style="inset" data-type="group">
-                </ul>
-            </div>
-        </div>
+                </li> 
+            </ul>           
+        </script>                        
                                                            
         <div data-role="view" id="tabstrip-settings" data-title="Options">
 			<div>
@@ -385,9 +412,9 @@ width: 100%;
             </header>
                
             <div data-role="footer">
-                <div data-role="tabstrip">
-                    <a href="#tabstrip-uiinteraction" data-icon="home">Home</a>
-                    <a href="#tabstrip-home" data-icon="search">Search</a>
+                <div data-role="tabstrip">                                       
+                    <a href="#tabstrip-home" data-icon="home">Home</a>
+                    <a href="#tabstrip-uiinteraction" data-icon="recents">Tasks</a>
                     <a href="#tabstrip-settings" data-icon="settings">Settings</a>
                 </div>
             </div>            
@@ -396,8 +423,9 @@ width: 100%;
         <!-- Client Summary Page -->
         <div data-role="view" id="clientSummaryView" data-transition="slide" data-layout="default" data-show="retrieveClient">
             <header data-role="header">
-                <div data-role="navbar">
-                    <a data-role="backbutton" data-align="left">Back</a>
+                <div data-role="navbar">                   
+                    <a class="button" data-role="button" data-icon="home" data-align="left" href="#tabstrip-home">Home</a>
+                    
                     <div data-role="view-title">Client Summary</div>
                 </div>
             </header>
@@ -408,9 +436,11 @@ width: 100%;
                 <a data-role="button" style="margin-left: 0; margin-right: 0;" href="#claimsView">Claims</a>
                 <a data-role="button" style="margin-left: 0; margin-right: 0;" href="#notesView">Notes</a>
             </div>
-             <div align='center'>                                                 
-                  <h4 align='center' id="DebtsBalanceOnSummary" class="debtsHeader"></h4>                
-             </div>             
+             <div align='center'>
+                 <h2 align='center' id="Debtor" style="margin-bottom: 0px;"></h2>
+                 <h4 align='center' id="DebtsBalanceOnSummary" class="debtsHeader" style="margin-top: .1em;"></h4>                                                                  
+             </div>   
+                        
             <div data-role="content">
             </div>
         </div>                                         
@@ -420,14 +450,14 @@ width: 100%;
             <ul data-role="listview" data-style="inset" data-type="group">
                 <li>#= ent_name + ((ent_suburb == null || ent_suburb == '') ? '' : ', ' + ent_suburb) #
                     <ul>
-                         <li>
-                            #= ((ent_trading_as == null || ent_trading_as == '') ? '' : 't/as ' + ent_trading_as + '<br />') #
-                            #= skipIfEmpty(ent_addressee, true) #
-                            #= skipIfEmpty(ent_address_1, true) #
-                            #= skipIfEmpty(ent_address_2, true) #
-                            #= skipIfEmpty(ent_address_3, true) #
-                            #= skipIfEmpty(ent_suburb, true) #
-                            #= skipIfEmpty(ent_postcode, true) #        
+                         <li style="font-size: 1em;">                            
+                                #= ((ent_trading_as == null || ent_trading_as == '') ? '' : 't/as ' + ent_trading_as + '<br />') #
+                                #= skipIfEmpty(ent_addressee, true) #
+                                #= skipIfEmpty(ent_address_1, true) #
+                                #= skipIfEmpty(ent_address_2, true) #
+                                #= skipIfEmpty(ent_address_3, true) #
+                                #= skipIfEmpty(ent_suburb, true) #
+                                #= skipIfEmpty(ent_postcode, true) #                             
                         </li>
                     </ul>
                 </li>
@@ -438,7 +468,7 @@ width: 100%;
                          <li><span class="item-title">Salutation</span><span class="item-info">#= skipIfEmpty(ent_salutation) #</span></li>
                          <li><span class="item-title">Web</span><span class="item-info"><a href="#= skipIfEmpty(ent_web_site) #" data-rel="external">#= skipIfEmpty(ent_web_site) #</a></span></li>
                          <li><span class="item-title">Email</span><span class="item-info"><a href="mailto:#= skipIfEmpty(ent_email) #"  data-rel="external">#= skipIfEmpty(ent_email) #</a></span></li>
-                         <li><span class="item-title">Classification</span><span class="item-info">#= skipIfEmpty(ent_abn) #</span></li>
+                        <!-- <li><span class="item-title">Classification</span><span class="item-info"></span></li>-->
                          <li><span class="item-title">ABN</span><span class="item-info">#= skipIfEmpty(ent_abn) #</span></li>
                     </ul>
                 </li>
@@ -459,11 +489,19 @@ width: 100%;
         <div data-role="view" id="notesView" data-transition="slide" data-layout="default" data-show="retrieveNotes">
             <header data-role="header">
                 <div data-role="navbar">
-                    <a data-role="backbutton" data-align="left">Back</a>
+                    <a class="button" data-role="button" data-icon="home" data-align="left" href="#tabstrip-home">Home</a>
                     <div data-role="view-title">Notes</div>
                     <a data-icon="add" data-align="right" data-role="button" href="#addNoteView"></a>
                 </div>
             </header>
+             <div align="center">
+                <a data-role="button" style="margin-left: 0; margin-right: 0;" href="#policiesView">Policies</a>
+                <a data-role="button" style="margin-left: 0; margin-right: 0;" href="#debtsView">Debts</a>
+                <a data-role="button" style="margin-left: 0; margin-right: 0;" href="#tasksView">Tasks</a>
+                <a data-role="button" style="margin-left: 0; margin-right: 0;" href="#claimsView">Claims</a>
+                <a data-role="button" style="margin-left: 0; margin-right: 0; color: #fff; background-color: #f60" href="#notesView">Notes</a>
+            </div>
+            <a href="#clientSummaryView"><h2 align='center' id="ClientNameSuburbNotes" class="debtsHeader"></h2></a>
             <div data-role="content">
                 <ul data-role="listview" id="notes-listview" style="height: auto;"
                         data-style="inset" data-type="group">
@@ -476,13 +514,10 @@ width: 100%;
             <header data-role="header">
                 <div data-role="navbar">
                     <div data-role="view-title" >New Note</div>
-                </div>
+                </div>                
             </header>
             <div data-role="content">
-                <div align="center" >
-                    <a data-role="button" data-align="right" data-click="saveNote">Save</a>
-                    <a data-role="button" data-align="right" data-click="cancelNoteAdd">Cancel</a>
-                </div>
+               
                 <h3>Details</h3>
                 <ul data-role="listview" data-style="inset">
                     
@@ -513,20 +548,34 @@ width: 100%;
                 <h3>Note</h3>
                          
                 <textarea class="notesEntryClass" placeholder="Notes" id="noteNote"></textarea>
-
+                <div align="center" >
+                    <a data-role="button" data-align="right" data-click="saveNote">Save</a>
+                    <a data-role="button" data-align="right" data-click="cancelNoteAdd">Cancel</a>
+                </div>
             </div>
+                 
         </div>
                         
         <!-- Policies Page -->
         <div data-role="view" id="policiesView" data-transition="slide" data-layout="default" data-show="retrievePolicies">
             <header data-role="header">
                 <div data-role="navbar">
-                    <a data-role="backbutton" data-align="left">Back</a>
+                    <a class="button" data-role="button" data-icon="home" data-align="left" href="#tabstrip-home">Home</a>
                     <div data-role="view-title">Policies</div>
                 </div>
             </header>
-            <div data-role="content">
-                <ul data-role="listview" id="policies-listview" style="height: auto;"
+             <div align="center">
+                <a data-role="button" style="margin-left: 0; margin-right: 0; color: #fff; background-color: #f60" href="#policiesView">Policies</a>
+                <a data-role="button" style="margin-left: 0; margin-right: 0;" href="#debtsView">Debts</a>
+                <a data-role="button" style="margin-left: 0; margin-right: 0;" href="#tasksView">Tasks</a>
+                <a data-role="button" style="margin-left: 0; margin-right: 0;" href="#claimsView">Claims</a>
+                <a data-role="button" style="margin-left: 0; margin-right: 0;" href="#notesView">Notes</a>
+            </div>
+            <div>
+                   <a href="#clientSummaryView"><h2 align='center' id="ClientNameSuburb" class="debtsHeader"></h2></a>
+            </div>
+            <div data-role="content" style="background-color: transparent;">
+                <ul data-role="listview" id="policies-listview" style="height: auto; background-color: transparent" 
                         data-style="inset" data-type="group">
                 </ul>
             </div>
@@ -540,7 +589,7 @@ width: 100%;
                     <div data-role="view-title">Documents</div>
                 </div>
             </header>
-            <div data-role="content">
+            <div data-role="content" >
                 <ul data-role="listview" id="docs-listview" style="height: auto;"
                         data-style="inset" data-type="group">
                 </ul>
@@ -551,14 +600,21 @@ width: 100%;
         <div data-role="view" id="debtsView" data-transition="slide" data-layout="default" data-show="retrieveDebts">
             <header data-role="header">
                 <div data-role="navbar">
-                    <a data-role="backbutton" data-align="left">Back</a>
+                    <a class="button" data-role="button" data-icon="home" data-align="left" href="#tabstrip-home">Home</a>
                     <div data-role="view-title">Debts</div>
-                </div>
-                <div>
-                        <h2 align='center' id="Debtor" class="debtsHeader"></h2>
-                        <h4 align='center' id="DebtsBalance" class="debtsHeader"></h4>                       
-                </div>
+                </div>                
             </header>
+             <div align="center">
+                <a data-role="button" style="margin-left: 0; margin-right: 0;" href="#policiesView">Policies</a>
+                <a data-role="button" style="margin-left: 0; margin-right: 0; color: #fff; background-color: #f60" href="#debtsView">Debts</a>
+                <a data-role="button" style="margin-left: 0; margin-right: 0;" href="#tasksView">Tasks</a>
+                <a data-role="button" style="margin-left: 0; margin-right: 0;" href="#claimsView">Claims</a>
+                <a data-role="button" style="margin-left: 0; margin-right: 0;" href="#notesView">Notes</a>
+            </div>
+            <div>
+                 <a href="#clientSummaryView"><h2 align='center' id="ClientNameSuburbDebts" class="debtsHeader" style="margin-bottom: 0px;"></h2></a>
+                 <h4 align='center' id="DebtsBalance" class="debtsHeader" style="margin-top: .1em;"></h4>                                                      
+            </div>
             <div data-role="content">
                 <ul data-role="listview" id="debts-listview" style="height: auto;"
                         data-style="inset" data-type="group">
@@ -570,16 +626,24 @@ width: 100%;
         <div data-role="view" id="tasksView" data-transition="slide" data-layout="default" data-show="retrieveEntityTasks">
             <header data-role="header">
                 <div data-role="navbar">
-                    <a data-role="backbutton" data-align="left">Back</a>
+                    <a class="button" data-role="button" data-icon="home" data-align="left" href="#tabstrip-home">Home</a>
                     <div data-role="view-title">Tasks</div>
                 </div>
+                 <div align="center">
+                    <a data-role="button" style="margin-left: 0; margin-right: 0;" href="#policiesView">Policies</a>
+                    <a data-role="button" style="margin-left: 0; margin-right: 0;" href="#debtsView">Debts</a>
+                    <a data-role="button" style="margin-left: 0; margin-right: 0; color: #fff; background-color: #f60" href="#tasksView">Tasks</a>
+                    <a data-role="button" style="margin-left: 0; margin-right: 0;" href="#claimsView">Claims</a>
+                    <a data-role="button" style="margin-left: 0; margin-right: 0;" href="#notesView">Notes</a>
+                </div>
+                <a href="#clientSummaryView"><h2 align='center' id="ClientNameSuburbTasks" class="debtsHeader"></h2></a>
                  <ul id="buttongroup" data-role="buttongroup" data-index="0" data-select="selectedEntityTask">
                         <li>All</li>
                         <li>Client</li>
                         <li>Claim</li>
                         <li>Policy</li>
                  </ul>
-            </header>
+            </header>           
             <div>               
                 <ul data-role="listview" id="entityTasks-listview" style="height: auto;"
                         data-style="inset" data-type="group">
@@ -591,10 +655,19 @@ width: 100%;
         <div data-role="view" id="claimsView" data-transition="slide" data-layout="default" data-show="retrieveEntityClaims">
             <header data-role="header">
                 <div data-role="navbar">
-                    <a data-role="backbutton" data-align="left">Back</a>
+                    <a class="button" data-role="button" data-icon="home" data-align="left" href="#tabstrip-home">Home</a>
                     <div data-role="view-title">Claims</div>
                 </div>                
             </header>
+             <div align="center">
+                <a data-role="button" style="margin-left: 0; margin-right: 0;" href="#policiesView">Policies</a>
+                <a data-role="button" style="margin-left: 0; margin-right: 0;" href="#debtsView">Debts</a>
+                <a data-role="button" style="margin-left: 0; margin-right: 0;" href="#tasksView">Tasks</a>
+                <a data-role="button" style="margin-left: 0; margin-right: 0; color: #fff; background-color: #f60" href="#claimsView">Claims</a>
+                <a data-role="button" style="margin-left: 0; margin-right: 0;" href="#notesView">Notes</a>
+            </div>
+            <a href="#clientSummaryView"><h2 align='center' id="ClientNameSuburbClaims" class="debtsHeader" style="margin-bottom: 0px; margin-top: 0px;"></h2></a>
+            
             <div>               
                 <ul data-role="listview" id="entityClaims-listview" style="height: auto;" data-style="inset" data-type="group">
                 </ul>
@@ -612,7 +685,11 @@ width: 100%;
 
             <ul data-role="listview" data-style="inset" data-type="group">
             
-                <li><span class="item-heading">${jou_brief_description}</span>
+                <li>
+                    <span class="item-heading">                               
+                                <a class="button" data-role="button" data-icon="bookmarks" data-align="left" >View</a>   
+                                ${jou_brief_description} 
+                    </span>
                     <ul>
                       <li><span class="item-title">Date</span><span class="item-info">#= kendo.toString(jou_created_when, "dd/MM/yyyy") #</span> </li>   
                       <li><span class="item-title">Name</span><span class="item-info">#= genins_name #</span></li>
@@ -636,8 +713,7 @@ width: 100%;
                              <li><span class="item-note">#= not_note #     </span></li>                 
                        </ul>    
                   </li>
-            </ul>               
-                 
+            </ul>                                
         </script>
                                                                            
         <script type="text/x-kendo-template" id="policies-listview-template">
@@ -715,17 +791,17 @@ width: 100%;
         <script type="text/x-kendo-template" id="entityClaims-listview-template">
                
               <ul data-role="listview" data-style="inset" data-type="group"> 
-                <li><span class="item-heading">${cla_brief_description}</span></li>
-            
-                 <ul>
-                      <li><span class="item-title">Date</span><span class="item-info">#= kendo.toString(cla_date_of_loss, "dd/MM/yyyy") #</span></li>                            
-                      <li><span class="item-title">Ref</span><span class="item-info">#= cla_id #</span></li>
-                      <li><span class="item-title">Claim Details</span><span class="item-info">#= skipIfEmpty(cla_brief_description, true) #</span></li>  
-                      <li><span class="item-title">Situation/Reg No</span><span class="item-info">#= skipIfEmpty(cla_sit_reg, true) #</span></li>                                                             
-                      <li><span class="item-title">Policy/Policy No</span><span class="item-info">#= skipIfEmpty(genins_name, true) #</span></li> 
-                      <li><span class="item-title">Insurer</span><span class="item-info">#= skipIfEmpty(Insurer, true) #</span></li> 
-                      <li><span class="item-title">Status</span><span class="item-info">#= clastaty_name#</span></li>                                                                                                                               
-                   </ul>
+                    <li><span class="item-heading">${cla_brief_description}</span>                
+                         <ul>
+                              <li><span class="item-title">Date</span><span class="item-info">#= kendo.toString(cla_date_of_loss, "dd/MM/yyyy") #</span></li>                            
+                              <li><span class="item-title">Ref</span><span class="item-info">#= cla_id #</span></li>
+                              <li><span class="item-title">Claim Details</span><span class="item-info">#= skipIfEmpty(cla_brief_description, true) #</span></li>  
+                              <li><span class="item-title">Situation/Reg No</span><span class="item-info">#= skipIfEmpty(cla_sit_reg, true) #</span></li>                                                             
+                              <li><span class="item-title">Policy/Policy No</span><span class="item-info">#= skipIfEmpty(genins_name, true) #</span></li> 
+                              <li><span class="item-title">Insurer</span><span class="item-info">#= skipIfEmpty(Insurer, true) #</span></li> 
+                              <li><span class="item-title">Status</span><span class="item-info">#= clastaty_name#</span></li>                                                                                                                               
+                           </ul>
+                     </li>
               </ul>                                        
                                 
         </script>   
@@ -830,6 +906,14 @@ width: 100%;
                             
                    </div>    
              </a>
-        </script>                                                                                  
+        </script>   
+    
+        <script>
+            $("#txtName").keydown(function(e) {
+                        if (e.keyCode === kendo.keys.ENTER) {
+                           eclipseSearch();
+                        }
+                    });
+        </script>                                                                                
     </body>
 </html>

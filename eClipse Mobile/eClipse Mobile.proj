@@ -11,9 +11,10 @@
     <DeviceOrientations>Portrait;Landscape</DeviceOrientations>
     <iOSStatusBarStyle>Default</iOSStatusBarStyle>
     <BundleVersion>1.0</BundleVersion>
-    <iOSDisplayName />
+    <iOSDisplayName>eClipseMobile</iOSDisplayName>
     <AndroidVersionCode>1</AndroidVersionCode>
     <AndroidHardwareAcceleration>false</AndroidHardwareAcceleration>
+    <iOSDeviceFamily>1;2</iOSDeviceFamily>
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="App_Resources" />
