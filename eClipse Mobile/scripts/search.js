@@ -109,8 +109,8 @@ function retrieveClient(e)
                 item = ds.get();
                 
                 currentClientName = item.ent_name;
-                currentClientSuburb = item.ent_suburb;
-                $("#Debtor").text(item.ent_name + ", " + item.ent_suburb);
+                currentClientSuburb = item.ent_suburb;                                        
+                $("#Debtor").text(currentClientName + ((currentClientSuburb == null || currentClientSuburb == '') ? '' : ', ' + currentClientSuburb));
                 view.scrollerContent.html(itemDetailsTemplate(item));
                 kendo.mobile.init(view.content);
         });
@@ -120,7 +120,7 @@ function retrieveClient(e)
 
 function retrieveDebts(e)
 {    
-     $("#ClientNameSuburbDebts").text(currentClientName + ", " + currentClientSuburb);
+     $("#ClientNameSuburbDebts").text(currentClientName + ((currentClientSuburb == null || currentClientSuburb == '') ? '' : ', ' + currentClientSuburb));
     
     if (debtsSearched)
     {
@@ -212,7 +212,7 @@ function UpdateClientBalance()
 
 function retrievePolicies(e)
 {        
-    $("#ClientNameSuburb").text(currentClientName + ", " + currentClientSuburb);    
+    $("#ClientNameSuburb").text(currentClientName + ((currentClientSuburb == null || currentClientSuburb == '') ? '' : ', ' + currentClientSuburb));
     
     if (policiesSearched)
     {
@@ -322,7 +322,7 @@ function resetNote(e)
 
 function retrieveNotes(e)
 {
-    $("#ClientNameSuburbNotes").text(currentClientName + ", " + currentClientSuburb);
+    $("#ClientNameSuburbNotes").text(currentClientName + ((currentClientSuburb == null || currentClientSuburb == '') ? '' : ', ' + currentClientSuburb));
     
     if (notesSearched)
     {
