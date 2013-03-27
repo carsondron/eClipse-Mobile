@@ -4,7 +4,7 @@ var isLoadedEntityTask = false;
 
 function retrieveEntityTasks(e)
 {              
-    $("#ClientNameSuburbTasks").text(currentClientName + ", " + currentClientSuburb);
+    $("#ClientNameSuburbTasks").text(currentClientName + ((currentClientSuburb == null || currentClientSuburb == '') ? '' : ', ' + currentClientSuburb));
     
     var dsEntityTasks = new kendo.data.DataSource({
       pageSize: 5, 
