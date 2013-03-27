@@ -5,6 +5,7 @@
 var baseURL = "http://192.168.140.23/EclipseMobile";
 //var baseURL = "http://203.110.139.199/demo";
 var serverURL = baseURL + "/ClientBin/BrokerPlus-Web-BrokerPlusDomainService.svc/JSON/";
+var authURL = baseURL + "/ClientBin/BrokerPlus-Web-AuthenticationService.svc/JSON/";
 
 var loggedIn = false;
 
@@ -26,6 +27,11 @@ function ShowDocument(url)
 function login()
 {
     var svrURL = localStorage.getItem("lsServerURL");
+    var username = document.getElementById("username");
+    username.value = localStorage.getItem("username");
+    var password = document.getElementById("password");
+    password.value = localStorage.getItem("password");
+    
     if(svrURL == null || svrURL == "")
     {
         $("#modalview-settings").data("kendoMobileModalView").open();
@@ -33,6 +39,7 @@ function login()
     }
     baseURL = svrURL;
     serverURL = baseURL + "/ClientBin/BrokerPlus-Web-BrokerPlusDomainService.svc/JSON/";
+    authURL = baseURL + "/ClientBin/BrokerPlus-Web-AuthenticationService.svc/JSON/";
     $("#modalview-login").data("kendoMobileModalView").open();    
 }
 
@@ -64,9 +71,40 @@ function closeModalViewSettings()
 
 function closeModalViewLogin()
 {
-    $("#modalview-login").kendoMobileModalView("close");
-    loggedIn = true;
-    //GetAllOutstandingTasks();
+    var username = document.getElementById("username"); //'SQLLoginTest';
+    var password = document.getElementById("password"); //'1234';
+    
+    $.ajax( 
+        { 
+        type: "POST",
+               url: authURL + "LoginMobile",
+               contentType: "application/json",
+               data: '{ "userName": "' + username.value.toString() + '", "password": "' + password.value.toString()
+                     + '", "Accept": "application/json"}',
+               dataType: "json", 
+               success: function (item) { 
+                   $("#modalview-login").kendoMobileModalView("close");
+                    if(item.LoginMobileResult == false)
+                    {
+                        alert("Login failed.");
+                        login();
+                    }
+                    else
+                    {
+                        var remember = document.getElementById("rememberMe");
+                        if(remember.checked == true)
+                        {
+                            var username = document.getElementById("username");
+                            localStorage.setItem("username", username.value);
+                            var password = document.getElementById("password");
+                            localStorage.setItem("password", password.value);
+                        }
+                        loggedIn = true;
+                    }
+                   
+                }
+        });
+    
 }
 
 function skipIfEmpty(strValue, addBreak, defaultString)
