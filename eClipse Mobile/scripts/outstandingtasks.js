@@ -18,13 +18,32 @@ function GetAllOutstandingTasks(){
 
 var today = new Date();
 var taskDate = new Date();
-taskDate.setDate(today.getDate()+1); // Add 7 days    
+taskDate.setDate(today.getDate()+7); // Add 7 days    
 
 curr_date = ('0' +taskDate.getDate()).slice(-2); // Add leading zeroes to date and .slice(-2) gives us the last two characters of the string.
 curr_month = ('0' + (taskDate.getMonth() + 1)).slice(-2); //Months are zero based
 curr_year = taskDate.getFullYear(); 
 
-var dataSource = new kendo.data.DataSource({
+function GetOutstandingTasks() {                       
+    
+    
+      if (loaded) {             
+          
+      var lvTasks = $("#outstandingTasksResults-listview").data("kendoMobileListView");
+      lvTasks.dataSource.transport.options.read.url = serverURL + "GetTasksForUserMobile?user=%25&date=" + curr_year + "-" + curr_month + "-" + curr_date  + "&IsClientTask=" + isClientTask+ "&IsClaimTask=" + isClaimTask + "&IsPolicyTask=" + isPolicyTask;
+      lvTasks.dataSource.page(1);
+      lvTasks.dataSource.read();
+      lvTasks.dataSource.endlessScroll = true;          
+      lvTasks.refresh();
+      //app.scroller().reset();
+          
+      ScrollToTop();
+      return;
+    }
+          
+   loaded = true;         
+    
+   var dataSource = new kendo.data.DataSource({
   pageSize: 10, 
   transport: {
     read: {
@@ -57,27 +76,9 @@ var dataSource = new kendo.data.DataSource({
         }           
       
   }
-});
-   
-
-function GetOutstandingTasks() {                       
+}); 
     
-      if (loaded) { 
-        
-      var lvTasks = $("#outstandingTasksResults-listview").data("kendoMobileListView");
-      lvTasks.dataSource.transport.options.read.url = serverURL + "GetTasksForUserMobile?user=%25&date=" + curr_year + "-" + curr_month + "-" + curr_date  + "&IsClientTask=" + isClientTask+ "&IsClaimTask=" + isClaimTask + "&IsPolicyTask=" + isPolicyTask;
-      lvTasks.dataSource.page(1);
-      lvTasks.dataSource.read();
-      lvTasks.dataSource.endlessScroll = true;          
-      lvTasks.refresh();
-      //app.scroller().reset();
-          
-      ScrollToTop();
-      return;
-    }
-          
-   loaded = true;     
-   
+    
   $("#outstandingTasksResults-listview").kendoMobileListView({
         		dataSource :dataSource,               
         		template: $("#outstandingTasksResults-listview-template").html(),
@@ -179,7 +180,9 @@ function retrieveOutstandingTasks(e)
                 {
                     item = ds.get();                    
                     currentClient = item.ent_id;   
-                    currentTaskType = item.TaskType;
+                    currentTaskType = item.TaskType;                   
+                    currentClientName = item.ent_name;                   
+                    UpdateSuburb(currentClient);
                     view.scrollerContent.html(itemDetailsTemplate(item));
                     kendo.mobile.init(view.content);                
                 });            
@@ -201,6 +204,35 @@ function GoToClientSummary()
     }
 }
     
+function UpdateSuburb(clientId)
+{       
+    var ds = new kendo.data.DataSource(
+    {
+         transport:
+         {
+             read:
+             {
+               url: serverURL + "GetEntity?entId=" + clientId,
+               data: 
+               {
+                   Accept: "application/json"
+               }
+            }
+       },
+       schema: 
+       {
+            data: "GetEntityResult.RootResults"
+       }
+    });   
+    
+    ds.fetch(function() {
+                item = ds.get();
+                
+                currentClientName = item.ent_name;
+                currentClientSuburb = item.ent_suburb;                                             
+        });
+    
+}
 
 
 
