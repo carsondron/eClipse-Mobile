@@ -15,12 +15,12 @@ function ShowPolicyDoc(docId, docType)
     $.ajax( 
     { 
         type: "POST",
-               url: serverURL + "GetDocumentByIdAndWriteToTempFile",
+               url: serverURL + "GetDocumentByIdAndWriteToTempFileMobile",
                contentType: "application/json",
                data: '{ "id": "' + docId.toString() + '", "type": "' + docType.toString() + '", "Accept": "application/json"}',
                dataType: "json", 
         success: function (item) { 
-            ShowDocument(item.GetDocumentByIdAndWriteToTempFileResult); 
+            ShowDocument(item.GetDocumentByIdAndWriteToTempFileMobileResult); 
         }
         });
 }
@@ -115,7 +115,8 @@ function retrieveClient(e)
                 kendo.mobile.init(view.content);
         });
       
-    UpdateClientBalance();
+    UpdateClientBalance();   
+    UpdateOSBalance();
 }
 
 function retrieveDebts(e)
@@ -202,19 +203,94 @@ function UpdateClientBalance()
     });  
   
     dataSource.fetch(function() {
-                item = dataSource.get();             
-                               
+                var item = dataSource.get();             
+                           
                 var balance = typeof(item) === "undefined" ? "$0.00" : item.ClientBalance;
                 $("#DebtsBalanceOnSummary").text("Balance: " + formatNum(balance));   
-                $("#DebtsBalance").text("Balance: " +formatNum(balance));
+                $("#DebtsBalance").text("Balance: " +formatNum(balance));                                         
+        
         });            
 }
+
+function UpdateOSBalance()
+{               
+    var OSdataSource = new kendo.data.DataSource(
+    {
+         transport:
+         {
+             read:
+             {
+               url: serverURL + "GetOSBalanceForClientMobile?entId=" + currentClient,
+               data: 
+               {
+                   Accept: "application/json"
+               }                   
+            }
+       },
+        schema: 
+           {
+                data: "GetOSBalanceForClientMobileResult.RootResults"          
+           }  
+    });            
+               
+    OSdataSource.fetch(function() {
+                               
+            item = OSdataSource.get();                                                                                                         
+            
+            if(typeof(item) === "undefined")
+            {
+                $("#btn7Days").text(formatNum(0));
+                 $("#btn14Days").text(formatNum(0));
+                 $("#btn30Days").text(formatNum(0));
+                 $("#btn60Days").text(formatNum(0));
+                 $("#btn90Days").text(formatNum(0));
+                 $("#btn90PlusDays").text(formatNum(0));
+                    
+                 $("#btn7Days").css("background-color","Gray");                                        
+                 $("#btn14Days").css("background-color","Gray");                                
+                 $("#btn30Days").css("background-color","Gray");                                
+                 $("#btn60Days").css("background-color","Gray");                                
+                 $("#btn90Days").css("background-color","Gray");                                
+                 $("#btn90PlusDays").css("background-color","Gray");                
+            }
+            else
+            {
+                $("#btn7Days").text(formatNum(item.C7Days));
+                $("#btn14Days").text(formatNum(item.C7_14Days));
+                $("#btn30Days").text(formatNum(item.C15_30Days));
+                $("#btn60Days").text(formatNum(item.C31_60Days));
+                $("#btn90Days").text(formatNum(item.C61_90Days));
+                $("#btn90PlusDays").text(formatNum(item.C90Days));     
+        
+                // Set Background color
+                var C7Dayscolor = item.C7Days == 0? "Gray" : "DarkGray";                 
+                $("#btn7Days").css("background-color",C7Dayscolor);
+        
+                var C14Dayscolor = item.C7_14Days == 0? "Gray" : "MediumSeaGreen";                 
+                $("#btn14Days").css("background-color",C14Dayscolor);
+        
+                var C30Dayscolor = item.C15_30Days == 0? "Gray" : "RoyalBlue";                 
+                $("#btn30Days").css("background-color",C30Dayscolor);
+        
+                var C60Dayscolor = item.C31_60Days == 0? "Gray" : "gold";                 
+                $("#btn60Days").css("background-color",C60Dayscolor);
+        
+                var C90Dayscolor = item.C61_90Days == 0? "Gray" : "darkorange";                 
+                $("#btn90Days").css("background-color",C90Dayscolor);
+        
+                var C90PlusDayscolor = item.C90Days == 0? "Gray" : "Red";                 
+                $("#btn90PlusDays").css("background-color",C90PlusDayscolor);
+            }
+                              
+       });   
+                                    
+} 
 
 function retrievePolicies(e)
 {        
     $("#ClientNameSuburb").text(currentClientName + ((currentClientSuburb == null || currentClientSuburb == '') ? '' : ', ' + currentClientSuburb));
     
-    if (policiesSearched)
+  if (policiesSearched)
     {
         var lvSearch = $("#policies-listview").data("kendoMobileListView");
         lvSearch.dataSource.transport.options.read.url = serverURL + "GetInterestsAndRisksMobile?entId=" + currentClient + "&showAll=true";
@@ -232,6 +308,7 @@ function retrievePolicies(e)
     var policiesDS = new kendo.data.DataSource(
     {
          pageSize: 10, 
+         serverPaging: true,
          transport:
          {
              read:
@@ -250,9 +327,7 @@ function retrievePolicies(e)
                   
               return parameters;
             }
-       },  
-       serverPaging: true,
-       pageable: true, 
+       },              
        schema: 
        {
            data: "GetInterestsAndRisksMobileResult.RootResults",
@@ -268,22 +343,54 @@ function retrievePolicies(e)
     
     $("#policies-listview").kendoMobileListView({
         		dataSource :policiesDS,
-                endlessScroll: true,
-                pullToRefresh: true,
-                scrollTreshold: 30,
-        		template: $("#policies-listview-template").html(),
+                template: $("#policies-listview-template").html(),
+                endlessScroll: true,               
+                scrollTreshold: 30,        		
                 columns: [
                         { field:"genins_dtFrom"},
-                        { field:"genins_dtTo"}],
-                 //loadMore: true,
-        click: function (e) {
-            //showActivity(e.dataItem.EventID);
-        }
-    });     
-   
-   
-    
+                        { field:"genins_dtTo"}]                
+    });               
 }
+
+
+function retrievePolicy(e)
+{              
+    var view = e.view;       
+    var policySummaryTemplate = kendo.template($("#policySummary-listview-template").text()); 
+    
+    var policyDS = new kendo.data.DataSource(
+    {        
+         transport:
+         {
+             read:
+             {
+               url: serverURL + "GetInterestsAndRisksByIdMobile?entId=" + currentClient + "&geninsId=" + view.params.id + "&showAll=true",     
+               data: 
+               {
+                   Accept: "application/json"
+               }                   
+            }
+       },       
+       schema: 
+       {
+           data: "GetInterestsAndRisksByIdMobileResult.RootResults",          
+           model: {
+                fields: {
+                    genins_dtFrom: { type: "date"},
+                    genins_dtTo: { type: "date"}
+                }
+               }
+       }        
+    });         
+    
+    policyDS.fetch(function() 
+                {
+                    item = policyDS.get();                                       
+                    view.scrollerContent.html(policySummaryTemplate(item));
+                    kendo.mobile.init(view.content);                
+                });              
+}
+
 
 function saveNote(e)
 {
@@ -388,7 +495,7 @@ function retrieveNotes(e)
 }
 
 function eclipseSearch() 
-{      
+{            
     var searchType = document.getElementById('searchType').value;
     var inputText = document.getElementById('txtName').value;
     $("#clientResults-listview").hide();
@@ -408,6 +515,7 @@ function eclipseSearch()
             claimSearch(inputText);
         break;    
     }        
+      
    
 }
 
