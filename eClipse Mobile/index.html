@@ -64,6 +64,21 @@
     width: 45%;
 }
     
+#policies-listview .item-title {
+	float: left;
+	font-size: 1em;
+    line-height: 1.4em;
+    margin: .3em 1em 0 .6em;
+    width: 80%;
+}
+#policies-listview .item-info {
+	float: left;
+	font-size: .7em;
+	line-height: 1em;
+    margin: 0 0 0 .95em;
+    width: 45%;
+}
+    
 #outstandingTasksResults-listview .item-title {
 	float: left;
 	font-size: 1em;
@@ -78,7 +93,7 @@
     margin: 0 0 0 .95em;
     width: 45%;
 }  
-    
+       
 #clientSummaryView .item-title {
 	float: left;
     width: 37%;
@@ -112,22 +127,22 @@
     width: 65%;
 }
     
-#policies-listview .item-heading {
+#policySummary-listview .item-heading {
 	font-size: .8em;
 	line-height: 1.3em;
 }
-#policies-listview .item-title {
+#policySummary-listview .item-title {
 	float: left;
 	font-size: .7em;
-	line-height: 1.3em;
+	line-height: 130%;
     color: #369;
-    width: 30%;
+    width: 40%;
 }
-#policies-listview .item-info {
+#policySummary-listview .item-info {
 	float: right;
-	font-size: .7em;
+	font-size: .8em;
 	line-height: 1.3em;
-    width: 65%;
+    width: 56%;
 }
  
 #notes-listview .item-heading {
@@ -186,6 +201,19 @@
     font-size: .8em;
 	line-height: 1.3em;
 }
+#policySummaryView .item-title {
+	float: left;
+    font-size: .8em;
+	line-height: 1.3em;
+    width: 33%;
+    color: #369;
+}    
+#policySummaryView .item-info {
+	float: right;
+    width: 65%;        
+    font-size: .8em;
+	line-height: 1.3em;
+}       
 #entityTasks-listview .item-heading {
 	font-size: .8em;
 	line-height: 1.3em;
@@ -251,7 +279,21 @@
     margin: .95em 0 0 .95em;
     width: 90%;
 }
-  
+
+.item-policy {
+    width: 95%;
+    height: auto;
+    float: left;
+    margin: .5em .5em;
+    -webkit-box-shadow: 0 1px 3px #333;
+    box-shadow: 0 1px 3px #333;
+    -webkit-border-radius: 8px;
+    border-radius: 8px;
+}       
+    
+div.hr {border-top: 1px #D3D3D3; border-bottom:1px #D3D3D3 solid;}
+div.hr hr {display:none;}    
+    
 .km-ios .debtsHeader { color: black; }
 .km-android .debtsHeader { color: white; }    
 .km-android .km-navbar .km-view-title /* After Q2 2012 SP1 */
@@ -345,7 +387,7 @@
                     <div data-role="content">
                          <h3>Server URL</h3>
                         <div class="settingsDetail">
-                         <input style="width:100%;-moz-box-sizing:border-box;-webkit-box-sizing:border-box;box-sizing: border-box;" type="text" width="300px" align="center" id="serverUrl" value="http://192.168.140.23/EclipseMobile" />
+                         <input style="width:100%;-moz-box-sizing:border-box;-webkit-box-sizing:border-box;box-sizing: border-box;" type="url" width="300px" align="center" id="serverUrl" value="http://192.168.140.23/EclipseMobile" />
                             </div>
                     </div>
                     <div align='center'>
@@ -353,9 +395,7 @@
                         <a data-click="closeModalViewSettings" id="settingsCanelButton" type="button" data-role="button">Cancel</a>
                     </div>
          </div>
-            
-        
-        
+                            
         <!-- Outstanding Tasks Details Page -->
         <div data-role="view" id="outstandingTasksDetailView" data-transition="slide" data-layout="default" data-show="retrieveOutstandingTasks">
             <header data-role="header">
@@ -540,7 +580,7 @@
                     <li>
                         <label>
                         Email
-                        <input type="text" placeholder="Email" id="noteEmail" />
+                        <input type="email" placeholder="Email" id="noteEmail" />
                         </label>
                     </li>
                     
@@ -574,13 +614,29 @@
             <div>
                    <a href="#clientSummaryView"><h2 align='center' id="ClientNameSuburb" class="debtsHeader"></h2></a>
             </div>
-            <div data-role="content" style="background-color: transparent;">
+            <div  data-role="content" style="background-color: transparent;">
                 <ul data-role="listview" id="policies-listview" style="height: auto; background-color: transparent" 
                         data-style="inset" data-type="group">
                 </ul>
             </div>
         </div>
-                  
+
+         <!-- Policy Summary Page -->
+        <div data-role="view" id="policySummaryView" data-transition="slide" data-layout="default" data-show="retrievePolicy">
+            <header data-role="header">
+                <div data-role="navbar">                   
+                     <a data-role="backbutton" data-align="left">Back</a>                    
+                    <div data-role="view-title">Policy Summary</div>
+                </div>
+            </header>            
+             <div align='center'>
+                 <h2 align='center' id="Debtor" style="margin-bottom: 0px;"></h2>                                                                             
+             </div>   
+            
+            <div data-role="content"></div>                       
+        </div>                             
+                            
+                        
         <!-- Policy Documents Page -->
         <div data-role="view" id="policyDocView" data-transition="slide" data-layout="default" data-show="retrieveDocuments">
             <header data-role="header">
@@ -614,6 +670,14 @@
             <div>
                  <a href="#clientSummaryView"><h2 align='center' id="ClientNameSuburbDebts" class="debtsHeader" style="margin-bottom: 0px;"></h2></a>
                  <h4 align='center' id="DebtsBalance" class="debtsHeader" style="margin-top: .1em;"></h4>                                                      
+            </div>
+            <div align='center'>
+                 <a id="btn7Days" data-role="button" ></a>
+                 <a id="btn14Days" data-role="button" ></a>
+                 <a id="btn30Days" data-role="button" ></a>
+                 <a id="btn60Days" data-role="button" ></a>
+                 <a id="btn90Days" data-role="button" ></a>
+                 <a id="btn90PlusDays" data-role="button" ></a>                
             </div>
             <div data-role="content">
                 <ul data-role="listview" id="debts-listview" style="height: auto;"
@@ -715,16 +779,44 @@
                   </li>
             </ul>                                
         </script>
-                                                                           
-        <script type="text/x-kendo-template" id="policies-listview-template">
+                        
+       
+        <script id="policies-listview-template" type="text/x-kendo-template">
+           
+            <a
+            class="details-link"
+            data-role="listview-link"
+            href="\#policySummaryView?id=#:genins_id#">
+            
+            <h3 class="item-title">${genins_name}</h3>
+                <div>
+                    <p class="item-info">
+                          #= kendo.toString(genins_dtFrom, "dd/MM/yyyy") + ' - ' + kendo.toString(genins_dtTo, "dd/MM/yyyy") #        
+                    </p>
+                </div>
+                <div>
+                    <p class="item-info">
+                     #= skipIfEmpty(genins_policy_number, false, "N/A") #
+                    </p>
+                    <p class="item-info">
+                     #= formatNum(balance, true) #
+                    </p>                   
+                </div>
+            </a>                                   
+                 
+        </script>
+                        
+        <script id="policySummary-listview-template" type="text/x-kendo-template">
            
             <ul data-role="listview" data-style="inset" data-type="group">
-                  <li><span class="item-heading">${genins_name}</span>
+                  <li><span class="item-heading">${genins_name}</span>                      
                       #= HasTask != 0 ? '<img src="images/calendar_redtotal.png" />' : '' #
                       #= balance > 0 ? '<img src="images/money_dollar_red.png" />' : '' #
                       #= prem_genins_id != 0 ? '<img src="images/Prem_Fund.png" />' : '' #
                       #= close_status > 0 ? '<img src="images/flag_red.png" />' : '' #
                       #= close_status == 0 ? '<img src="images/flag_green.png" />' : '' #
+                  </li>    
+                  <li>    
                       <ul>
                           <li><a href="\#policyDocView?id=#:genins_id#"><img src="images/document.png" /><span style="font-size: .7em;  color: \#369;">&nbsp;<u>View Documents</u></span></a></li>
                           <li><span class="item-title">Period</span><span class="item-info">#= kendo.toString(genins_dtFrom, "dd/MM/yyyy") + ' - ' + 
@@ -732,12 +824,14 @@
                              <li><span class="item-title">Class of Business</span><span class="item-info">#= gencob_name #</span></li>
                              <li><span class="item-title">Insurer</span><span class="item-info">#= insurer #</span></li>
                              <li><span class="item-title">Policy No.</span><span class="item-info">#= genins_policy_number #</span></li>
-                             <li><span class="item-title">Amount Owing</span><span class="item-info">#= formatNum(balance, true) #</span>     </li>                 
+                             <li><span class="item-title">Amount Owing</span><span class="item-info">#= formatNum(balance, true) #</span></li>                 
+                             <li><span class="item-title">Status</span><span class="item-info">#= genins_nStatus == 0? "Current": "Not Current"  #</span></li>                 
                        </ul>    
                   </li>
             </ul>               
                  
         </script>
+                        
                         
         <script type="text/x-kendo-template" id="debts-listview-template">
            
@@ -800,7 +894,7 @@
                               <li><span class="item-title">Policy/Policy No</span><span class="item-info">#= skipIfEmpty(genins_name, true) #</span></li> 
                               <li><span class="item-title">Insurer</span><span class="item-info">#= skipIfEmpty(Insurer, true) #</span></li> 
                               <li><span class="item-title">Status</span><span class="item-info">#= clastaty_name#</span></li>                                                                                                                               
-                           </ul>
+                         </ul>
                      </li>
               </ul>                                        
                                 
@@ -844,8 +938,7 @@
                     </p>
                     <p class="item-info">
                          Follow up Action
-                    </p>
-        
+                    </p>        
                 </div>
                 <div>
                     <p class="item-info">
@@ -901,17 +994,15 @@
                                  Priority: ${pri_name}
                             </p>    
                            <p class="item-info">&nbsp;</p>
-                            #= getTaskType(TaskType) #  
-                           
-                            
-                   </div>    
+                            #= getTaskType(TaskType) #                                                         
+                  </div>    
              </a>
         </script>   
     
         <script>
             $("#txtName").keydown(function(e) {
-                        if (e.keyCode === kendo.keys.ENTER) {
-                           eclipseSearch();
+                        if (e.keyCode === kendo.keys.ENTER) {                           
+                           eclipseSearch();                                                     
                         }
                     });
         </script>                                                                                

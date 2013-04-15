@@ -98,8 +98,8 @@ function UpdatedSelectedTask(type) {
     selectedTaskTextElem.style.display = 'block';    
 }
 
-  function selectedTask() {
-
+  function selectedTask() { 
+  
      switch(this.current().index())
       {
           case 0:
@@ -233,7 +233,6 @@ function UpdateSuburb(clientId)
         });
     
 }
-
 
 
 
