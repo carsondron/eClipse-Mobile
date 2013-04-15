@@ -3,6 +3,7 @@
 //var baseURL = "http://localhost/BrokerPlus.Web";   
 //var baseURL = "http://localhost/BrokerPlus.WebSL4";
 var baseURL = "http://192.168.140.23/EclipseMobile";
+// var baseURL = "http://192.168.10.171/demo";
 //var baseURL = "http://203.110.139.199/demo";
 var serverURL = baseURL + "/ClientBin/BrokerPlus-Web-BrokerPlusDomainService.svc/JSON/";
 var authURL = baseURL + "/ClientBin/BrokerPlus-Web-AuthenticationService.svc/JSON/";
@@ -82,29 +83,55 @@ function closeModalViewLogin()
                data: '{ "userName": "' + username.value.toString() + '", "password": "' + password.value.toString()
                      + '", "Accept": "application/json"}',
                dataType: "json", 
-               success: function (item) { 
-                   $("#modalview-login").kendoMobileModalView("close");
-                    if(item.LoginMobileResult == false)
-                    {
-                        alert("Login failed.");
-                        login();
-                    }
-                    else
-                    {
-                        var remember = document.getElementById("rememberMe");
-                        if(remember.checked == true)
-                        {
-                            var username = document.getElementById("username");
-                            localStorage.setItem("username", username.value);
-                            var password = document.getElementById("password");
-                            localStorage.setItem("password", password.value);
-                        }
-                        loggedIn = true;
-                    }
+               success: function (item)
+               { 
+                   processLoginResult(item);
                    
                 }
         });
+}
+
+function processLoginResult(loginResult)
+{
     
+    if(loginResult.LoginMobileResult == false)
+    {
+        alert("Login failed.");
+    }
+    else
+    {
+        
+        var remember = document.getElementById("rememberMe");
+        if(remember.checked == true)
+        {
+            var username = document.getElementById("username");
+            localStorage.setItem("username", username.value);
+            var password = document.getElementById("password");
+            localStorage.setItem("password", password.value);
+        }
+         $.ajax( 
+        { 
+        type: "POST",
+               url: serverURL + "GetStayAliveKeyMobile",
+               contentType: "application/json",
+               data: '{ "guid": "", "Accept": "application/json"}',
+               dataType: "json", 
+               success: function (item)
+               { 
+                   if(item != null && item != "")
+                   {
+                       $("#modalview-login").kendoMobileModalView("close");
+                       loggedIn = true;
+                   }
+                   else
+                   {
+                       alert("Too many session sof eClipse are already running.");
+                   }
+                   
+                }
+        });
+        
+    }
 }
 
 function skipIfEmpty(strValue, addBreak, defaultString)
