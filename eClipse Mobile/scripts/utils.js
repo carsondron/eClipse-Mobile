@@ -2,7 +2,8 @@
 
 //var baseURL = "http://localhost/BrokerPlus.Web";   
 //var baseURL = "http://localhost/BrokerPlus.WebSL4";
-var baseURL = "http://192.168.140.23/EclipseMobile";
+var baseURL = "http://localhost:50706";
+//var baseURL = "http://192.168.140.23/EclipseMobile";
 // var baseURL = "http://192.168.10.171/demo";
 //var baseURL = "http://203.110.139.199/demo";
 var serverURL = baseURL + "/ClientBin/BrokerPlus-Web-BrokerPlusDomainService.svc/JSON/";
@@ -44,6 +45,12 @@ function login()
     $("#modalview-login").data("kendoMobileModalView").open();    
 }
 
+function showSettingsFromLogin()
+{
+    $("#modalview-login").kendoMobileModalView("close");
+    showSettings();
+}
+
 function showSettings()
 {
     var svrURL = document.getElementById("serverUrl");
@@ -68,6 +75,10 @@ function saveSettings()
 function closeModalViewSettings()
 {
     $("#modalview-settings").kendoMobileModalView("close");
+    if(!loggedIn)
+    {
+        login();
+    }
 }
 
 function closeModalViewLogin()
