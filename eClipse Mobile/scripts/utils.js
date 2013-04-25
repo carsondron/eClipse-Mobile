@@ -86,6 +86,7 @@ function closeModalViewLogin()
     var username = document.getElementById("username"); //'SQLLoginTest';
     var password = document.getElementById("password"); //'1234';
     
+    showLoading("Logging in...");
     $.ajax( 
         { 
         type: "POST",
@@ -96,15 +97,14 @@ function closeModalViewLogin()
                dataType: "json", 
                success: function (item)
                { 
+                   app.hideLoading();
                    processLoginResult(item);
-                   
-                }
+               }
         });
 }
 
 function processLoginResult(loginResult)
 {
-    
     if(loginResult.LoginMobileResult == false)
     {
         alert("Login failed.");
@@ -120,7 +120,8 @@ function processLoginResult(loginResult)
             var password = document.getElementById("password");
             localStorage.setItem("password", password.value);
         }
-         $.ajax( 
+        showLoading("Connecting...");
+        $.ajax( 
         { 
         type: "POST",
                url: serverURL + "GetStayAliveKeyMobile",
@@ -129,6 +130,7 @@ function processLoginResult(loginResult)
                dataType: "json", 
                success: function (item)
                { 
+                   app.hideLoading();
                    if(item != null && item != "")
                    {
                        $("#modalview-login").kendoMobileModalView("close");
@@ -138,8 +140,7 @@ function processLoginResult(loginResult)
                    {
                        alert("Too many session sof eClipse are already running.");
                    }
-                   
-                }
+              }
         });
         
     }

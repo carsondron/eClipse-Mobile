@@ -78,9 +78,13 @@
     <Content Include="kendo\styles\images\KendoUI.ttf" />
     <Content Include="kendo\styles\images\KendoUI.woff" />
     <Content Include="kendo\styles\kendo.mobile.all.min.css" />
+    <Content Include="scripts\debts.js" />
+    <Content Include="scripts\documents.js" />
     <Content Include="scripts\entityclaims.js" />
     <Content Include="scripts\entitytasks.js" />
+    <Content Include="scripts\notes.js" />
     <Content Include="scripts\outstandingtasks.js" />
+    <Content Include="scripts\policies.js" />
     <Content Include="scripts\search.js" />
     <Content Include="scripts\utils.js" />
     <Content Include="styles\main.css" />

@@ -23,6 +23,9 @@ function retrieveEntityClaims(e)
               
           return parameters;
         }
+      },
+      requestStart: function(e) {
+        showLoading();
       },    
       serverPaging: true, //specifies whether the paging should be handled by the service       
       schema: {           // describe the result format

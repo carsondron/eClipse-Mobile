@@ -8,13 +8,17 @@
         <script src="kendo/js/kendo.mobile.min.js"></script>
         <script src="scripts/search.js"></script>
         <script src="scripts/utils.js"></script>
+        <script src="scripts/documents.js"></script>
+        <script src="scripts/notes.js"></script>
+        <script src="scripts/policies.js"></script>
+        <script src="scripts/debts.js"></script>
         <script src="scripts/outstandingtasks.js"></script>
         <script src="scripts/entitytasks.js"></script>
         <script src="scripts/entityclaims.js"></script>
         <script type="text/javascript" charset="utf-8" src="Plugins/Child Browser/childbrowser.js"></script>
         
         <link rel="stylesheet" href="kendo/styles/kendo.mobile.all.min.css" />
-        <link rel="stylesheet" href="kendo/styles/kendo.jitterz.mobile.all.css" />
+        <link rel="stylesheet" href="kendo/styles/kendo.jitterz.mobile.all.css" /> 
         
         <!-- Default Stylesheet -->
         <link rel="stylesheet" href="styles/main.css" />
@@ -35,276 +39,6 @@
         <style type="text/css">
             
         </style>
-        
-<style scoped>
-
- #eclipseLogo {                            
-    top: 20%;     
-    margin: 0px; 
-    background-position: center center;
-    -webkit-box-shadow: 0 1px 3px #333;
-    box-shadow: 0 1px 3px #333;
-    -webkit-border-radius: 0px;
-    border-radius: 0px;
-    background: url('images/Naq50.png') transparent no-repeat 0 0;
-}    
-    
-.searchResults-listview .item-title {
-	float: left;
-	font-size: 1em;
-    line-height: 1.4em;
-    margin: .3em 1em 0 .6em;
-    width: 80%;
-}
-.searchResults-listview .item-info {
-	float: left;
-	font-size: .7em;
-	line-height: 1em;
-    margin: 0 0 0 .95em;
-    width: 45%;
-}
-    
-#policies-listview .item-title {
-	float: left;
-	font-size: 1em;
-    line-height: 1.4em;
-    margin: .3em 1em 0 .6em;
-    width: 80%;
-}
-#policies-listview .item-info {
-	float: left;
-	font-size: .7em;
-	line-height: 1em;
-    margin: 0 0 0 .95em;
-    width: 45%;
-}
-    
-#outstandingTasksResults-listview .item-title {
-	float: left;
-	font-size: 1em;
-    line-height: 1.4em;
-    margin: .3em 1em 0 .6em;
-    width: 80%;
-}
-#outstandingTasksResults-listview .item-info {
-	float: left;
-	font-size: .7em;
-	line-height: 1em;
-    margin: 0 0 0 .95em;
-    width: 45%;
-}  
-       
-#clientSummaryView .item-title {
-	float: left;
-    width: 37%;
-    color: #369;
-    font-size: .8em;
-	line-height: 1.3em;
-}
-#clientSummaryView .item-info {
-	float: right;
-    width: 61%;    
-    vertical-align : center;
-    font-size: .8em;
-	line-height: 1.3em;
-}
-
-#debts-listview .item-heading {
-	font-size: .8em;
-	line-height: 1.3em;
-}
-#debts-listview .item-title {
-	float: left;
-	font-size: .7em;
-	line-height: 1.3em;
-    color: #369;
-    width: 30%;
-}
-#debts-listview .item-info {
-	float: right;
-	font-size: .7em;
-	line-height: 1.3em;
-    width: 65%;
-}
-    
-#policySummary-listview .item-heading {
-	font-size: .8em;
-	line-height: 1.3em;
-}
-#policySummary-listview .item-title {
-	float: left;
-	font-size: .7em;
-	line-height: 130%;
-    color: #369;
-    width: 40%;
-}
-#policySummary-listview .item-info {
-	float: right;
-	font-size: .8em;
-	line-height: 1.3em;
-    width: 56%;
-}
- 
-#notes-listview .item-heading {
-	font-size: .8em;
-	line-height: 1.3em;
-}
-#notes-listview .item-title {
-	float: left;
-	font-size: .7em;
-	line-height: 1.3em;
-    color: #369;
-    width: 30%;
-}
-#notes-listview .item-info {
-	float: right;
-	font-size: .7em;
-	line-height: 1.3em;
-    width: 65%;
-}
- 
-#notes-listview .item-note {
-	float: left;
-	font-size: .7em;
-	line-height: 1.3em;
-    width: 90%;
-}
- 
-#docs-listview .item-heading {
-	font-size: .8em;
-	line-height: 1.3em;
-}        
-#docs-listview .item-title {
-	float: left;
-	font-size: .7em;
-	line-height: 1.3em;
-    color: #369;
-    width: 30%;
-}
-#docs-listview .item-info {
-	float: right;
-	font-size: .7em;
-	line-height: 1.3em;
-    width: 65%;
-}
-    
-#outstandingTasksDetailView .item-title {
-	float: left;
-    font-size: .8em;
-	line-height: 1.3em;
-    width: 33%;
-    color: #369;
-}    
-#outstandingTasksDetailView .item-info {
-	float: right;
-    width: 65%;        
-    font-size: .8em;
-	line-height: 1.3em;
-}
-#policySummaryView .item-title {
-	float: left;
-    font-size: .8em;
-	line-height: 1.3em;
-    width: 33%;
-    color: #369;
-}    
-#policySummaryView .item-info {
-	float: right;
-    width: 65%;        
-    font-size: .8em;
-	line-height: 1.3em;
-}       
-#entityTasks-listview .item-heading {
-	font-size: .8em;
-	line-height: 1.3em;
-}
-#entityTasks-listview .item-title {
-	float: left;
-	font-size: .7em;
-	line-height: 1.3em;
-    color: #369;
-    width: 30%;
-}
-#entityTasks-listview .item-info {
-	float: right;
-	font-size: .7em;
-	line-height: 1.3em;
-    width: 65%;
-}    
-#entityClaims-listview .item-heading {
-	font-size: .8em;
-	line-height: 1.3em;
-}
-#entityClaims-listview .item-title {
-	float: left;
-	font-size: .7em;
-	line-height: 1.3em;
-    color: #369;
-    width: 40%;
-}
-#entityClaims-listview .item-info {
-	float: right;
-	font-size: .7em;
-	line-height: 1.3em;
-    width: 58%;
-}            
-    
-.details-link {
-    margin-top: -1.2em;
-    position: absolute;
-    right: 0.6em;
-    top: 50%;
-}
-     
-.km-ios #tabstrip-home .km-content{
-    background: url('../images/Naq114x114.png') no-repeat center center;
-    background-color: white; 
-}   
-.km-listview .km-list {
-    margin: 0;    
-}
-  
-#buttongroup {
-    margin: 1em auto .4em auto;
-    font-size: 0.8em;
-} 
-    
-.settingsDetail{
-    height: 30px;
-    width: 100%;
-}
-
-.notesEntryClass{
-    height: 150px;
-    margin: .95em 0 0 .95em;
-    width: 90%;
-}
-
-.item-policy {
-    width: 95%;
-    height: auto;
-    float: left;
-    margin: .5em .5em;
-    -webkit-box-shadow: 0 1px 3px #333;
-    box-shadow: 0 1px 3px #333;
-    -webkit-border-radius: 8px;
-    border-radius: 8px;
-}       
-    
-div.hr {border-top: 1px #D3D3D3; border-bottom:1px #D3D3D3 solid;}
-div.hr hr {display:none;}    
-    
-.km-ios .debtsHeader { color: black; }
-.km-android .debtsHeader { color: white; }    
-.km-android .km-navbar .km-view-title /* After Q2 2012 SP1 */
-{
-    visibility: visible;
-}    
-.km-android div.km-view {
-    -webkit-box-direction: normal;
-}
-    
-</style>
                         
     </head>
     <body>
@@ -739,9 +473,12 @@ div.hr hr {display:none;}
         </div>                        
                         
         <script>
-            
-            var app = new kendo.mobile.Application(document.body, { transition: "slide", layout: "mobile-tabstrip" });
-
+            var app;
+            var showLoading = function (message) {
+    $(".loading-message").text(message ? message : "Loading...");
+    app.showLoading();
+};
+            app = new kendo.mobile.Application(document.body, { loading: '<h1 class="loading-message">Loading...</h1>', transition: "slide", layout: "mobile-tabstrip" });
 
         </script>
                                                  

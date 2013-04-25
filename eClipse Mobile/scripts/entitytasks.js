@@ -24,6 +24,9 @@ function retrieveEntityTasks(e)
               
           return parameters;
         }
+      },
+      requestStart: function(e) {
+        showLoading();
       },    
       serverPaging: true, //specifies whether the paging should be handled by the service       
       schema: {           // describe the result format
@@ -93,6 +96,7 @@ function GetEntityTasks() {
       //app.scroller().reset();
       
       ScrollToTop();
+      showLoading();
       return;
     }
          
