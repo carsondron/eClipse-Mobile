@@ -48,9 +48,10 @@ function retrieveDebts(e)
         showLoading();
       },
        pageable: true,
-       requestEnd: function (e) {
-                               
-            } 
+       requestEnd: function(e){
+            var data = e.response;
+            data.GetOutstandingDebtsMobileResult.RootResults.length == 0 && e.sender._page == 1 ? $("#debtsEmpty").show() : $("#debtsEmpty").hide();
+        }  
     });
 
     $("#debts-listview").kendoMobileListView({

@@ -27,7 +27,11 @@ function retrieveEntityTasks(e)
       },
       requestStart: function(e) {
         showLoading();
-      },    
+      },  
+        requestEnd: function(e){
+            var data = e.response;
+            data.GetTasks_ViewMobileResult.RootResults.length == 0 && e.sender._page == 1 ? $("#tasksEmpty").show() : $("#tasksEmpty").hide();
+        },
       serverPaging: true, //specifies whether the paging should be handled by the service       
       schema: {           // describe the result format
          data: "GetTasks_ViewMobileResult.RootResults", // the data which the DataSource will be bound to is in the "results" field           
@@ -50,12 +54,8 @@ function retrieveEntityTasks(e)
             		dataSource :dsEntityTasks,
             		template: $("#entityTasks-listview-template").html(),
                     endlessScroll: true,
-                    scrollTreshold: 30, //treshold in pixels                   
-            click: function (e) {                
-            },
-            dataBound: function () {
-                
-                                   }
+                    scrollTreshold: 30 //treshold in pixels                   
+            
      });
     
 }

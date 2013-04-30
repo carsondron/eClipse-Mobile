@@ -11,6 +11,8 @@
         <script src="scripts/documents.js"></script>
         <script src="scripts/notes.js"></script>
         <script src="scripts/policies.js"></script>
+        <script src="scripts/settings.js"></script>
+        <script src="scripts/login.js"></script>
         <script src="scripts/debts.js"></script>
         <script src="scripts/outstandingtasks.js"></script>
         <script src="scripts/entitytasks.js"></script>
@@ -129,7 +131,7 @@
                         <a data-click="closeModalViewSettings" id="settingsCanelButton" type="button" data-role="button">Cancel</a>
                     </div>
          </div>
-                            
+    
         <!-- Outstanding Tasks Details Page -->
         <div data-role="view" id="outstandingTasksDetailView" data-transition="slide" data-layout="default" data-show="retrieveOutstandingTasks">
             <header data-role="header">
@@ -277,6 +279,9 @@
             </div>
             <a href="#clientSummaryView"><h2 align='center' id="ClientNameSuburbNotes" class="debtsHeader"></h2></a>
             <div data-role="content">
+                <div id="notesEmpty" align="center">
+                    <h2>No Results</h2>
+                </div>
                 <ul data-role="listview" id="notes-listview" style="height: auto;"
                         data-style="inset" data-type="group">
                 </ul>
@@ -349,6 +354,9 @@
                    <a href="#clientSummaryView"><h2 align='center' id="ClientNameSuburb" class="debtsHeader"></h2></a>
             </div>
             <div  data-role="content" style="background-color: transparent;">
+                <div id="policiesEmpty" align="center">
+                    <h2>No Results</h2>
+                </div>
                 <ul data-role="listview" id="policies-listview" style="height: auto; background-color: transparent" 
                         data-style="inset" data-type="group">
                 </ul>
@@ -414,6 +422,9 @@
                  <a id="btn90PlusDays" data-role="button" ></a>                
             </div>
             <div data-role="content">
+                <div id="debtsEmpty" align="center">
+                    <h2>No Results</h2>
+                </div>
                 <ul data-role="listview" id="debts-listview" style="height: auto;"
                         data-style="inset" data-type="group">
                 </ul>
@@ -443,6 +454,9 @@
                  </ul>
             </header>           
             <div>               
+                <div id="tasksEmpty" align="center">
+                    <h2>No Results</h2>
+                </div>
                 <ul data-role="listview" id="entityTasks-listview" style="height: auto;"
                         data-style="inset" data-type="group">
                 </ul>
@@ -467,6 +481,9 @@
             <a href="#clientSummaryView"><h2 align='center' id="ClientNameSuburbClaims" class="debtsHeader" style="margin-bottom: 0px; margin-top: 0px;"></h2></a>
             
             <div>               
+                <div id="claimsEmpty" style="vertical-align: top; horizontal-align: center; float: top" align="center">
+                    <h2>No Results</h2>
+                </div>
                 <ul data-role="listview" id="entityClaims-listview" style="height: auto;" data-style="inset" data-type="group">
                 </ul>
             </div>

@@ -42,7 +42,11 @@ function retrievePolicies(e)
                   
               return parameters;
             }
-       },              
+       },
+        requestEnd: function(e){
+            var data = e.response;
+            data.GetInterestsAndRisksMobileResult.RootResults.length == 0 && e.sender._page == 1 ? $("#policiesEmpty").show() : $("#policiesEmpty").hide();
+        },        
        schema: 
        {
            data: "GetInterestsAndRisksMobileResult.RootResults",
@@ -89,7 +93,7 @@ function retrievePolicy(e)
                    Accept: "application/json"
                }                   
             }
-       },       
+        },    
        schema: 
        {
            data: "GetInterestsAndRisksByIdMobileResult.RootResults",          

@@ -82,10 +82,12 @@
     <Content Include="scripts\documents.js" />
     <Content Include="scripts\entityclaims.js" />
     <Content Include="scripts\entitytasks.js" />
+    <Content Include="scripts\login.js" />
     <Content Include="scripts\notes.js" />
     <Content Include="scripts\outstandingtasks.js" />
     <Content Include="scripts\policies.js" />
     <Content Include="scripts\search.js" />
+    <Content Include="scripts\settings.js" />
     <Content Include="scripts\utils.js" />
     <Content Include="styles\main.css" />
     <Content Include="cordova.ios.js">

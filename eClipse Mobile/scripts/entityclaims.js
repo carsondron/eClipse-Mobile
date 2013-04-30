@@ -24,6 +24,10 @@ function retrieveEntityClaims(e)
           return parameters;
         }
       },
+        requestEnd: function(e){
+            var data = e.response;
+            data.GetClaims_ViewMobileResult.RootResults.length == 0 && e.sender._page == 1 ? $("#claimsEmpty").show() : $("#claimsEmpty").hide();
+        },  
       requestStart: function(e) {
         showLoading();
       },    

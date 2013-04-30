@@ -89,6 +89,10 @@ function retrieveNotes(e)
                 }
                }
        },
+        requestEnd: function(e){
+            var data = e.response;
+            data.GetNotesViewsMobileResult.RootResults.length == 0 && e.sender._page == 1 ? $("#notesEmpty").show() : $("#notesEmpty").hide();
+        },  
       requestStart: function(e) {
         showLoading();
       }

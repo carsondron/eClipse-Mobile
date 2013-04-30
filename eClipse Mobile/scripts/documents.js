@@ -1,6 +1,20 @@
 
 var docsSearched = false;
 
+function ShowDocument(url)
+{
+    var docUrl = baseURL + "/TempReports/" + url;
+
+    if (device.platform === 'Android')
+    {
+        window.plugins.childBrowser.openExternal(docUrl);
+       
+    }
+    else
+    {
+        window.plugins.childBrowser.showWebPage(docUrl); 
+    }
+}
 
 function ShowPolicyDoc(docId, docType)
 {
@@ -16,7 +30,7 @@ function ShowPolicyDoc(docId, docType)
             app.hideLoading();
             ShowDocument(item.GetDocumentByIdAndWriteToTempFileMobileResult); 
         }
-        });
+    });
 }
 
 function retrieveDocuments(e)
