@@ -1,13 +1,30 @@
 var selectedTaskType = "All";
 var isLoadedEntityTask = false;
-
+var tasksSearched = false;
 
 function retrieveEntityTasks(e)
 {              
     $("#ClientNameSuburbTasks").text(currentClientName + ((currentClientSuburb == null || currentClientSuburb == '') ? '' : ', ' + currentClientSuburb));
     
+    if (tasksSearched)
+    {
+        var lvSearch = $("#entityTasks-listview").data("kendoMobileListView");
+        lvSearch.dataSource.transport.options.read.url = serverURL + "GetTasks_ViewMobile?ent_id=" + currentClient + "&taskType=" + selectedTaskType;
+        lvSearch.dataSource.page(1);
+        lvSearch.dataSource.read();
+        lvSearch.refresh();
+        
+        ScrollToTop(); 
+        showLoading();
+        return;
+        
+    }
+    
+    tasksSearched = true;
+    
     var dsEntityTasks = new kendo.data.DataSource({
-      pageSize: 5, 
+      pageSize: 10, 
+      serverPaging: true,
       transport: {
         read: {
                 url: serverURL + "GetTasks_ViewMobile?ent_id=" + currentClient + "&taskType=" + selectedTaskType,  //url specifies whether the paging should be handled by the service                           
@@ -29,23 +46,27 @@ function retrieveEntityTasks(e)
         showLoading();
       },  
         requestEnd: function(e){
+            hideLoading();
             var data = e.response;
             data.GetTasks_ViewMobileResult.RootResults.length == 0 && e.sender._page == 1 ? $("#tasksEmpty").show() : $("#tasksEmpty").hide();
         },
-      serverPaging: true, //specifies whether the paging should be handled by the service       
-      schema: {           // describe the result format
-         data: "GetTasks_ViewMobileResult.RootResults", // the data which the DataSource will be bound to is in the "results" field           
-         model: {
+      schema: 
+        {           // describe the result format
+            data: "GetTasks_ViewMobileResult.RootResults", // the data which the DataSource will be bound to is in the "results" field           
+            model: {
                 fields: {
                     tas_updated_when: { type: "date"},
                     tas_created_when: { type: "date"},
                     tas_created_when: { type: "date"},
                     tas_followup_date: {type: "date"},
                     tas_id: { type: "number" }
-                }
-            }                 
-      },     
-      pageable: true
+                    }
+                  },
+               total: function(response) 
+               {
+                   return response.GetTasks_ViewMobileResult.RootResults.length == 0 ? 0 : response.GetTasks_ViewMobileResult.RootResults[0].TotalRecords;
+               }
+      }
     });
     
     isLoadedEntityTask = true;

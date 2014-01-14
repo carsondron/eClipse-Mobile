@@ -18,11 +18,10 @@ function retrievePolicies(e)
         
     }
     policiesSearched = true;       
-    
-   
+       
     var policiesDS = new kendo.data.DataSource(
     {
-         pageSize: 10, 
+         pageSize: 30, 
          serverPaging: true,
          transport:
          {
@@ -44,18 +43,25 @@ function retrievePolicies(e)
             }
        },
         requestEnd: function(e){
+            hideLoading();
             var data = e.response;
             data.GetInterestsAndRisksMobileResult.RootResults.length == 0 && e.sender._page == 1 ? $("#policiesEmpty").show() : $("#policiesEmpty").hide();
         },        
        schema: 
        {
            data: "GetInterestsAndRisksMobileResult.RootResults",
-           model: {
-                fields: {
-                    genins_dtFrom: { type: "date"},
-                    genins_dtTo: { type: "date"}
-                }
-               }
+           model:
+           {
+                fields:
+                   {
+                        genins_dtFrom: { type: "date"},
+                        genins_dtTo: { type: "date"}
+                    }
+           },
+           total: function(response) 
+           {
+               return response.GetInterestsAndRisksMobileResult.RootResults.length == 0 ? 0 : response.GetInterestsAndRisksMobileResult.RootResults[0].TotalRecords;
+           }
        },
       requestStart: function(e) {
         showLoading();
@@ -71,7 +77,7 @@ function retrievePolicies(e)
                 columns: [
                         { field:"genins_dtFrom"},
                         { field:"genins_dtTo"}]                
-    });               
+    });                          
 }
 
 
@@ -89,9 +95,8 @@ function retrievePolicy(e)
              {
                url: serverURL + "GetInterestsAndRisksByIdMobile?entId=" + currentClient + "&geninsId=" + view.params.id + "&showAll=true",     
                data: 
-               {
-                   Accept: "application/json"
-               }                   
+               "jsonp"
+                             
             }
         },    
        schema: 
@@ -108,7 +113,7 @@ function retrievePolicy(e)
     
     policyDS.fetch(function() 
                 {
-                    app.hideLoading();
+                    hideLoading();
                     item = policyDS.get();                                       
                     view.scrollerContent.html(policySummaryTemplate(item));
                     kendo.mobile.init(view.content);                

@@ -38,7 +38,7 @@ function retrieveClient(e)
     
     ds.fetch(function() {
                 item = ds.get();
-                app.hideLoading();
+                hideLoading();
                 currentClientName = item.ent_name;
                 currentClientSuburb = item.ent_suburb;                                        
                 $("#Debtor").text(currentClientName + ((currentClientSuburb == null || currentClientSuburb == '') ? '' : ', ' + currentClientSuburb));
@@ -187,7 +187,7 @@ function clientSearch(inputText)
     
     if (clientSearched) {
         var lvSearch = $("#clientResults-listview").data("kendoMobileListView");
-        lvSearch.dataSource.transport.options.read.url = serverURL + "GetClientsResult?searchFilter=" + inputText;
+        lvSearch.dataSource.transport.options.read.url = serverURL + "GetClientsResultMobile?searchFilter=" + inputText;
         lvSearch.dataSource.page(1);
         lvSearch.dataSource.read();
         lvSearch.refresh();
@@ -197,43 +197,64 @@ function clientSearch(inputText)
     
     clientSearched = true;
     
-       $("#clientResults-listview").kendoMobileListView({
-       dataSource :
-           {
-           transport:
+    var clientsDS = new kendo.data.DataSource(
+    {
+        pageSize: 40, 
+      serverPaging: true,
+        transport:
+        {
+             read:
              {
-                 read:
-                 {
-                   url: serverURL + "GetClientsResult?searchFilter=" + inputText,
-                   data: 
-                   {
-                       Accept: "application/json"
-                   }
-                }
-           },
-           schema: 
-           {
-                data: "GetClientsResultResult.RootResults"
-           },
-      requestStart: function(e) {
-        showLoading();
-      }
-           },
-        		template: $("#clientSearchResults-listview-template").html(),
-                 //loadMore: true,
-        click: function (e) {
-            //showActivity(e.dataItem.EventID);
+               url: serverURL + "GetClientsResultMobile?searchFilter=" + inputText,
+               data: 
+               {
+                   Accept: "application/json"
+               }
+            },
+        parameterMap: function(options) {
+          var parameters = {        
+            take: options.pageSize,   //additional parameters sent to the remote service
+            page: options.page        //next page
+          };
+              
+          return parameters;
+        }
+       },
+        requestEnd: function(e){
+            hideLoading();
+//            var data = e.response;
+//            data.GetTasks_ViewMobileResult.RootResults.length == 0 && e.sender._page == 1 ? $("#tasksEmpty").show() : $("#tasksEmpty").hide();
         },
-        dataBound: function () {
-            if (this.dataSource.total() == 0) {
-                $("#clientResults-listview").html("No Results Found");
-            }
-            }
-        	});
+       schema: 
+       {
+            data: "GetClientsResultMobileResult.RootResults",
+           total: function(response) 
+               {
+                   return response.GetClientsResultMobileResult.RootResults.length == 0 ? 0 : response.GetClientsResultMobileResult.RootResults[0].TotalRecords;
+               }
+       },
+      requestStart: function(e) {
+            showLoading();
+              }
+           
+        });
+    
+       $("#clientResults-listview").kendoMobileListView({
+           dataSource : clientsDS,
+           template: $("#clientSearchResults-listview-template").html(),
+           endlessScroll: true,
+           scrollTreshold: 30 //treshold in pixels        
+        });
 }
 
 function taskSearch(inputText)
 {   
+    if(inputText == "")
+    {
+        hideLoading();
+        return;
+        }
+    
     $("#taskResults-listview").show();
     
     if (taskSearched) {

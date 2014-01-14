@@ -18,7 +18,7 @@ function saveNote(e)
                      + '", "priority": "' + priority.toString() + '", "Accept": "application/json"}',
                dataType: "json", 
         success: function (item) { 
-            app.hideLoading();
+            hideLoading();
             app.navigate("#:back");
         }
         });
@@ -57,7 +57,7 @@ function retrieveNotes(e)
     
     var dsSearch = new kendo.data.DataSource(
     {
-         pageSize: 5, 
+         pageSize: 10, 
          transport:
          {
              read:
@@ -87,9 +87,14 @@ function retrieveNotes(e)
                 fields: {
                     not_created_when: { type: "date"}
                 }
+               },
+               total: function(response) 
+               {
+                   return response.GetNotesViewsMobileResult.RootResults.length == 0 ? 0 : response.GetNotesViewsMobileResult.RootResults[0].TotalRecords;
                }
        },
         requestEnd: function(e){
+            hideLoading();
             var data = e.response;
             data.GetNotesViewsMobileResult.RootResults.length == 0 && e.sender._page == 1 ? $("#notesEmpty").show() : $("#notesEmpty").hide();
         },  
@@ -104,9 +109,7 @@ function retrieveNotes(e)
         		template: $("#notes-listview-template").html(),
                 columns: [
                         { field:"not_created_when"}],
-                 //loadMore: true,
-        click: function (e) {
-            //showActivity(e.dataItem.EventID);
-        }
+                scrollTreshold: 30 //treshold in pixels   
+        
         	});
 }

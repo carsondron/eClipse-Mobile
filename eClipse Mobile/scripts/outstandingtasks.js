@@ -33,7 +33,6 @@ function GetOutstandingTasks() {
       lvTasks.dataSource.transport.options.read.url = serverURL + "GetTasksForUserMobile?user=%25&date=" + curr_year + "-" + curr_month + "-" + curr_date  + "&IsClientTask=" + isClientTask+ "&IsClaimTask=" + isClaimTask + "&IsPolicyTask=" + isPolicyTask;
       lvTasks.dataSource.page(1);
       lvTasks.dataSource.read();
-      lvTasks.dataSource.endlessScroll = true;          
       lvTasks.refresh();
       //app.scroller().reset();
           
@@ -44,36 +43,43 @@ function GetOutstandingTasks() {
    loaded = true;         
     
    var dataSource = new kendo.data.DataSource({
-  pageSize: 10, 
-  transport: {
-    read: {
+      pageSize: 30, 
+      transport: {
+      read: {
             url: serverURL + "GetTasksForUserMobile?user=%25&date=" + curr_year + "-" + curr_month + "-" + curr_date  + "&IsClientTask=" + isClientTask+ "&IsClaimTask=" + isClaimTask + "&IsPolicyTask=" + isPolicyTask,  //url specifies whether the paging should be handled by the service                           
             data: 
             {
                 Accept: "application/json"// (JSON with padding) is required for cross-domain AJAX
             }  
-    },
-    parameterMap: function(options) {
-      var parameters = {        
-        take: options.pageSize,//additional parameters sent to the remote service
-        page: options.page //next page
-      };
-          
-      return parameters;
-    }
-  },    
+        },
+        parameterMap: function(options) {
+          var parameters = {        
+            take: options.pageSize,//additional parameters sent to the remote service
+            page: options.page //next page
+          };
+              
+          return parameters;
+        }
+      }, 
+       requestEnd: function(e){
+           hideLoading();
+        },  
   serverPaging: true, //specifies whether the paging should be handled by the service  
  
   schema: { // describe the result format
      data: "GetTasksForUserMobileResult.RootResults", // the data which the DataSource will be bound to is in the "results" field
-     //total: "GetTasksForUserResult.TotalCount",
+
      model: {
             fields: {
                 tas_followup_date: { type: "date"},
                 tas_id: { type: "number" },
                 ent_id: { type: "number" }
             }
-        }           
+        },
+               total: function(response) 
+               {
+                   return response.GetTasksForUserMobileResult.RootResults.length == 0 ? 0 : response.GetTasksForUserMobileResult.RootResults[0].TotalRecords;
+               }           
       
   }
 }); 

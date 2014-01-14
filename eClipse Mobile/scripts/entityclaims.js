@@ -1,9 +1,25 @@
 var isLoadedEntityClaim = false;
-
+var claimsSearched = false;
 
 function retrieveEntityClaims(e)
 {                      
     $("#ClientNameSuburbClaims").text(currentClientName + ((currentClientSuburb == null || currentClientSuburb == '') ? '' : ', ' + currentClientSuburb));
+    
+    if (claimsSearched)
+    {
+        var lvSearch = $("#entityClaims-listview").data("kendoMobileListView");
+        lvSearch.dataSource.transport.options.read.url = serverURL + "GetClaims_ViewMobile?ent_id=" + currentClient;
+        lvSearch.dataSource.page(1);
+        lvSearch.dataSource.read();
+        lvSearch.refresh();
+        
+        ScrollToTop(); 
+        showLoading();
+        return;
+        
+    }
+    
+    claimsSearched = true;
     
     var dsEntityClaims = new kendo.data.DataSource({
       pageSize: 10, 
@@ -25,6 +41,7 @@ function retrieveEntityClaims(e)
         }
       },
         requestEnd: function(e){
+            hideLoading();
             var data = e.response;
             data.GetClaims_ViewMobileResult.RootResults.length == 0 && e.sender._page == 1 ? $("#claimsEmpty").show() : $("#claimsEmpty").hide();
         },  
@@ -42,7 +59,11 @@ function retrieveEntityClaims(e)
                     cla_followup_date: {type: "date"},
                     cla_id: { type: "number" }
                 }
-            }                 
+            },
+               total: function(response) 
+               {
+                   return response.GetClaims_ViewMobileResult.RootResults.length == 0 ? 0 : response.GetClaims_ViewMobileResult.RootResults[0].TotalRecords;
+               }                 
       },     
       pageable: true
     });

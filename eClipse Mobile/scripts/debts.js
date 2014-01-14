@@ -7,11 +7,10 @@ function retrieveDebts(e)
     if (debtsSearched)
     {
         var lvSearch = $("#debts-listview").data("kendoMobileListView");
-        lvSearch.dataSource.transport.options.read.url = serverURL + "GetOutstandingDebtsMobile?ent_id=" + currentClient + "&BRClient=0&$orderby=it.pol_date_effective%252c%2bit.pol_tran_id";
+        lvSearch.dataSource.transport.options.read.url = serverURL + "GetOutstandingDebtsMobile?ent_id=" + currentClient + "&BRClient=0";
         lvSearch.dataSource.page(1);
         lvSearch.dataSource.read();
         lvSearch.refresh();
-        //app.scroller().reset();
                
         ScrollToTop(); 
         showLoading();
@@ -21,12 +20,12 @@ function retrieveDebts(e)
     
     var dsSearch = new kendo.data.DataSource(
     {
-         pageSize: 10,
+         pageSize: 20,
          transport:
          {
              read:
              {
-               url: serverURL + "GetOutstandingDebtsMobile?ent_id=" + currentClient + "&BRClient=0&$orderby=it.pol_date_effective%252c%2bit.pol_tran_id",
+               url: serverURL + "GetOutstandingDebtsMobile?ent_id=" + currentClient + "&BRClient=0",
                data: 
                {
                    Accept: "application/json"
@@ -37,18 +36,25 @@ function retrieveDebts(e)
        serverPaging: true,   
        schema: 
        {
-            data: "GetOutstandingDebtsMobileResult.RootResults",
-           model: {
-                fields: {
+           data: "GetOutstandingDebtsMobileResult.RootResults",
+           model:
+           {
+                fields:
+                {
                     pol_date_effective: { type: "date"}
                 }
-               }
+           },
+           total: function(response) 
+           {
+               return response.GetOutstandingDebtsMobileResult.RootResults.length == 0 ? 0 : response.GetOutstandingDebtsMobileResult.RootResults[0].TotalRecords;
+           }
        },
       requestStart: function(e) {
         showLoading();
       },
        pageable: true,
        requestEnd: function(e){
+           hideLoading();
             var data = e.response;
             data.GetOutstandingDebtsMobileResult.RootResults.length == 0 && e.sender._page == 1 ? $("#debtsEmpty").show() : $("#debtsEmpty").hide();
         }  
@@ -60,9 +66,7 @@ function retrieveDebts(e)
         		template: $("#debts-listview-template").html(),
                 columns: [
                         { field:"pol_date_effective"}],
-                 //loadMore: true,
-        click: function (e) {
-            //showActivity(e.dataItem.EventID);
-        }
+                scrollTreshold: 30 //treshold in pixels          
+
         	});                               
 }

@@ -5,12 +5,17 @@ function login()
 {
     var svrURL = localStorage.getItem("lsServerURL");
     var username = document.getElementById("username");
-    username.value = localStorage.getItem("username");
+    
+    loaderElement = app.pane.loader.element.find("h1");
+    
+    username.value = localStorage.getItem("username") != null ? localStorage.getItem("username") : defaultUsername;
     var password = document.getElementById("password");
-    password.value = localStorage.getItem("password");
+    password.value = localStorage.getItem("password") != null ? localStorage.getItem("password") : defaultPassword;
     
     if(svrURL == null || svrURL == "")
     {
+        var serverURL = document.getElementById("serverUrl");
+        serverURL.value = baseURL;
         $("#modalview-settings").data("kendoMobileModalView").open();
         return;
     }
@@ -24,6 +29,9 @@ function closeModalViewLogin()
 {
     var username = document.getElementById("username"); //'SQLLoginTest';
     var password = document.getElementById("password"); //'1234';
+    baseURL = localStorage.getItem("lsServerURL");
+     serverURL = baseURL + "/ClientBin/BrokerPlus-Web-BrokerPlusDomainService.svc/JSON/";
+    authURL = baseURL + "/ClientBin/BrokerPlus-Web-AuthenticationService.svc/JSON/";
     
     showLoading("Logging in...");
     $.ajax( 
@@ -36,7 +44,7 @@ function closeModalViewLogin()
                dataType: "json", 
                success: function (item)
                { 
-                   app.hideLoading();
+                   hideLoading();
                    processLoginResult(item);
                }
         });
@@ -69,7 +77,7 @@ function processLoginResult(loginResult)
                dataType: "json", 
                success: function (item)
                { 
-                   app.hideLoading();
+                   hideLoading();
                    if(item != null && item != "")
                    {
                        $("#modalview-login").kendoMobileModalView("close");

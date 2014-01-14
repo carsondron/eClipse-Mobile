@@ -10,7 +10,7 @@ function showSettingsFromLogin()
 function showSettings()
 {
     var svrURL = document.getElementById("serverUrl");
-    svrURL.value = localStorage.getItem("lsServerURL");
+    svrURL.value = localStorage.getItem("lsServerURL") != null ? localStorage.getItem("lsServerURL") : baseURL;
     $("#modalview-settings").data("kendoMobileModalView").open();
 }
 
