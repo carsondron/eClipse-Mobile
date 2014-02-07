@@ -32,7 +32,7 @@ function GetOutstandingTasks() {
       var lvTasks = $("#outstandingTasksResults-listview").data("kendoMobileListView");
       lvTasks.dataSource.transport.options.read.url = serverURL + "GetTasksForUserMobile?user=%25&date=" + curr_year + "-" + curr_month + "-" + curr_date  + "&IsClientTask=" + isClientTask+ "&IsClaimTask=" + isClaimTask + "&IsPolicyTask=" + isPolicyTask;
       lvTasks.dataSource.page(1);
-      lvTasks.dataSource.read();
+      //lvTasks.dataSource.read();
       lvTasks.refresh();
       //app.scroller().reset();
           

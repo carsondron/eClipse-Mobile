@@ -175,6 +175,33 @@ body
     width: 65%;
 }
     
+#taskdocs-listview .item-heading {
+	font-size: .8em;
+	line-height: 1.3em;
+}        
+#taskdocs-listview .item-title {
+	float: left;
+	font-size: .7em;
+	line-height: 1.3em;
+    color: #369;
+    width: 30%;
+}
+#taskdocs-listview .item-info {
+	float: right;
+	font-size: .7em;
+	line-height: 1.3em;
+    width: 65%;
+}
+
+#emailDocView .item-title {
+    float: left;
+    width: 20%;
+    color: #369;
+}
+#emailDocView .item-info {
+	float: right;
+    width: 75%;
+}
 #outstandingTasksDetailView .item-title {
 	float: left;
     font-size: .8em;
@@ -243,7 +270,7 @@ body
     top: 50%;
 }
      
-.km-ios #tabstrip-home .km-content{
+#tabstrip-home .km-content{
     background: url('../images/Naq114x114.png') no-repeat center center;
     background-color: white; 
 }   
@@ -267,6 +294,22 @@ body
     width: 90%;
 }
 
+.highlightButton.button{
+    background-color: rgb(0, 129, 168);
+    color: #fff;
+}
+
+.highlightButton.button.km-state-active {
+    background-color: rgb(0, 119, 158);
+    }
+ 
+ .km-root .km-pane .km-view .km-custom
+    {
+        background-image: url("images/Naq114x114.png");
+        background-color: rgb(0, 119, 158);
+        color: rgb(234,234,234);
+    }
+
 .item-policy {
     width: 95%;
     height: auto;
@@ -281,8 +324,12 @@ body
 div.hr {border-top: 1px #D3D3D3; border-bottom:1px #D3D3D3 solid;}
 div.hr hr {display:none;}    
     
-.km-ios .debtsHeader { color: black; }
-.km-android .debtsHeader { color: white; }    
+.debtsHeader 
+{
+    margin-bottom: 5px;
+    margin-top: 5px;
+}
+
 .km-android .km-navbar .km-view-title /* After Q2 2012 SP1 */
 {
     visibility: visible;
@@ -291,8 +338,10 @@ div.hr hr {display:none;}
     -webkit-box-direction: normal;
 }
 
+
+
 .km-flat .km-view .km-navbar .km-button.km-state-active {
-    background-color: rgb(128, 128, 255);
+    background-color: rgb(25, 202, 255);
 }
 .km-flat .km-view .km-content .km-list .km-state-active .km-listview-link {
     background-color: rgb(0, 129, 168);
@@ -313,6 +362,27 @@ div.hr hr {display:none;}
 }
 .km-flat .km-view .km-navbar .km-button {
     background-color: rgb(229, 229, 229);
+}
+
+/*
+.km-flat .km-view .km-button {
+    background-color: rgb(0, 129, 168);
+    color: #fff;
+}
+.km-flat .km-view .km-button.km-state-active {
+    background-color: rgb(0, 119, 158);
+}
+.km-flat .km-view .km-navbar .km-button {
+
+    color: rgb(110,110,110);
+}*/
+
+.km-button {
+    font-size: 0.85em
+}
+
+.km-button-group {
+    font-size: 1em;
 }
 .km-flat .km-view .km-content {
     background-color: rgb(204, 204, 204);

@@ -82,6 +82,7 @@ function processLoginResult(loginResult)
                    {
                        $("#modalview-login").kendoMobileModalView("close");
                        loggedIn = true;
+                       loadStaticData();
                    }
                    else
                    {
@@ -92,3 +93,4 @@ function processLoginResult(loginResult)
         
     }
 }
+

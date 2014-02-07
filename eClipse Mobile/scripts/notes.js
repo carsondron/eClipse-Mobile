@@ -24,11 +24,6 @@ function saveNote(e)
         });
 }
 
-function cancelNoteAdd(e)
-{
-    app.navigate("#:back");
-}
-
 function resetNote(e)
 {
     document.getElementById("noteSubject").value = "";
@@ -47,7 +42,7 @@ function retrieveNotes(e)
         lvSearch.dataSource.transport.options.read.url = serverURL +"GetNotesViewsMobile?parentid=" + currentClient,
 
         lvSearch.dataSource.page(1);
-        lvSearch.dataSource.read();
+        //lvSearch.dataSource.read();
         lvSearch.refresh();
         ScrollToTop(); 
         showLoading();

@@ -10,7 +10,7 @@ function retrieveEntityClaims(e)
         var lvSearch = $("#entityClaims-listview").data("kendoMobileListView");
         lvSearch.dataSource.transport.options.read.url = serverURL + "GetClaims_ViewMobile?ent_id=" + currentClient;
         lvSearch.dataSource.page(1);
-        lvSearch.dataSource.read();
+        //lvSearch.dataSource.read();
         lvSearch.refresh();
         
         ScrollToTop(); 

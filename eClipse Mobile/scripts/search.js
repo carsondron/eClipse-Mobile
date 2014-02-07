@@ -6,6 +6,7 @@ var claimSearched = false;
 var currentClient = -1;
 var currentClientName = '';
 var currentClientSuburb = '';
+var currentClientBalance = '';
 
 function retrieveClient(e)
 {   
@@ -51,7 +52,13 @@ function retrieveClient(e)
 }
 
 function UpdateClientBalance()
-{               
+{  
+/*    $("#clientButtongroup").data('kendoMobileButtonGroup').selectedIndex = null;
+    $('#clientButtongroup').find('.km-state-active').removeClass('km-state-active');*/
+    
+    
+    $("#DebtsBalanceOnSummary").text("Balance:");
+    $("#DebtsBalance").text("Balance:");
     var dataSource = new kendo.data.DataSource(
     {
          transport:
@@ -75,6 +82,7 @@ function UpdateClientBalance()
                 var item = dataSource.get();             
                            
                 var balance = typeof(item) === "undefined" ? "$0.00" : item.ClientBalance;
+                currentClientBalance = formatNum(balance);
                 $("#DebtsBalanceOnSummary").text("Balance: " + formatNum(balance));   
                 $("#DebtsBalance").text("Balance: " +formatNum(balance));                                         
         
@@ -189,7 +197,7 @@ function clientSearch(inputText)
         var lvSearch = $("#clientResults-listview").data("kendoMobileListView");
         lvSearch.dataSource.transport.options.read.url = serverURL + "GetClientsResultMobile?searchFilter=" + inputText;
         lvSearch.dataSource.page(1);
-        lvSearch.dataSource.read();
+        //lvSearch.dataSource.read();
         lvSearch.refresh();
         showLoading();
         return;
@@ -199,7 +207,7 @@ function clientSearch(inputText)
     
     var clientsDS = new kendo.data.DataSource(
     {
-        pageSize: 40, 
+        pageSize: 100, 
       serverPaging: true,
         transport:
         {
@@ -261,7 +269,7 @@ function taskSearch(inputText)
         var lvSearch = $("#taskResults-listview").data("kendoMobileListView");
         lvSearch.dataSource.transport.options.read.url = serverURL + "GetTasks_view?$where=(it.tas_id%253d%253d" + inputText + ")";
         lvSearch.dataSource.page(1);
-        lvSearch.dataSource.read();
+        //lvSearch.dataSource.read();
         lvSearch.refresh();
         showLoading();
         return;
@@ -303,7 +311,7 @@ function claimSearch(inputText)
         var lvSearch = $("#claimResults-listview").data("kendoMobileListView");
         lvSearch.dataSource.transport.options.read.url = serverURL + "GetSearchClaimsResults?insurerRef=" + inputText;
         lvSearch.dataSource.page(1);
-        lvSearch.dataSource.read();
+        //lvSearch.dataSource.read();
         lvSearch.refresh();
         showLoading();
         return;

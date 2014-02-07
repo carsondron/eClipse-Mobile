@@ -11,7 +11,7 @@ function retrieveEntityTasks(e)
         var lvSearch = $("#entityTasks-listview").data("kendoMobileListView");
         lvSearch.dataSource.transport.options.read.url = serverURL + "GetTasks_ViewMobile?ent_id=" + currentClient + "&taskType=" + selectedTaskType;
         lvSearch.dataSource.page(1);
-        lvSearch.dataSource.read();
+        //lvSearch.dataSource.read();
         lvSearch.refresh();
         
         ScrollToTop(); 
@@ -27,16 +27,16 @@ function retrieveEntityTasks(e)
       serverPaging: true,
       transport: {
         read: {
-                url: serverURL + "GetTasks_ViewMobile?ent_id=" + currentClient + "&taskType=" + selectedTaskType,  //url specifies whether the paging should be handled by the service                           
+                url: serverURL + "GetTasks_ViewMobile?ent_id=" + currentClient + "&taskType=" + selectedTaskType,
                 data: 
                 {
-                    Accept: "application/json"    // (JSON with padding) is required for cross-domain AJAX
+                    Accept: "application/json"
                 }  
         },
         parameterMap: function(options) {
           var parameters = {        
-            take: options.pageSize,   //additional parameters sent to the remote service
-            page: options.page        //next page
+            take: options.pageSize,
+            page: options.page
           };
               
           return parameters;
@@ -51,8 +51,8 @@ function retrieveEntityTasks(e)
             data.GetTasks_ViewMobileResult.RootResults.length == 0 && e.sender._page == 1 ? $("#tasksEmpty").show() : $("#tasksEmpty").hide();
         },
       schema: 
-        {           // describe the result format
-            data: "GetTasks_ViewMobileResult.RootResults", // the data which the DataSource will be bound to is in the "results" field           
+        {
+            data: "GetTasks_ViewMobileResult.RootResults",      
             model: {
                 fields: {
                     tas_updated_when: { type: "date"},
@@ -111,7 +111,7 @@ function GetEntityTasks() {
       var lvTasks = $("#entityTasks-listview").data("kendoMobileListView");
       lvTasks.dataSource.transport.options.read.url = serverURL + "GetTasks_ViewMobile?ent_id=" + currentClient + "&taskType=" + selectedTaskType, 
       lvTasks.dataSource.page(1);
-      lvTasks.dataSource.read();
+      //lvTasks.dataSource.read();
       lvTasks.dataSource.endlessScroll = true;          
       lvTasks.refresh();
       //app.scroller().reset();
@@ -131,6 +131,81 @@ function GetEntityTasks() {
    });         
   
 }
+
+function generateQuickDoc(e)
+{
+    var templateId = document.getElementById('docTemplates').value;
+    
+    showLoading("Generating...");
+      
+   $.ajax( 
+    { 
+        type: "POST",
+               url: serverURL + "GenerateClientTaskDocumentMobile",
+               contentType: "application/json",
+               data: '{ "entId": "' + currentClient.toString() + '", "docId": "' + templateId.toString() + '", "Accept": "application/json"}',
+               dataType: "json", 
+        success: function (item) { 
+            hideLoading();
+            ShowDocument(item.GenerateClientTaskDocumentMobileResult);
+            app.navigate("#:back");
+        }
+    });
+}
+
+function saveNewTask()
+{
+    var description = document.getElementById("taskDescription").value;
+    var type = document.getElementById("taskType").value;
+    var status = document.getElementById("taskStatusType").value;
+    var queue = document.getElementById('taskQueue').value;
+
+    var contactMethod = document.getElementById('contactMethod').value;
+    var action = document.getElementById('followupAction').value;
+    if(action === "")
+    {
+        action = description;
+    }
+    var priority = document.getElementById('taskPriority').value;
+    var contact = document.getElementById('contactPerson').value;
+    var followupDate = new Date($("#followupDate").val());
+    var phone = document.getElementById('taskPhone').value;
+    var mobile = document.getElementById('taskMobile').value;
+    var email = document.getElementById('taskEmail').value;
+    
+    var comments = document.getElementById('taskComments').value;
+    
+    var curr_date = ('0' + followupDate.getDate()).slice(-2); // Add leading zeroes to date and .slice(-2) gives us the last two characters of the string.
+    var curr_month = ('0' + (followupDate.getMonth() + 1)).slice(-2); //Months are zero based
+    var curr_year = followupDate.getFullYear(); 
+    
+    showLoading("Saving...");
+    $.ajax( 
+    { 
+        type: "POST",
+               url: serverURL + "SaveClientTaskMobile",
+               contentType: "application/json",
+               data: '{ "entId": "' + currentClient.toString() + '", "email": "' + email.toString()
+                     + '", "contactMethod": "' + contactMethod.toString() + '", "description": "' + description.toString()
+                     + '", "mobile": "' + mobile.toString() + '", "contact": "' + contact.toString()
+                     + '", "phone": "' + phone.toString() + '", "followupAction": "' + action.toString()
+                     + '", "followupDate": "' + curr_year + "-" + curr_month + "-" + curr_date + '", "notes": "' + comments.toString()
+                     + '", "priority": "' + priority.toString() + '", "email": "' + email.toString()
+                     + '", "type": "' + type.toString() + '", "queue": "' + queue.toString()
+                     + '", "status": "' + status.toString() + '", "Accept": "application/json"}',
+               dataType: "json", 
+        success: function (item) { 
+            hideLoading();
+            app.navigate("#:back");
+        }
+        });
+/*
+int entId, string email, int contactMethod, string description, string mobile,
+            string contact, string phone, string followupAction, DateTime followupDate, string notes, int priority, string queue, int type
+  */  
+}
+
+
 
 
 

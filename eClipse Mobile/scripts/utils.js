@@ -108,4 +108,76 @@ function ScrollToTop(e) {
     }, 500);        
 }
 
+function clientFunctionSelected()
+{
+    switch(this.current().index())
+      {
+          case 0:
+           app.navigate("#policiesView");
+                  break;
+          case 1:
+              app.navigate("#debtsView");
+      }
+}
+function loadStaticData()
+{
+    var clientTaskDocumentsViewModel = kendo.observable({data: [], dataSource: new kendo.data.DataSource({
+            transport:{ read: { url: serverURL + "GetActiveClientTaskDocumentsView", data: "jsonp"}},    
+            schema: { data: "GetActiveClientTaskDocumentsViewResult.RootResults"},
+            change: function (e) {clientTaskDocumentsViewModel.set("data", this.view());}
+        })});
 
+    clientTaskDocumentsViewModel.dataSource.read();
+    kendo.bind($("#docTemplates"), clientTaskDocumentsViewModel);
+    
+    var contactMethodsViewModel = kendo.observable({data: [], dataSource: new kendo.data.DataSource({
+            transport:{ read: { url: serverURL + "GetActiveContactMethods", data: "jsonp"}},    
+            schema: { data: "GetActiveContactMethodsResult.RootResults"},
+            change: function (e) {contactMethodsViewModel.set("data", this.view());}
+        })});
+
+    contactMethodsViewModel.dataSource.read();
+    kendo.bind($("#contactMethod"), contactMethodsViewModel);
+    
+    var taskTypesViewModel = kendo.observable({data: [], dataSource: new kendo.data.DataSource({
+            transport:{ read: { url: serverURL + "GetActiveClientTaskTypes", data: "jsonp"}},    
+            schema: { data: "GetActiveClientTaskTypesResult.RootResults"},
+            change: function (e) {taskTypesViewModel.set("data", this.view());}
+        })});
+
+    taskTypesViewModel.dataSource.read();
+    kendo.bind($("#taskType"), taskTypesViewModel);
+        
+    var taskStatusTypesViewModel = kendo.observable({data: [], dataSource: new kendo.data.DataSource({
+            transport:{ read: { url: serverURL + "GetActiveClientTaskStatusTypes", data: "jsonp"}},    
+            schema: { data: "GetActiveClientTaskStatusTypesResult.RootResults"},
+            change: function (e) {taskStatusTypesViewModel.set("data", this.view());}
+        })});
+
+    taskStatusTypesViewModel.dataSource.read();
+    kendo.bind($("#taskStatusType"), taskStatusTypesViewModel);
+            
+    var taskPrioritiesViewModel = kendo.observable({data: [], dataSource: new kendo.data.DataSource({
+            transport:{ read: { url: serverURL + "GetActivePriorities", data: "jsonp"}},    
+            schema: { data: "GetActivePrioritiesResult.RootResults"},
+            change: function (e) {taskPrioritiesViewModel.set("data", this.view());}
+        })});
+
+    taskPrioritiesViewModel.dataSource.read();
+    kendo.bind($("#taskPriority"), taskPrioritiesViewModel);
+                
+    var taskQueuesViewModel = kendo.observable({data: [], dataSource: new kendo.data.DataSource({
+            transport:{ read: { url: serverURL + "GetQueuesForClientTaskMobile", data: "jsonp"}},    
+            schema: { data: "GetQueuesForClientTaskMobileResult.RootResults"},
+            change: function (e) {taskQueuesViewModel.set("data", this.view());}
+        })});
+
+    taskQueuesViewModel.dataSource.read();
+    kendo.bind($("#taskQueue"), taskQueuesViewModel);
+    
+}
+
+function cancelNewItem(e)
+{
+    app.navigate("#:back");
+}

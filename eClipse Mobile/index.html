@@ -3,9 +3,12 @@
     <head>
         <title>eClipse Mobile</title>
         <meta charset="utf-8" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
         <script src="cordova.js"></script>
         <script src="kendo/js/jquery.min.js"></script>
         <script src="kendo/js/kendo.mobile.min.js"></script>
+        <script src="kendo/js/kendo.all.min.js"></script>
+        
         <script src="scripts/search.js"></script>
         <script src="scripts/utils.js"></script>
         <script src="scripts/documents.js"></script>
@@ -24,6 +27,11 @@
         
         <!-- Default Stylesheet -->
         <link rel="stylesheet" href="styles/main.css" />
+        <link rel="apple-touch-icon" sizes="57x57" href="images/Naq57x57.png" />
+        <link rel="apple-touch-icon" sizes="72x72" href="images/Naq72x72.png" />
+        <link rel="apple-touch-icon" sizes="114x114" href="images/Naq114x114.png" />
+        <link rel="apple-touch-icon" sizes="144x144" href="images/Naq144x144.png" />
+        <link rel="icon" href="images/Naq57x57.png" />
                         
     </head>
     <body>
@@ -44,7 +52,7 @@
                         <option value="Task">Task</option>
                         <option value="Claim">Claim</option>
                     </select>
-                    <a id="submitButton" data-role="button" data-click="eclipseSearch" data-icon="search"></a>
+                    <a id="submitButton" class="highlightButton button" data-role="button" data-click="eclipseSearch" data-icon="search"></a>
                 </div>
     
             </header>                                                             
@@ -87,8 +95,8 @@
                     </div>
                </div>              
                <h2 align="center" id="selectedTaskText"></h2>                                            
-               <ul id="buttongroup" data-role="buttongroup" data-index="0" data-select="selectedTask">
-                    <li style>All</li>
+               <ul id="buttongroup" style="font-size: 1em;" data-role="buttongroup" data-index="0" data-select="selectedTask">
+                    <li>All</li>
                     <li>Client</li>
                     <li>Claim</li>
                     <li>Policy</li>
@@ -103,22 +111,23 @@
          </div>
          
          <!-- Settings Page -->
-         <div data-role="modalview" id="modalview-settings" style="width: 300px; height: 230px;" data-init="settingsInit">
-                <div data-role="header">
-                        <div data-role="navbar">
-                            <span>Settings</span>
-                        </div>
-                    </div>
-                    <div data-role="content">
-                         <h3>Server URL</h3>
-                        <div class="settingsDetail">
-                         <input style="width:100%;-moz-box-sizing:border-box;-webkit-box-sizing:border-box;box-sizing: border-box;" type="url" width="300px" align="center" id="serverUrl" value="" />
-                            </div>
-                    </div>
-                    <div align='center'>
-                        <a data-click="saveSettings" id="saveSettingsButton" type="button" data-role="button">Save</a>
-                        <a data-click="closeModalViewSettings" id="settingsCanelButton" type="button" data-role="button">Cancel</a>
-                    </div>
+         <div data-role="modalview" id="modalview-settings" style="width: 300px; height: 180px;">
+            <div data-role="header">
+                <div data-role="navbar">
+                    <span>Settings</span>
+                </div>
+            </div>
+            <div data-role="content">
+                 <h3>Server URL</h3>
+                <div class="settingsDetail">
+                    <input style="width:100%;-moz-box-sizing:border-box;-webkit-box-sizing:border-box;box-sizing: border-box;" type="url" width="300px" align="center" id="serverUrl" value="" />
+                </div>
+                 <div align='center'>
+                    <a data-click="saveSettings" id="saveSettingsButton" type="button" data-role="button">Save</a>
+                    <a data-click="closeModalViewSettings" id="settingsCanelButton" type="button" data-role="button">Cancel</a>
+                </div>
+            </div>
+
          </div>
     
         <!-- Outstanding Tasks Details Page -->
@@ -134,17 +143,14 @@
         </div>
         
         <script id="outstandingTaskDetailTemplate" type="text/x-kendo-template">
-           
-            <ul data-role="listview" data-style="inset" data-type="group">
-                <li>   <a href="javascript:GoToClientSummary();"> #= ent_name# </a>
+           <a align="center" href="javascript:GoToClientSummary();"><h3> #= ent_name# </h3></a>
+            <ul data-role="listview" data-style="inset" data-type="group" style="margin-top: -10px" >
+               
+                <li>#= tas_brief_description#
                     <ul>
-                        <li>
-                            #= tas_brief_description#                
-                        </li> 
-                    </ul>
-                </li>
-                <li>Details
-                    <ul>
+            #if(HasDoc == 'Yes'){#
+                     <li><a href="\#taskDocView?id=#:tas_id#&type=#:TaskType#"><img src="images/document.png" /><span style="font-size: .7em;  color: \#369;">&nbsp;<u>View Documents</u></span></a></li>
+             #}#
                         <li><span class="item-title">Date</span><span class="item-info">#= kendo.toString(tas_followup_date, "dd/MM/yyyy") #</span></li>
                         <li><span class="item-title">Ref</span><span class="item-info">#= getTaskCode(TaskType) #:#= tas_id #</span></li>                        
                         <li><span class="item-title">Priority</span><span class="item-info">#= skipIfEmpty(pri_name, true) #</span></li>                                                   
@@ -161,10 +167,10 @@
             </ul>           
         </script>                        
                                                            
-        <div data-role="view" id="tabstrip-settings" data-title="Options">
-			<div>
+        <div data-role="view" id="tabstrip-settings" data-title="Settings">
+			<div align="center" >
                 <div>
-                    <a id="showSettingsButton" data-role="button" data-click="showSettings">Settings</a>          
+                    <a id="showSettingsButton" class="highlightButton button" data-role="button" data-click="showSettings">Server URL</a>          
                 </div>
             </div>
         </div>
@@ -194,6 +200,13 @@
                     <div data-role="view-title">Client Summary</div>
                 </div>
             </header>
+<!--            <ul id="clientButtongroup" style="font-size: 1em;" data-role="buttongroup" data-index="-1" data-select="clientFunctionSelected">
+                    <li>Policies</li>
+                    <li>Debts</li>
+                    <li>Tasks</li>
+                    <li>Claims</li>
+                    <li>Notes</li>
+                </ul>     -->
             <div align="center">
                 <a data-role="button" style="margin-left: 0; margin-right: 0;" href="#policiesView">Policies</a>
                 <a data-role="button" style="margin-left: 0; margin-right: 0;" href="#debtsView">Debts</a>
@@ -202,18 +215,44 @@
                 <a data-role="button" style="margin-left: 0; margin-right: 0;" href="#notesView">Notes</a>
             </div>
              <div align='center'>
-                 <h2 align='center' id="Debtor" style="margin-bottom: 0px;"></h2>
-                 <h4 align='center' id="DebtsBalanceOnSummary" class="debtsHeader" style="margin-top: .1em;"></h4>                                                                  
+                 <h3 align='center' id="Debtor" style="margin-bottom: 0px; margin-top: 5px;"></h3>
+                 <h5 align='center' id="DebtsBalanceOnSummary" class="debtsHeader" style="margin-top: .1em; margin-bottom: .3em;"></h5>       
+                 <a data-role="button" style="font-size: 0.8em; padding: 2px; margin-bottom: .6em;" href="#addTaskView"><img src="images/calendar_add.png" style="margin-right: .4em;"/> Task</a>
+                 <a data-role="button" style="font-size: 0.8em; padding: 2px; margin-bottom: .6em;" href="#addQuickDoc"><img src="images/note_add.png" style="margin-right: .4em;"/> Quick Doc</a>
+                 <a data-role="button" style="font-size: 0.8em; padding: 2px; margin-bottom: .6em;" href="#addNoteView"><img src="images/page_white_add.png" style="margin-right: .4em;"/> Note</a>
              </div>   
                         
             <div data-role="content">
             </div>
         </div>                                         
-                        
+                
+         <!-- Email Doc Page -->
+         <div data-role="view" id="emailDocView" data-transition="slide" data-layout="default">
+            <div data-role="header">
+                <div data-role="navbar">
+                    <span>Email Document</span>
+                </div>
+            </div>
+             
+            <div data-role="content">
+                 <ul data-role="listview" data-style="inset">
+                     <li><label class="item-title">To</label><input class="item-info" type="email" id="emailAddress" placeholder="Email Address" /> </li>
+                     <li><label class="item-title">Subject</label> <input class="item-info" type="text" id="emailSubject" /></li>
+                     <li><label class="item-title">Attached</label> <label class="item-info" type="text" id="emailAttachment"></label></li>
+                 </ul>
+                <textarea class="notesEntryClass" placeholder="Message text" id="emailMessage"></textarea>
+                 <div align='center'>
+                    <a data-click="sendEmail" type="button" data-role="button">Send</a>
+                    <a data-click="closeEmailDocView" type="button" data-role="button">Cancel</a>
+                </div>
+            </div>
+
+         </div>
+        
         <script id="detailTemplate" type="text/x-kendo-template">
                      
             <ul data-role="listview" data-style="inset" data-type="group">
-                <li>#= ent_name + ((ent_suburb == null || ent_suburb == '') ? '' : ', ' + ent_suburb) #
+                <li>Address
                     <ul>
                          <li style="font-size: 1em;">                            
                                 #= ((ent_trading_as == null || ent_trading_as == '') ? '' : 't/as ' + ent_trading_as + '<br />') #
@@ -256,7 +295,6 @@
                 <div data-role="navbar">
                     <a class="button" data-role="button" data-icon="home" data-align="left" href="#tabstrip-home">Home</a>
                     <div data-role="view-title">Notes</div>
-                    <a data-icon="add" data-align="right" data-role="button" href="#addNoteView"></a>
                 </div>
             </header>
              <div align="center">
@@ -264,9 +302,12 @@
                 <a data-role="button" style="margin-left: 0; margin-right: 0;" href="#debtsView">Debts</a>
                 <a data-role="button" style="margin-left: 0; margin-right: 0;" href="#tasksView">Tasks</a>
                 <a data-role="button" style="margin-left: 0; margin-right: 0;" href="#claimsView">Claims</a>
-                <a data-role="button" style="margin-left: 0; margin-right: 0; color: #fff; background-color: #f60" href="#notesView">Notes</a>
+                <a data-role="button" style="margin-left: 0; margin-right: 0; color: #fff; background-color:  rgb(178, 89, 0)" href="#notesView">Notes</a>
             </div>
-            <a href="#clientSummaryView"><h2 align='center' id="ClientNameSuburbNotes" class="debtsHeader"></h2></a>
+            <a href="#clientSummaryView"><h3 align='center' id="ClientNameSuburbNotes" class="debtsHeader"></h3></a>
+            <div align="center">
+                <a data-role="button" style="font-size: 0.8em; padding: 2px; margin-bottom: 0.4em;" href="#addNoteView"><img src="images/page_white_add.png" style="margin-right: 0.4em;"/>Add Note</a>
+            </div>
             <div data-role="content">
                 <div id="notesEmpty" align="center">
                     <h2>No Results</h2>
@@ -275,6 +316,107 @@
                         data-style="inset" data-type="group">
                 </ul>
             </div>
+        </div>
+                                  
+        <!-- Add Task Page -->
+        <div data-role="view" id="addTaskView" data-transition="slide" data-layout="default" data-show="resetNote">
+            <header data-role="header">
+                <div data-role="navbar">
+                    <div data-role="view-title" >New Task</div>
+                </div>                
+            </header>
+            <div data-role="content">
+               
+                <h3>Details</h3>
+                <ul data-role="listview" data-style="inset">
+                    
+                    <li>
+                        <label>
+                        Description
+                            <input type="text" placeholder="Description" id="taskDescription" />
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                        Task
+                        <select id="taskType" data-bind="source: data" data-text-field="tastyp_name" data-value-field="tastyp_id">
+                        </select>
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                        Status
+                        <select id="taskStatusType" data-bind="source: data" data-text-field="tasstaty_name" data-value-field="tasstaty_id">
+                        </select>
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                        Queue
+                        <select id="taskQueue" data-bind="source: data" data-text-field="Username" data-value-field="Username">
+                        </select>
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                        Contact Method
+                        <select id="contactMethod" data-bind="source: data" data-text-field="conmet_name" data-value-field="conmet_id">
+                        </select>
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                        F/up Action
+                            <input type="text" placeholder="Follow up Action" id="followupAction" />
+                        </label>
+                    </li>
+                     <li>
+                        <label>
+                        Priority
+                        <select id="taskPriority" data-bind="source: data" data-text-field="pri_name" data-value-field="pri_id">
+                        </select>
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                        Contact
+                            <input type="text" placeholder="Contact Person" id="contactPerson" />
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                            Follow up Date
+                            <input type="date" id="followupDate"/>
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                        Phone
+                            <input type="text" placeholder="Phone" id="taskPhone" />
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                        Mobile
+                            <input type="text" placeholder="Mobile" id="taskMobile" />
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                        Email
+                            <input type="text" placeholder="Email" id="taskEmail" />
+                        </label>
+                    </li>
+                </ul>
+                <h3>Comments</h3>
+                         
+                <textarea class="notesEntryClass" placeholder="Comments" id="taskComments"></textarea>
+                <div align="center" >
+                    <a class="highlightButton button" data-role="button" data-align="right" data-click="saveNewTask">Save</a>
+                    <a class="highlightButton button" data-role="button" data-align="right" data-click="cancelNewItem">Cancel</a>
+                </div>
+            </div>
+                 
         </div>
                           
         <!-- Add Note Page -->
@@ -317,13 +459,42 @@
                          
                 <textarea class="notesEntryClass" placeholder="Notes" id="noteNote"></textarea>
                 <div align="center" >
-                    <a data-role="button" data-align="right" data-click="saveNote">Save</a>
-                    <a data-role="button" data-align="right" data-click="cancelNoteAdd">Cancel</a>
+                    <a class="highlightButton button" data-role="button" data-align="right" data-click="saveNote">Save</a>
+                    <a class="highlightButton button" data-role="button" data-align="right" data-click="cancelNewItem">Cancel</a>
                 </div>
             </div>
                  
         </div>
-                        
+                     
+        <!-- Quick Doc Page -->
+        <div data-role="view" id="addQuickDoc" data-transition="slide" data-layout="default" data-show="resetNote">
+            <header data-role="header">
+                <div data-role="navbar">
+                    <div data-role="view-title" >New Quick Document</div>
+                </div>                
+            </header>
+            <div data-role="content">
+               
+                <h3>Quick Doc</h3>
+                <ul data-role="listview" data-style="inset">
+                    <li>
+                        <label>
+                        Document
+                        <select id="docTemplates" data-bind="source: data" data-text-field="tasdoc_name" data-value-field="tasdoc_id">
+                        </select>
+                        </label>
+                    </li>
+                </ul>
+               
+                <div align="center" id="testBind">
+                    <a class="highlightButton button" data-role="button" data-align="right" data-click="generateQuickDoc">Generate</a>
+                    <a class="highlightButton button" data-role="button" data-align="right" data-click="cancelNewItem">Cancel</a>
+                </div>
+            </div>
+                 
+        </div>
+                 
+        
         <!-- Policies Page -->
         <div data-role="view" id="policiesView" data-transition="slide" data-layout="default" data-show="retrievePolicies">
             <header data-role="header">
@@ -333,14 +504,14 @@
                 </div>
             </header>
              <div align="center">
-                <a data-role="button" style="margin-left: 0; margin-right: 0; color: #fff; background-color: #f60" href="#policiesView">Policies</a>
+                <a data-role="button" style="margin-left: 0; margin-right: 0; color: #fff; background-color: rgb(178, 89, 0)" href="#policiesView">Policies</a>
                 <a data-role="button" style="margin-left: 0; margin-right: 0;" href="#debtsView">Debts</a>
                 <a data-role="button" style="margin-left: 0; margin-right: 0;" href="#tasksView">Tasks</a>
                 <a data-role="button" style="margin-left: 0; margin-right: 0;" href="#claimsView">Claims</a>
                 <a data-role="button" style="margin-left: 0; margin-right: 0;" href="#notesView">Notes</a>
             </div>
             <div>
-                   <a href="#clientSummaryView"><h2 align='center' id="ClientNameSuburb" class="debtsHeader"></h2></a>
+                   <a href="#clientSummaryView"><h3 align='center' id="ClientNameSuburb" class="debtsHeader"></h3></a>
             </div>
             <div  data-role="content" >
                 <div id="policiesEmpty" align="center">
@@ -367,8 +538,7 @@
             
             <div data-role="content"></div>                       
         </div>                             
-                            
-                        
+                       
         <!-- Policy Documents Page -->
         <div data-role="view" id="policyDocView" data-transition="slide" data-layout="default" data-show="retrieveDocuments">
             <header data-role="header">
@@ -378,9 +548,34 @@
                 </div>
             </header>
             <div data-role="content" >
-                <ul data-role="listview" id="docs-listview" style="height: auto;"
-                        data-style="inset" data-type="group">
-                </ul>
+                <div id="polDocsEmpty" align="center">
+                    <h2>No Results</h2>
+                </div>
+                <div>
+                    <ul data-role="listview" id="docs-listview" style="height: auto;"
+                            data-style="inset" data-type="group">
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+         <!-- Task Documents Page -->
+        <div data-role="view" id="taskDocView" data-transition="slide" data-layout="default" data-show="retrieveTaskDocuments">
+            <header data-role="header">
+                <div data-role="navbar">
+                    <a data-role="backbutton" data-align="left">Back</a>
+                    <div data-role="view-title">Task Documents</div>
+                </div>
+            </header>
+            <div data-role="content" >
+                <div id="taskDocsEmpty" align="center">
+                    <h2>No Results</h2>
+                </div>
+                <div>
+                    <ul data-role="listview" id="taskdocs-listview" style="height: auto;"
+                            data-style="inset" data-type="group">
+                    </ul>
+                </div>
             </div>
         </div>
         
@@ -409,22 +604,17 @@
             </header>
              <div align="center">
                 <a data-role="button" style="margin-left: 0; margin-right: 0;" href="#policiesView">Policies</a>
-                <a data-role="button" style="margin-left: 0; margin-right: 0; color: #fff; background-color: #f60" href="#debtsView">Debts</a>
+                <a data-role="button" style="margin-left: 0; margin-right: 0; color: #fff; background-color: rgb(178, 89, 0)" href="#debtsView">Debts</a>
                 <a data-role="button" style="margin-left: 0; margin-right: 0;" href="#tasksView">Tasks</a>
                 <a data-role="button" style="margin-left: 0; margin-right: 0;" href="#claimsView">Claims</a>
                 <a data-role="button" style="margin-left: 0; margin-right: 0;" href="#notesView">Notes</a>
             </div>
             <div>
-                 <a href="#clientSummaryView"><h2 align='center' id="ClientNameSuburbDebts" class="debtsHeader" style="margin-bottom: 0px;"></h2></a>
-                 <h4 align='center' id="DebtsBalance" class="debtsHeader" style="margin-top: .1em;"></h4>                                                      
+                 <a href="#clientSummaryView"><h3 align='center' id="ClientNameSuburbDebts" class="debtsHeader" ></h3></a>
+                 <h4 align='center' id="DebtsBalance" class="debtsHeader" style="margin-top: .1em;">Balance:</h4>                                                      
             </div>
             <div align='center'>
-                 <a id="btn7Days" data-role="button" ></a>
-                 <a id="btn14Days" data-role="button" ></a>
-                 <a id="btn30Days" data-role="button" ></a>
-                 <a id="btn60Days" data-role="button" ></a>
-                 <a id="btn90Days" data-role="button" ></a>
-                 <a id="btn90PlusDays" data-role="button" ></a>                
+                 <a class="highlightButton button" data-role="button" data-icon="details" href="#agedDebt-view"  style="margin-bottom: .8em;">Show Aged Debt</a>
             </div>
             <div data-role="content">
                 <div id="debtsEmpty" align="center">
@@ -435,7 +625,24 @@
                 </ul>
             </div>
         </div>
-                        
+                   
+        <div data-role="view" id="agedDebt-view" data-transition="slide" data-layout="default" data-show="showAgedDebt">
+            <header data-role="header">
+                <div data-role="navbar">
+                    <a data-role="backbutton" data-align="left">Back</a>
+                    <div data-role="view-title">Aged Debt</div>
+                </div>                
+            </header>
+             <div data-role="content">
+                 <div>
+                     <h3 align="center" id="adgedDebtClientName"></h3>
+                 </div>
+                <div class="chart-wrapper">
+                    <div id="chart"></div>
+                </div>
+            </div>
+        </div>
+        
          <!-- Tasks Page -->
         <div data-role="view" id="tasksView" data-transition="slide" data-layout="default" data-show="retrieveEntityTasks">
             <header data-role="header">
@@ -446,12 +653,12 @@
                  <div align="center">
                     <a data-role="button" style="margin-left: 0; margin-right: 0;" href="#policiesView">Policies</a>
                     <a data-role="button" style="margin-left: 0; margin-right: 0;" href="#debtsView">Debts</a>
-                    <a data-role="button" style="margin-left: 0; margin-right: 0; color: #fff; background-color: #f60" href="#tasksView">Tasks</a>
+                    <a data-role="button" style="margin-left: 0; margin-right: 0; color: #fff; background-color: rgb(178, 89, 0)" href="#tasksView">Tasks</a>
                     <a data-role="button" style="margin-left: 0; margin-right: 0;" href="#claimsView">Claims</a>
                     <a data-role="button" style="margin-left: 0; margin-right: 0;" href="#notesView">Notes</a>
                 </div>
-                <a href="#clientSummaryView"><h2 align='center' id="ClientNameSuburbTasks" class="debtsHeader"></h2></a>
-                 <ul id="buttongroup" data-role="buttongroup" data-index="0" data-select="selectedEntityTask">
+                <a href="#clientSummaryView"><h3 align='center' id="ClientNameSuburbTasks" class="debtsHeader"></h3></a>
+                 <ul id="buttongroup" style="font-size: 1em;" data-role="buttongroup" data-index="0" data-select="selectedEntityTask">
                         <li>All</li>
                         <li>Client</li>
                         <li>Claim</li>
@@ -479,10 +686,10 @@
                 <a data-role="button" style="margin-left: 0; margin-right: 0;" href="#policiesView">Policies</a>
                 <a data-role="button" style="margin-left: 0; margin-right: 0;" href="#debtsView">Debts</a>
                 <a data-role="button" style="margin-left: 0; margin-right: 0;" href="#tasksView">Tasks</a>
-                <a data-role="button" style="margin-left: 0; margin-right: 0; color: #fff; background-color: #f60" href="#claimsView">Claims</a>
+                <a data-role="button" style="margin-left: 0; margin-right: 0; color: #fff; background-color: rgb(178, 89, 0)" href="#claimsView">Claims</a>
                 <a data-role="button" style="margin-left: 0; margin-right: 0;" href="#notesView">Notes</a>
             </div>
-            <a href="#clientSummaryView"><h2 align='center' id="ClientNameSuburbClaims" class="debtsHeader" style="margin-bottom: 0px; margin-top: 0px;"></h2></a>
+            <a href="#clientSummaryView"><h3 align='center' id="ClientNameSuburbClaims" class="debtsHeader" ></h3></a>
             </header>
             
             
@@ -567,20 +774,53 @@
     {
         font-size: 1.5rem;
     }
-</style>                                 
-        <script type="text/x-kendo-template" id="docs-listview-template">
+</style>    
+        
+        <script type="text/x-kendo-template" id="taskdocs-listview-template">
 
             <ul data-role="listview" data-style="inset" data-type="group">
             
                 <li>
-                    <span class="item-heading">                               
-                                <a class="button" data-role="button" data-icon="bookmarks" data-align="left" >View</a>   
-                                ${jou_brief_description} 
+                    <ul>
+                      <li><span class="item-title">Date</span><span class="item-info">#= kendo.toString(Date, "dd/MM/yyyy") #</span> </li>   
+                      <li><span class="item-title">Name</span><span class="item-info">#= Description #</span></li>
+             #if(FileName !== ""){#
+                    <li><span class="item-title">Filename</span><span class="item-info">#= FileName #</span></li>
+            #}#
+                   </ul>
+            <span class="item-heading">
+            #if(CanView){#
+                       <a class="highlightButton button" data-role="button" data-icon="bookmarks" data-align="left" data-click="displayDoc" data-id="#:Id#" data-type="#:Type#">View Document</a>   
+            #}#
+                       <a href="\#emailDocView" data-role="button" data-icon="bookmarks" data-align="left" data-click="emailDoc" 
+                            data-id="#:Id#" data-type="#:Type#" data-subject="#:Description#" data-attachment="#:FileName#" >
+                                    <img style="margin-right: 10px; margin-bottom: -5px" src="images/email.png" />Email</a>
                     </span>
+                </li>
+            </ul>
+        </script>
+                             
+        <script type="text/x-kendo-template" id="docs-listview-template">
+
+            <ul data-role="listview" data-style="inset" data-type="group">
+            
+                <li><span class="item-heading">${jou_brief_description}</span>
+                    
                     <ul>
                       <li><span class="item-title">Date</span><span class="item-info">#= kendo.toString(jou_created_when, "dd/MM/yyyy") #</span> </li>   
                       <li><span class="item-title">Name</span><span class="item-info">#= genins_name #</span></li>
+            #if(Fname !== ""){#
+                    <li><span class="item-title">Filename</span><span class="item-info">#= Fname #</span></li>
+            #}#
                    </ul>
+            <span class="item-heading">
+            #if(CanView){#
+            <a class="highlightButton button" data-role="button" data-icon="bookmarks" data-align="left" data-click="displayDoc" data-id="#:Id#" data-type="#:Type#">View</a>  
+             #}#
+                   <a href="\#emailDocView" data-role="button" data-icon="bookmarks" data-align="left" data-click="emailDoc" 
+                        data-id="#:Id#" data-type="#:Type#" data-subject="#:genins_name#" data-attachment="#:Fname#">
+                                    <img style="margin-right: 10px; margin-bottom: -5px" src="images/email.png" />Email</a>
+                    </span>
                 </li>
             </ul>
         </script>
@@ -639,9 +879,12 @@
                       #= close_status > 0 ? '<img src="images/flag_red.png" />' : '' #
                       #= close_status == 0 ? '<img src="images/flag_green.png" />' : '' #
                   </li>    
+                  <li>
+                    <a class="highlightButton button" data-role="button" data-icon="bookmarks" data-click="displaySchedule" data-id="#:wor_id#">View Schedule</a>
+                    <a class="highlightButton button" data-role="button" data-icon="details" href="\#policyDocView?id=#:genins_id#">View Documents</a>
+                    </li>
                   <li>    
                       <ul>
-                          <li><a href="\#policyDocView?id=#:genins_id#"><img src="images/document.png" /><span style="font-size: .7em;  color: \#369;">&nbsp;<u>View Documents</u></span></a></li>
                           <li><span class="item-title">Period</span><span class="item-info">#= kendo.toString(genins_dtFrom, "dd/MM/yyyy") + ' - ' + 
                               kendo.toString(genins_dtTo, "dd/MM/yyyy") #</span></li>
                              <li><span class="item-title">Class of Business</span><span class="item-info">#= gencob_name #</span></li>
@@ -686,6 +929,10 @@
                 <li><span class="item-heading">${tas_brief_description}</span>
             
                  <ul>
+             #if(HasDoc == 'Yes'){#
+                     <li><a href="\#taskDocView?id=#:tas_id#&type=#:TaskType#"><img src="images/document.png" /><span style="font-size: .7em;  color: \#369;">&nbsp;<u>View Documents</u></span></a></li>
+             #}#
+                     
                       <li><span class="item-title">Date</span><span class="item-info">#= kendo.toString(tas_followup_date, "dd/MM/yyyy") #</span> </li>   
                       <li><span class="item-title">Priority</span><span class="item-info">#= pri_name#</span> </li>    
                       <li><span class="item-title">Ref</span><span class="item-info">#= getTaskCode(TaskType) #:#= tas_id #</span></li>

@@ -9,7 +9,7 @@ function retrievePolicies(e)
         var lvSearch = $("#policies-listview").data("kendoMobileListView");
         lvSearch.dataSource.transport.options.read.url = serverURL + "GetInterestsAndRisksMobile?entId=" + currentClient + "&showAll=true";
         lvSearch.dataSource.page(1);
-        lvSearch.dataSource.read();
+        //lvSearch.dataSource.read();
         lvSearch.refresh();
         
         ScrollToTop(); 
@@ -21,7 +21,7 @@ function retrievePolicies(e)
        
     var policiesDS = new kendo.data.DataSource(
     {
-         pageSize: 30, 
+         pageSize: 100, 
          serverPaging: true,
          transport:
          {
@@ -73,7 +73,7 @@ function retrievePolicies(e)
         		dataSource :policiesDS,
                 template: $("#policies-listview-template").html(),
                 endlessScroll: true,               
-                scrollTreshold: 30,        		
+                scrollTreshold: 30,   
                 columns: [
                         { field:"genins_dtFrom"},
                         { field:"genins_dtTo"}]                
